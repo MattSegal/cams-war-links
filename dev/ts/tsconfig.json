@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "jsx": "react",
+    "removeComments": true,
+    "outFile": "../../out.js",
+    "sourceMap": true,
+    "noEmitOnError": false
+  }
+}

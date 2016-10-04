@@ -1,0 +1,154 @@
+doctype html
+html(lang="en")
+    head
+        meta(charset="utf-8")
+        meta(name = "viewport",
+        content = "width=device-width,initial-scale=1.0")
+        //- fonts
+        link(href='https://fonts.googleapis.com/css?family=Oswald:400,300', rel='stylesheet', type='text/css')
+        link(href='https://fonts.googleapis.com/css?family=Open+Sans|Open+Sans+Condensed:300', rel='stylesheet', type='text/css')
+        link(rel="stylesheet", type="text/css", href="{{ url_for('static',filename='./css/style.css') }}")
+        //- page icon --
+        link(rel="shortcut icon", href="{{ url_for('static',filename='site_icon.ico') }}")
+        title Matt's Links
+        //- inline css for blurry header image preload
+        style.
+            .pre-load-image {
+                background-size: cover;
+                background-position: 0 -50px;
+                height: 300px;
+                width: 100%;
+                overflow: hidden;
+                opacity: 1; 
+                z-index: -1;
+                background-image: url("{% include "blur_image.html" %}");
+            }
+
+    body
+        .wrapper
+            a(href="/")
+                header
+                    .pre-load-image
+                    h1 Matt's Links
+            main
+                //- navigation sidebar 
+                .userNav
+                    h3 Users
+                    .horizontalRule
+                    ul
+                        //- users go in here
+                    .editUsersButton
+                        .editUsersIcon
+                        span.editUsersText Edit Users
+                //- template for navigation sidebar
+                template(id="userListTemplate")
+                    {% raw %}
+                    li(id='select{{name}}') {{name}}
+                    {% endraw %}
+                
+                //- box for current user's links
+                .userBox
+                
+                //- templates for userBox
+                template(id="welcomeTemplate")
+                    div(id="welcomeUser")
+                        h2 Welcome!
+                        p.welcome To get started, browse the navbar. 
+                template(id="userBoxTemplate")
+                    {% raw %} 
+                    .user(id="{{name}}")
+                        h2 {{name}}
+                        .linkList
+
+                        .newItemWrapper
+                            .newItemButton
+                                .newItemIcon
+                                span.newItemText Add new item
+                            
+                            .newItemForm
+                                button.submit Submit
+                                button.cancel Cancel
+                                p
+                                    input.url(type="text", placeholder = "Enter link URL")
+                                p
+                                    input.title(type="text", placeholder = "Enter link title (optional)")
+                    {% endraw %}
+                
+                template(id="linkTemplate")
+                    {% raw %}   
+                    .link(id="link{{id}}")
+                        .linkContent(id="linkContent{{id}}")
+                            a(href="{{url}}") {{title}}
+                        .linkOptions
+                            .linkDelete(id="linkDelete{{id}}")
+                                .buttonTitle Delete
+                            .linkEdit(id="linkEdit{{id}}") 
+                                .buttonTitle Edit
+
+                        .linkEditForm
+                            p.input
+                                label URL
+                                input.url(type="text", placeholder = "Enter link URL")
+                            p.input
+                                label Title
+                                input.title(type="text", placeholder = "Enter link title")
+                            p
+                                button.submit Submit
+                                button.cancel Cancel
+
+                        .linkDeleteForm
+                            p
+                                button.delete Delete
+                            p
+                                button.cancel Cancel
+                    {% endraw %}
+
+            //- template for edit users page
+            template(id="editScreenTemplate")
+                    .editScreen
+                        h2 Edit Users
+                        //- users go here
+                        ul
+                        button.addUser Add User
+                        .newUserForm
+                            input(type="text", class="name",    placeholder = "Enter username - maximum length of 12 characters")
+                            br
+                            button.add Add
+                            button.cancel Cancel
+                            
+                template(id="editUserTemplate")
+                    {% raw %}
+                    li.editUser(id="edit{{name}}")
+                        h3 {{name}}
+                        button.deleteCancel(id = "cancel{{name}}") Cancel
+                        button.delete(id="delete{{name}}") Delete
+                    {% endraw %}    
+
+            //- end templates
+                
+            footer
+                .horizontalRule
+                .right 2015 The_Amp_Walrus
+    //- third party libraries   
+    script(src="{{ url_for('static',filename='js/jquery-2.1.4.js') }}")
+    script(src="{{ url_for('static',filename='js/mustache.min.js') }}")
+    //- app modules
+    script(src="{{ url_for('static',filename='js/out.js') }}")
+    script.
+        // when bg image loaded, swap out full image
+        window.onload = function loadSharpImages() {
+            // Quit early if older browser (e.g. IE 8).
+            if (!('addEventListener' in window)) return
+            var preLoadBackground = document.querySelector(".pre-load-image")
+            var backgroundSourceFile = "{{url_for('static',filename='img/hero.png')}}"
+            var backgroundImage = new Image();
+            backgroundImage.src = backgroundSourceFile
+            backgroundImage.onload = function() {
+                function fadeOut(i) {
+                    preLoadBackground.style.opacity = 1 - 0.01*i
+                    if (i >= 100) return
+                    setTimeout(function(){fadeOut(i+1)},1)
+                }
+                fadeOut(0)
+            }
+        };
