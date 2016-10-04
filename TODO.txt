@@ -1,9 +1,0 @@
-refresh button
-filters tags order descriptions
-links scroll from top down
-users?
-make deployable
-make automatic db backups
-
-Add selenium regression tests
-Add API regression tests

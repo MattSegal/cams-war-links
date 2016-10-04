@@ -1,19 +1,27 @@
 # Link-Sharing-Website
 
-[View Live Website Here](http://mattsegal.xyz/links)
+[View Live Website Here](http://www.mattdsegal.com/links)
 
 ### Overview
-Having learned some JavaScript/jQuery I wanted to apply what I had learned with a small practical project. This project includes both the front-end (HTML/CSS/JS) and the back-end (Flask/MySQL/Apache2). The aim of this website is to allow me and my friends to share interesting links with each other. 
+The aim of this website is to allow me and my friends to share interesting links with each other. 
+
+I initially made this site to help me learn JavaScript/jQuery in 2015. Now I'm looking to expand its features.
   
-### Current Bugs
-* Navigating to another site and then pressing 'back' causes links to not re-load
-  
-### To Do - Improvements
-* implement a MVC design pattern
-* continue to fight the spaghetti
-* add a front page and load all links using a single GET request, rather than every time a user is loaded
+### To Do - Fixes
+* Get heroic cowboy TypeScript refactor working
 
 ### To Do - New Features
-* add optional link description to each link
-* record number of views or link clicks for each link
-* allow user to recommend each links to other users
+* Reverse order of links so that the newest are at the top
+* Add optional link description to each link
+* Add a refresh button or polling mechanism to keep content up to date
+* Add list manipulations:
+	- filter on tags 
+	- change order
+* Detect gifs / images and optionally show them
+* Add user accounts and logins
+
+### To Do - Improvements
+* Make the MYSQL db easier to deploy
+* Add automatic db backups
+* Add selenium regression tests
+* Add API regression tests
