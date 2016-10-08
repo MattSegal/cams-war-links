@@ -305,7 +305,7 @@ var UserController = (function () {
             return _this.userModel.users;
         };
         this.Create = function (user) {
-            var isValidName = !CheckIsEmpty(user.name) && user.name.length < 13;
+            var isValidName = !CheckIsEmpty(user.name) && user.name.length <= 10;
             if (!isValidName) {
                 console.log('Invalid username');
                 var deferred = jQuery.Deferred();

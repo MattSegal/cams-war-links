@@ -6,6 +6,9 @@
 The aim of this website is to allow me and my friends to share interesting links with each other. 
 
 I initially made this site to help me learn JavaScript/jQuery in 2015. Now I'm looking to expand its features.
+
+### To Do - Bugfixes
+ * Fix responsive design after UI changes are completed
   
 ### To Do - New Features
 * Add optional link description to each link

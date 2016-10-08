@@ -32,7 +32,7 @@ class UserController
 
 	Create = (user:User) : JQueryPromise<any> =>
 	{
-		let isValidName = !CheckIsEmpty(user.name) && user.name.length < 13
+		let isValidName = !CheckIsEmpty(user.name) && user.name.length <= 10
 		if (!isValidName)
 		{
 			console.log('Invalid username')
