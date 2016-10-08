@@ -19,31 +19,43 @@ class UserPageEvents
 
 		o.AddEvent(Events.NavigateUserPage,this.NavigateUserPage)
 		o.AddEvent(Events.NavigateLinks,this.PageExited)
-		o.AddEvent(Events.CreateUserButtonPress,this.UserAdded)
-		o.AddEvent(Events.DeleteUserButtonPress,this.UserDeleted)
+		o.AddEvent(Events.CreateUserButtonPress,this.CreateUserSubmitted)
+		o.AddEvent(Events.DeleteUserButtonPress,this.DeleteUserSubmitted)
 		this.observer = o
 	}
 
-	UserAdded(user:User) 
+	CreateUserSubmitted = (user:User) =>
 	{
-		let success = this.userController.Create(user)
-		if (success) 
-		{	
-			this.userPage.HideNewUserForm()
+		this.userController.Create(user)
+		.done( () =>
+		{
 			this.userViews[user.name] = new UserView(user,this.observer)
 			this.observer.EmitEvent(Events.UserCreated,user)
-		}	
+		})
+		this.userPage.HideNewUserForm()
 	}
 
-	UserDeleted = (user:User) =>
+	DeleteUserSubmitted = (user:User) =>
 	{
-		let success = this.userController.Delete(user)
-		if (success)
+		let userView = this.userViews[user.name]
+
+		if (userView.isDeleteFormOpen)
 		{
-			let userView = this.userViews[user.name]
-			userView.RenderDelete()
-			delete this.userViews[user.name]
-			this.observer.EmitEvent(Events.UserDeleted,user)
+			this.userController.Delete(user)
+			.done( () =>
+			{
+				userView.RenderDelete()
+				delete this.userViews[user.name]
+				this.observer.EmitEvent(Events.UserDeleted,user)
+			})
+			.fail( () =>
+			{
+				userView.CancelDeleteForm()
+			})
+		}
+		else
+		{
+			userView.RenderDeleteForm()
 		}
 	}
 
@@ -64,5 +76,4 @@ class UserPageEvents
 	{
 		this.userPage.Hide()
 	}
-
 }

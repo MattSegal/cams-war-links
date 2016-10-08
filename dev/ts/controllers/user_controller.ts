@@ -1,5 +1,4 @@
 /// <reference path="../tools/observer.ts" />
-/// <reference path="../tools/helper.ts" />
 /// <reference path="../models/model.ts" />
 /// <reference path="../data/user_repository.ts" />
 
@@ -31,44 +30,60 @@ class UserController
 		return this.userModel.users
 	}
 
-	Create = (user:User) : boolean =>
+	Create = (user:User) : JQueryPromise<any> =>
 	{
-		let username = user.name
-		let success = false
-		let name = RemoveWhitespace(username)
-		let isValidName = !CheckIsEmpty(name) && name.length < 13
-		if (isValidName)
+		let isValidName = !CheckIsEmpty(user.name) && user.name.length < 13
+		if (!isValidName)
 		{
-			name = name.slice(0,1).toUpperCase() + name.slice(1).toLowerCase()
-			console.log('Add user: ',name)
-
-			this.userRepository.Create(name)
-			this.userModel.Add(name)
-			success = true
+			console.log('Invalid username')
+			let deferred = jQuery.Deferred()
+			deferred.reject()
+			return deferred.promise()
 		}
-		return success
+		
+		console.log('User POST: ', user.name)
+		return this.userRepository.Create(user.name)
+		.done(() => 
+		{
+			console.log('Success')
+			this.userModel.Add(user.name)
+		})
+		.fail( (response,status,error) => 
+		{
+			console.log("Failure: "+response.status+' '+response.responseText)
+		})
 	}
 
-	// maybe use observer
-	Load = () : JQueryPromise<Function> =>
+	Load = () : JQueryPromise<any> =>
 	{
+		console.log('User GET')
 		return this.userRepository.GetAll()
 		.done( userResponses => 
 		{
 			for (let userResponse of userResponses)
 			{
+				console.log('Success')
 				this.userModel.Add(userResponse.name)
 			}
-		})	
+		})
+		.fail( (response,status,error) => 
+		{
+			console.log("Failure: "+response.status+' '+response.responseText)
+		})
 	}
 
-	// TODO - use observer
-	Delete = (user:User) : boolean =>
+	Delete = (user:User) : JQueryPromise<any> =>
 	{
-		let username = user.name
-		console.log('Delete user: ',name)
-		this.userModel.Remove(username)
-		this.userRepository.Delete(name)
-		return true
+		console.log('User DELETE: ',user.name)
+		return this.userRepository.Delete(user.name)
+		.done( (response) => 
+		{
+			console.log("Success: "+response)
+			this.userModel.Remove(user.name)
+		})
+		.fail( (response,status,error) => 
+		{
+			console.log("Failure: "+response.status+' '+response.responseText)
+		})
 	}
 }

@@ -1,4 +1,3 @@
-/// <reference path="../tools/observer.ts" />
 /// <reference path="../models/model.ts" />
 /// <reference path="../data/links_repository.ts" />
 
@@ -6,12 +5,6 @@ class LinkController
 {
 	linksRepository = new LinksRepository()
 	linkModel 		= new LinkModel()
-	observer:Observer
-
-	constructor(observer:Observer)
-	{
-		this.observer = observer
-	}
 
 	Get(user:User)
 	{
@@ -21,75 +14,84 @@ class LinkController
 	Load() 
 	{
 		let linkStore = this.linkModel.links
+		console.log('Link GET')
 		this.linksRepository.GetAll()
 		.done((links) => 
 		{
-			console.log('link GET - success')
+			console.log('Success')
 			for (let link of links)
 			{
 				linkStore[link.id] = link
 			}
 		})
-		.fail(() => 
-		{
-			console.log('link GET - failure')
-		});	
+		.fail( (response,status,error) => {
+			console.log("Failure: "+response.status+' '+response.responseText)
+		})
 	}
 
-	Create(newLink:Link) 
+	Create(newLink:Link) : JQueryPromise<any>
 	{
 		if (CheckIsEmpty(newLink.url) || CheckIsEmpty(newLink.user)) 
 		{
 			console.log('Invalid fields for new link')
-			this.observer.EmitEvent(Events.CreateLinkFailure,{})
-			return
+			let deferred = jQuery.Deferred()
+			deferred.reject()
+			return deferred.promise()
 		}
 
 		newLink.url 	= ParseURL(newLink.url)
 		newLink.title 	= CheckIsEmpty(newLink.title) ? newLink.url.slice(7) : newLink.title
 
-		this.linksRepository.Create(newLink)
+		console.log('Link POST')
+		return this.linksRepository.Create(newLink)
 		.done( link_id => 
 		{
-			console.log('Link POST - Success')
 			newLink.id = parseInt(link_id,10)
 			this.linkModel.links[newLink.id] = newLink
+			console.log('Success')
 			console.log(newLink)
-			this.observer.EmitEvent(Events.CreateLinkSuccess,newLink)
 		})
-		.fail( (xhr, status, error) => {
-			console.log('Link POST - Failure with status '+status)
-			console.log(error)
-			this.observer.EmitEvent(Events.CreateLinkFailure,{})
-		});
+		.fail( (response,status,error) => {
+			console.log("Failure: "+response.status+' '+response.responseText)
+		})
 	}
 
-	Update(newLink:Link) : boolean
+	Update(newLink:Link) : JQueryPromise<any>
 	{
-		let success = false
-	 	if (!CheckIsEmpty(newLink.title) && !CheckIsEmpty(newLink.url)) 
+	 	if (CheckIsEmpty(newLink.title) || CheckIsEmpty(newLink.url)) 
 	 	{
-			newLink.url = ParseURL(newLink.url);
-			this.linksRepository.Update(newLink);
-			// TODO: Action on error/success
-			this.linkModel.links[newLink.id] = newLink
-			success = true
+			let deferred = jQuery.Deferred()
+			deferred.reject()
+			return deferred.promise()
 		}
-		return success
+		
+		console.log('Link PUT:')
+		console.log(newLink)
+		newLink.url = ParseURL(newLink.url);
+		return this.linksRepository.Update(newLink)
+		.done((response) =>
+		{
+			console.log('Success: '+response);
+			this.linkModel.links[newLink.id] = newLink
+		})
+		.fail( (response,status,error) => {
+			console.log("Failure: "+response.status+' '+response.responseText)
+		})
 	}
 
-	Delete(id) : boolean
+	Delete(id) : JQueryPromise<any>
 	{
-		let success= false;
-	 	this.linksRepository.Delete(id)
-	 	.done(() => {
-	 		success = true
+		console.log('Link DELETE:')
+
+	 	return this.linksRepository.Delete(id)
+	 	.done(() => 
+	 	{
+	 		console.log('Success')
 	 		delete this.linkModel.links[id]
 	 	})
-	 	.fail(() => {
-
-	 	})
-	 	return success
+	 	.fail( (response,status,error) => {
+			console.log("Failure: "+response.status+' '+response.responseText)
+		})
 	}
 
 	GetCurrentLink()

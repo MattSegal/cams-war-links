@@ -16,13 +16,11 @@ class NavbarEvents
 
 	UserAdded = (user:User) => 
 	{
-		// TODO: ensure this doesn't get out of sync if ajax fails
 		this.userNavbarView.AddUser(user)
 	}
 
 	UserDeleted = (user:User) => 
 	{
-		// TODO: ensure this doesn't get out of sync if ajax fails
 		this.userNavbarView.RemoveUser(user)
 	}
 }

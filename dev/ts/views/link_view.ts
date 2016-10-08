@@ -20,7 +20,7 @@ class LinkView
 		this.linkId = link.id
 
 		// Render link.
-		$('.linkList').append(Mustache.render($('#linkTemplate').html(),link));
+		$('.linkList').prepend(Mustache.render($('#linkTemplate').html(),link));
 
 		// Cache the DOM for this link.
 		this.link    		= $('#link'+this.linkId);
@@ -64,7 +64,7 @@ class LinkView
 
 	private DestroyLink = () => 
 	{
-		// unsub and stop listening to events
+		// TODO: unsub and stop listening to events
 		this.link.remove()
 	}
 

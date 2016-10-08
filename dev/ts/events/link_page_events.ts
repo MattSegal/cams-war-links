@@ -20,6 +20,7 @@ class LinkPageEvents
 		o.AddEvent(Events.NavigateUserPage,this.PageExited)
 		o.AddEvent(Events.ExitLinkForm,this.LinkEditFormClosed)
 		o.AddEvent(Events.OpenLinkForm,this.LinkEditFormOpened)
+		o.AddEvent(Events.CreateLinkSubmit,this.SubmitNewLink)
 		this.observer = o
 	}
 
@@ -27,6 +28,8 @@ class LinkPageEvents
 	{
 		newLink.user = this.userController.GetCurrent().name
 		this.linkController.Create(newLink)
+		.done( () => this.observer.EmitEvent(Events.CreateLinkSuccess,newLink))
+		.fail( () => this.observer.EmitEvent(Events.CreateLinkFailure,{}))
 		this.linkPage.RenderNewLinkButton()
 	}
 

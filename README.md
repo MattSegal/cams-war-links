@@ -7,11 +7,7 @@ The aim of this website is to allow me and my friends to share interesting links
 
 I initially made this site to help me learn JavaScript/jQuery in 2015. Now I'm looking to expand its features.
   
-### To Do - Fixes
-* Get heroic cowboy TypeScript refactor working
-
 ### To Do - New Features
-* Reverse order of links so that the newest are at the top
 * Add optional link description to each link
 * Add a refresh button or polling mechanism to keep content up to date
 * Add list manipulations:
@@ -19,8 +15,10 @@ I initially made this site to help me learn JavaScript/jQuery in 2015. Now I'm l
 	- change order
 * Detect gifs / images and optionally show them
 * Add user accounts and logins
+	- Only authorised users can edit/delete links (optional?)
 
 ### To Do - Improvements
+* Move the add link button to the top
 * Make the MYSQL db easier to deploy
 * Add automatic db backups
 * Add selenium regression tests

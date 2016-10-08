@@ -1,14 +1,4 @@
-enum Page
-{
-	Welcome,
-	Links,
-	Users
-}
-
-class PageModel
-{
-	page = Page.Welcome
-}
+/// <reference path="../tools/helper.ts" />
 
 enum LinkEditState
 {
@@ -16,7 +6,6 @@ enum LinkEditState
 	Edit,
 	Delete
 }
-
 
 class Link
 {
@@ -36,7 +25,7 @@ class Link
 class LinkModel
 {
 	currentLinkId: number
-	state: LinkEditState
+	state: LinkEditState = LinkEditState.None
 	linkIdCount: number
 	links = {}
 
@@ -53,7 +42,8 @@ class User
 	name: string;
 	constructor(name:string)
 	{
-		this.name = name
+		this.name = RemoveWhitespace(name)
+		this.name = name.slice(0,1).toUpperCase() + name.slice(1).toLowerCase()
 	}
 }
 

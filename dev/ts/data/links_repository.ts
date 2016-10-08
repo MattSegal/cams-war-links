@@ -39,21 +39,11 @@ class LinksRepository
 
 	Update(newLink:Link) 
 	{
-		console.log('putting link:')
-		console.log(newLink)
-		$.ajax({
+		return $.ajax({
 			type: 'PUT',
 			url: '/api/link/'+newLink.id,
 			contentType: 'application/json',
-			data: JSON.stringify(newLink),
-			success: function(resp) {
-				console.log('link PUT - success')
-				console.log('server says: '+resp);
-			},
-			error: function(resp) {
-				console.log('link PUT - failure');
-				console.log('server says: '+resp);
-			},	
+			data: JSON.stringify(newLink)
 		});
 	}
 }

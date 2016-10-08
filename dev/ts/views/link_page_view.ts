@@ -36,7 +36,7 @@ class LinkPage
 		// Bind submit new link event
 		let submitNewLink = () => {
 			let newLink = new Link(this.newLinkUrl.val(),this.newLinkTitle.val())
-			o.EmitEvent(Events.CreateLinkSuccess, newLink)
+			o.EmitEvent(Events.CreateLinkSubmit, newLink)
 		}
 
 		this.confirmNewLinkButton.on('click',submitNewLink);

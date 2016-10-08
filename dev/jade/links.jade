@@ -10,7 +10,7 @@ html(lang="en")
         link(rel="stylesheet", type="text/css", href="{{ url_for('static',filename='./css/style.css') }}")
         //- page icon --
         link(rel="shortcut icon", href="{{ url_for('static',filename='site_icon.ico') }}")
-        title Matt's Links
+        title Links
         //- inline css for blurry header image preload
         style.
             .pre-load-image {
@@ -53,12 +53,11 @@ html(lang="en")
                 template(id="welcomeTemplate")
                     div(id="welcomeUser")
                         h2 Welcome!
-                        p.welcome To get started, browse the navbar. 
+                        p.welcome To get started, browse the side menu. 
                 template(id="userBoxTemplate")
                     {% raw %} 
                     .user(id="{{name}}")
                         h2 {{name}}
-                        .linkList
 
                         .newItemWrapper
                             .newItemButton
@@ -72,6 +71,9 @@ html(lang="en")
                                     input.url(type="text", placeholder = "Enter link URL")
                                 p
                                     input.title(type="text", placeholder = "Enter link title (optional)")
+
+                        .linkList
+
                     {% endraw %}
                 
                 template(id="linkTemplate")

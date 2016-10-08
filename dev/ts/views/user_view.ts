@@ -10,10 +10,12 @@ class UserView
 	userElement : JQuery
 	deleteButton : JQuery
 	cancelDeleteButton : JQuery
+	isDeleteFormOpen: boolean
 
 	constructor(user:User,observer:Observer) 
 	{
 		this.username = user.name
+		this.isDeleteFormOpen = false
 		this.template  = $('#editUserTemplate').html();
 
 		// Render user
@@ -39,12 +41,14 @@ class UserView
 
 	RenderDeleteForm = () => 
 	{
+		this.isDeleteFormOpen = true
 		this.deleteButton.addClass('deleteConfirm')
 		this.cancelDeleteButton.animate({width:'show'},350);
 	}
 	
 	CancelDeleteForm = () => 
 	{
+		this.isDeleteFormOpen = false
 		this.deleteButton.removeClass('deleteConfirm')
 		this.deleteButton.on('click',this.RenderDeleteForm)
 		this.cancelDeleteButton.animate({width:'hide'},350);

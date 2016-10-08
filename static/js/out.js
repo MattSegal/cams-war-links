@@ -2,20 +2,21 @@ var Events;
 (function (Events) {
     Events[Events["NavigateUserPage"] = 0] = "NavigateUserPage";
     Events[Events["NavigateLinks"] = 1] = "NavigateLinks";
-    Events[Events["CreateLinkSuccess"] = 2] = "CreateLinkSuccess";
-    Events[Events["CreateLinkFailure"] = 3] = "CreateLinkFailure";
-    Events[Events["DeleteLinkButtonPress"] = 4] = "DeleteLinkButtonPress";
-    Events[Events["CancelDeleteLinkButtonPress"] = 5] = "CancelDeleteLinkButtonPress";
-    Events[Events["ConfirmDeleteLinkButtonPress"] = 6] = "ConfirmDeleteLinkButtonPress";
-    Events[Events["EditLinkButtonPress"] = 7] = "EditLinkButtonPress";
-    Events[Events["CancelEditLinkButtonPress"] = 8] = "CancelEditLinkButtonPress";
-    Events[Events["ConfirmEditLinkButtonPress"] = 9] = "ConfirmEditLinkButtonPress";
-    Events[Events["OpenLinkForm"] = 10] = "OpenLinkForm";
-    Events[Events["ExitLinkForm"] = 11] = "ExitLinkForm";
-    Events[Events["CreateUserButtonPress"] = 12] = "CreateUserButtonPress";
-    Events[Events["DeleteUserButtonPress"] = 13] = "DeleteUserButtonPress";
-    Events[Events["UserCreated"] = 14] = "UserCreated";
-    Events[Events["UserDeleted"] = 15] = "UserDeleted";
+    Events[Events["CreateLinkSubmit"] = 2] = "CreateLinkSubmit";
+    Events[Events["CreateLinkSuccess"] = 3] = "CreateLinkSuccess";
+    Events[Events["CreateLinkFailure"] = 4] = "CreateLinkFailure";
+    Events[Events["DeleteLinkButtonPress"] = 5] = "DeleteLinkButtonPress";
+    Events[Events["CancelDeleteLinkButtonPress"] = 6] = "CancelDeleteLinkButtonPress";
+    Events[Events["ConfirmDeleteLinkButtonPress"] = 7] = "ConfirmDeleteLinkButtonPress";
+    Events[Events["EditLinkButtonPress"] = 8] = "EditLinkButtonPress";
+    Events[Events["CancelEditLinkButtonPress"] = 9] = "CancelEditLinkButtonPress";
+    Events[Events["ConfirmEditLinkButtonPress"] = 10] = "ConfirmEditLinkButtonPress";
+    Events[Events["OpenLinkForm"] = 11] = "OpenLinkForm";
+    Events[Events["ExitLinkForm"] = 12] = "ExitLinkForm";
+    Events[Events["CreateUserButtonPress"] = 13] = "CreateUserButtonPress";
+    Events[Events["DeleteUserButtonPress"] = 14] = "DeleteUserButtonPress";
+    Events[Events["UserCreated"] = 15] = "UserCreated";
+    Events[Events["UserDeleted"] = 16] = "UserDeleted";
 })(Events || (Events = {}));
 var Observer = (function () {
     function Observer() {
@@ -70,18 +71,6 @@ function ParseURL(rawLinkText) {
         return 'http://' + rawLinkText;
     }
 }
-var Page;
-(function (Page) {
-    Page[Page["Welcome"] = 0] = "Welcome";
-    Page[Page["Links"] = 1] = "Links";
-    Page[Page["Users"] = 2] = "Users";
-})(Page || (Page = {}));
-var PageModel = (function () {
-    function PageModel() {
-        this.page = Page.Welcome;
-    }
-    return PageModel;
-}());
 var LinkEditState;
 (function (LinkEditState) {
     LinkEditState[LinkEditState["None"] = 0] = "None";
@@ -98,6 +87,7 @@ var Link = (function () {
 var LinkModel = (function () {
     function LinkModel() {
         var _this = this;
+        this.state = LinkEditState.None;
         this.links = {};
         this.GetUserLinks = function (user) {
             return Object.keys(_this.links)
@@ -109,7 +99,8 @@ var LinkModel = (function () {
 }());
 var User = (function () {
     function User(name) {
-        this.name = name;
+        this.name = RemoveWhitespace(name);
+        this.name = name.slice(0, 1).toUpperCase() + name.slice(1).toLowerCase();
     }
     return User;
 }());
@@ -164,92 +155,90 @@ var LinksRepository = (function () {
         });
     };
     LinksRepository.prototype.Update = function (newLink) {
-        console.log('putting link:');
-        console.log(newLink);
-        $.ajax({
+        return $.ajax({
             type: 'PUT',
             url: '/api/link/' + newLink.id,
             contentType: 'application/json',
-            data: JSON.stringify(newLink),
-            success: function (resp) {
-                console.log('link PUT - success');
-                console.log('server says: ' + resp);
-            },
-            error: function (resp) {
-                console.log('link PUT - failure');
-                console.log('server says: ' + resp);
-            }
+            data: JSON.stringify(newLink)
         });
     };
     return LinksRepository;
 }());
 var LinkController = (function () {
-    function LinkController(observer) {
+    function LinkController() {
         this.linksRepository = new LinksRepository();
         this.linkModel = new LinkModel();
-        this.observer = observer;
     }
     LinkController.prototype.Get = function (user) {
         return this.linkModel.GetUserLinks(user);
     };
     LinkController.prototype.Load = function () {
         var linkStore = this.linkModel.links;
+        console.log('Link GET');
         this.linksRepository.GetAll()
             .done(function (links) {
-            console.log('link GET - success');
+            console.log('Success');
             for (var _i = 0, links_1 = links; _i < links_1.length; _i++) {
                 var link = links_1[_i];
                 linkStore[link.id] = link;
             }
         })
-            .fail(function () {
-            console.log('link GET - failure');
+            .fail(function (response, status, error) {
+            console.log("Failure: " + response.status + ' ' + response.responseText);
         });
     };
     LinkController.prototype.Create = function (newLink) {
         var _this = this;
         if (CheckIsEmpty(newLink.url) || CheckIsEmpty(newLink.user)) {
             console.log('Invalid fields for new link');
-            this.observer.EmitEvent(Events.CreateLinkFailure, {});
-            return;
+            var deferred = jQuery.Deferred();
+            deferred.reject();
+            return deferred.promise();
         }
         newLink.url = ParseURL(newLink.url);
         newLink.title = CheckIsEmpty(newLink.title) ? newLink.url.slice(7) : newLink.title;
-        this.linksRepository.Create(newLink)
+        console.log('Link POST');
+        return this.linksRepository.Create(newLink)
             .done(function (link_id) {
-            console.log('Link POST - Success');
             newLink.id = parseInt(link_id, 10);
             _this.linkModel.links[newLink.id] = newLink;
+            console.log('Success');
             console.log(newLink);
-            _this.observer.EmitEvent(Events.CreateLinkSuccess, newLink);
         })
-            .fail(function (xhr, status, error) {
-            console.log('Link POST - Failure with status ' + status);
-            console.log(error);
-            _this.observer.EmitEvent(Events.CreateLinkFailure, {});
+            .fail(function (response, status, error) {
+            console.log("Failure: " + response.status + ' ' + response.responseText);
         });
     };
     LinkController.prototype.Update = function (newLink) {
-        var success = false;
-        if (!CheckIsEmpty(newLink.title) && !CheckIsEmpty(newLink.url)) {
-            newLink.url = ParseURL(newLink.url);
-            this.linksRepository.Update(newLink);
-            this.linkModel.links[newLink.id] = newLink;
-            success = true;
+        var _this = this;
+        if (CheckIsEmpty(newLink.title) || CheckIsEmpty(newLink.url)) {
+            var deferred = jQuery.Deferred();
+            deferred.reject();
+            return deferred.promise();
         }
-        return success;
+        console.log('Link PUT:');
+        console.log(newLink);
+        newLink.url = ParseURL(newLink.url);
+        return this.linksRepository.Update(newLink)
+            .done(function (response) {
+            console.log('Success: ' + response);
+            _this.linkModel.links[newLink.id] = newLink;
+        })
+            .fail(function (response, status, error) {
+            console.log("Failure: " + response.status + ' ' + response.responseText);
+        });
     };
     LinkController.prototype.Delete = function (id) {
         var _this = this;
-        var success = false;
-        this.linksRepository.Delete(id)
+        console.log('Link DELETE:');
+        return this.linksRepository.Delete(id)
             .done(function () {
-            success = true;
+            console.log('Success');
             delete _this.linkModel.links[id];
         })
-            .fail(function () {
+            .fail(function (response, status, error) {
+            console.log("Failure: " + response.status + ' ' + response.responseText);
         });
-        return success;
     };
     LinkController.prototype.GetCurrentLink = function () {
         return this.linkModel.currentLinkId;
@@ -286,41 +275,19 @@ var UserRepository = (function () {
     UserRepository.prototype.GetAll = function () {
         return $.ajax({
             type: 'GET',
-            url: '/api/user/',
-            success: function () {
-                console.log('user GET - success');
-            },
-            error: function () {
-                console.log('user GET - failure');
-            }
+            url: '/api/user/'
         });
     };
     UserRepository.prototype.Create = function (username) {
-        console.log('posting user:');
-        console.log(username);
-        $.ajax({
+        return $.ajax({
             type: 'POST',
-            url: '/api/user/' + username,
-            success: function () {
-                console.log('user POST - success');
-            },
-            error: function () {
-                console.log('user POST - failure');
-            }
+            url: '/api/user/' + username
         });
     };
     UserRepository.prototype.Delete = function (username) {
-        $.ajax({
+        return $.ajax({
             type: 'DELETE',
-            url: '/api/user/' + username,
-            success: function (resp) {
-                console.log('link DELETE - success');
-                console.log('server says: ' + resp);
-            },
-            error: function (resp) {
-                console.log('link DELETE - failure');
-                console.log(resp);
-            }
+            url: '/api/user/' + username
         });
     };
     return UserRepository;
@@ -338,34 +305,47 @@ var UserController = (function () {
             return _this.userModel.users;
         };
         this.Create = function (user) {
-            var username = user.name;
-            var success = false;
-            var name = RemoveWhitespace(username);
-            var isValidName = !CheckIsEmpty(name) && name.length < 13;
-            if (isValidName) {
-                name = name.slice(0, 1).toUpperCase() + name.slice(1).toLowerCase();
-                console.log('Add user: ', name);
-                _this.userRepository.Create(name);
-                _this.userModel.Add(name);
-                success = true;
+            var isValidName = !CheckIsEmpty(user.name) && user.name.length < 13;
+            if (!isValidName) {
+                console.log('Invalid username');
+                var deferred = jQuery.Deferred();
+                deferred.reject();
+                return deferred.promise();
             }
-            return success;
+            console.log('User POST: ', user.name);
+            return _this.userRepository.Create(user.name)
+                .done(function () {
+                console.log('Success');
+                _this.userModel.Add(user.name);
+            })
+                .fail(function (response, status, error) {
+                console.log("Failure: " + response.status + ' ' + response.responseText);
+            });
         };
         this.Load = function () {
+            console.log('User GET');
             return _this.userRepository.GetAll()
                 .done(function (userResponses) {
                 for (var _i = 0, userResponses_1 = userResponses; _i < userResponses_1.length; _i++) {
                     var userResponse = userResponses_1[_i];
+                    console.log('Success');
                     _this.userModel.Add(userResponse.name);
                 }
+            })
+                .fail(function (response, status, error) {
+                console.log("Failure: " + response.status + ' ' + response.responseText);
             });
         };
         this.Delete = function (user) {
-            var username = user.name;
-            console.log('Delete user: ', name);
-            _this.userModel.Remove(username);
-            _this.userRepository.Delete(name);
-            return true;
+            console.log('User DELETE: ', user.name);
+            return _this.userRepository.Delete(user.name)
+                .done(function (response) {
+                console.log("Success: " + response);
+                _this.userModel.Remove(user.name);
+            })
+                .fail(function (response, status, error) {
+                console.log("Failure: " + response.status + ' ' + response.responseText);
+            });
         };
         this.userModel = new UserModel();
         this.userRepository = new UserRepository();
@@ -447,7 +427,7 @@ var LinkView = (function () {
             }, delay);
         };
         this.linkId = link.id;
-        $('.linkList').append(Mustache.render($('#linkTemplate').html(), link));
+        $('.linkList').prepend(Mustache.render($('#linkTemplate').html(), link));
         this.link = $('#link' + this.linkId);
         this.deleteButton = this.link.find('.linkDelete');
         this.editButton = this.link.find('.linkEdit');
@@ -511,16 +491,16 @@ var LinkEvents = (function () {
             _this.observer.EmitEvent(Events.ExitLinkForm, {});
         };
         this.LinkEditConfirmed = function (linkData) {
-            var link = new Link(linkData["url"], linkData["title"]);
-            link.id = linkData["linkId"];
-            var success = _this.linkController.Update(link);
-            if (success) {
-                _this.linkController.SetNoLinkDialogue();
-                var linkView = _this.linkViews[link.id];
-                linkView.UpdateHyperLink(link);
-                linkView.CancelEditForm(false);
-                _this.observer.EmitEvent(Events.ExitLinkForm, {});
-            }
+            var updatedLink = new Link(linkData["url"], linkData["title"]);
+            updatedLink.id = linkData["linkId"];
+            var linkView = _this.linkViews[updatedLink.id];
+            _this.linkController.Update(updatedLink)
+                .done(function () {
+                linkView.UpdateHyperLink(updatedLink);
+            });
+            _this.linkController.SetNoLinkDialogue();
+            linkView.CancelEditForm(false);
+            _this.observer.EmitEvent(Events.ExitLinkForm, {});
         };
         this.LinkDeleteSelected = function (linkId) {
             var linkView = _this.linkViews[linkId];
@@ -548,11 +528,16 @@ var LinkEvents = (function () {
             _this.observer.EmitEvent(Events.ExitLinkForm, {});
         };
         this.LinkDeleteConfirmed = function (linkId) {
-            _this.linkController.Delete(linkId);
             var linkView = _this.linkViews[linkId];
+            _this.linkController.Delete(linkId)
+                .done(function () {
+                linkView.RenderDelete();
+                delete _this.linkViews[linkId];
+            })
+                .fail(function () {
+                linkView.CancelDeleteForm(false);
+            });
             _this.linkController.SetNoLinkDialogue();
-            linkView.RenderDelete();
-            delete _this.linkViews[linkId];
             _this.observer.EmitEvent(Events.ExitLinkForm, {});
         };
         this.linkController = linkController;
@@ -584,7 +569,7 @@ var LinkPage = (function () {
             _this.cancelNewLinkButton.on('click', _this.RenderNewLinkButton);
             var submitNewLink = function () {
                 var newLink = new Link(_this.newLinkUrl.val(), _this.newLinkTitle.val());
-                o.EmitEvent(Events.CreateLinkSuccess, newLink);
+                o.EmitEvent(Events.CreateLinkSubmit, newLink);
             };
             _this.confirmNewLinkButton.on('click', submitNewLink);
             _this.newLinkUrl.on('keypress', function (e) { return OnEnterPress(e, submitNewLink); });
@@ -621,7 +606,9 @@ var LinkPageEvents = (function () {
         var _this = this;
         this.SubmitNewLink = function (newLink) {
             newLink.user = _this.userController.GetCurrent().name;
-            _this.linkController.Create(newLink);
+            _this.linkController.Create(newLink)
+                .done(function () { return _this.observer.EmitEvent(Events.CreateLinkSuccess, newLink); })
+                .fail(function () { return _this.observer.EmitEvent(Events.CreateLinkFailure, {}); });
             _this.linkPage.RenderNewLinkButton();
         };
         this.LinkEditFormOpened = function () {
@@ -656,6 +643,7 @@ var LinkPageEvents = (function () {
         o.AddEvent(Events.NavigateUserPage, this.PageExited);
         o.AddEvent(Events.ExitLinkForm, this.LinkEditFormClosed);
         o.AddEvent(Events.OpenLinkForm, this.LinkEditFormOpened);
+        o.AddEvent(Events.CreateLinkSubmit, this.SubmitNewLink);
         this.observer = o;
     }
     return LinkPageEvents;
@@ -672,7 +660,11 @@ var UserPage = (function () {
             _this.confirmAddUserButton = $('.add');
             _this.usernameField = $('.name');
             _this.newUserForm = $('.newUserForm');
-            var publishAddUser = function () { return observer.EmitEvent(Events.CreateUserButtonPress, _this.usernameField.val()); };
+            var publishAddUser = function () {
+                var username = _this.usernameField.val();
+                var newUser = new User(username);
+                observer.EmitEvent(Events.CreateUserButtonPress, newUser);
+            };
             _this.confirmAddUserButton.on('click', publishAddUser);
             _this.usernameField.on('keypress', function (e) { if (e.keyCode == 13) {
                 publishAddUser();
@@ -714,15 +706,18 @@ var UserView = (function () {
             setTimeout(function () { return _this.userElement.remove(); }, 300);
         };
         this.RenderDeleteForm = function () {
+            _this.isDeleteFormOpen = true;
             _this.deleteButton.addClass('deleteConfirm');
             _this.cancelDeleteButton.animate({ width: 'show' }, 350);
         };
         this.CancelDeleteForm = function () {
+            _this.isDeleteFormOpen = false;
             _this.deleteButton.removeClass('deleteConfirm');
             _this.deleteButton.on('click', _this.RenderDeleteForm);
             _this.cancelDeleteButton.animate({ width: 'hide' }, 350);
         };
         this.username = user.name;
+        this.isDeleteFormOpen = false;
         this.template = $('#editUserTemplate').html();
         var userHtml = Mustache.render(this.template, { name: user.name });
         $('.editScreen').find('ul').append(userHtml);
@@ -739,13 +734,29 @@ var UserPageEvents = (function () {
     function UserPageEvents(o, userController) {
         var _this = this;
         this.userViews = {};
-        this.UserDeleted = function (user) {
-            var success = _this.userController.Delete(user);
-            if (success) {
-                var userView = _this.userViews[user.name];
-                userView.RenderDelete();
-                delete _this.userViews[user.name];
-                _this.observer.EmitEvent(Events.UserDeleted, user);
+        this.CreateUserSubmitted = function (user) {
+            _this.userController.Create(user)
+                .done(function () {
+                _this.userViews[user.name] = new UserView(user, _this.observer);
+                _this.observer.EmitEvent(Events.UserCreated, user);
+            });
+            _this.userPage.HideNewUserForm();
+        };
+        this.DeleteUserSubmitted = function (user) {
+            var userView = _this.userViews[user.name];
+            if (userView.isDeleteFormOpen) {
+                _this.userController.Delete(user)
+                    .done(function () {
+                    userView.RenderDelete();
+                    delete _this.userViews[user.name];
+                    _this.observer.EmitEvent(Events.UserDeleted, user);
+                })
+                    .fail(function () {
+                    userView.CancelDeleteForm();
+                });
+            }
+            else {
+                userView.RenderDeleteForm();
             }
         };
         this.NavigateUserPage = function () {
@@ -765,18 +776,10 @@ var UserPageEvents = (function () {
         this.userPage = new UserPage();
         o.AddEvent(Events.NavigateUserPage, this.NavigateUserPage);
         o.AddEvent(Events.NavigateLinks, this.PageExited);
-        o.AddEvent(Events.CreateUserButtonPress, this.UserAdded);
-        o.AddEvent(Events.DeleteUserButtonPress, this.UserDeleted);
+        o.AddEvent(Events.CreateUserButtonPress, this.CreateUserSubmitted);
+        o.AddEvent(Events.DeleteUserButtonPress, this.DeleteUserSubmitted);
         this.observer = o;
     }
-    UserPageEvents.prototype.UserAdded = function (user) {
-        var success = this.userController.Create(user);
-        if (success) {
-            this.userPage.HideNewUserForm();
-            this.userViews[user.name] = new UserView(user, this.observer);
-            this.observer.EmitEvent(Events.UserCreated, user);
-        }
-    };
     return UserPageEvents;
 }());
 var UserNavbarView = (function () {
@@ -846,7 +849,7 @@ var WelcomePage = (function () {
 }());
 var observer = new Observer();
 var userController = new UserController(observer);
-var linkController = new LinkController(observer);
+var linkController = new LinkController();
 var welcomePage = new WelcomePage();
 var linkEvents = new LinkEvents(observer, linkController);
 var linkPageEvents = new LinkPageEvents(observer, linkController, userController);
@@ -856,7 +859,7 @@ welcomePage.Show();
 observer.AddEvent(Events.NavigateLinks, function () { return welcomePage.Hide(); });
 observer.AddEvent(Events.NavigateUserPage, function () { return welcomePage.Hide(); });
 userController.Load()
-    .then(function () {
+    .done(function () {
     var users = userController.GetAll();
     for (var _i = 0, users_3 = users; _i < users_3.length; _i++) {
         var user = users_3[_i];

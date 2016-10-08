@@ -29,7 +29,12 @@ class UserPage
 		this.newUserForm = $('.newUserForm')
 
 		// Bind confirm add user event
-		let publishAddUser = () => observer.EmitEvent(Events.CreateUserButtonPress,this.usernameField.val())
+		let publishAddUser = () =>
+		{	
+			let username = this.usernameField.val()
+			let newUser = new User(username)
+		 	observer.EmitEvent(Events.CreateUserButtonPress,newUser)
+		}
 		this.confirmAddUserButton.on('click',publishAddUser)
 		this.usernameField.on('keypress',(e) => { if (e.keyCode == 13) { publishAddUser() } })
 

@@ -65,18 +65,20 @@ class LinkEvents
 
 	LinkEditConfirmed = (linkData) =>   
 	{
-		let link = new Link(linkData["url"],linkData["title"])
-		link.id = linkData["linkId"]
+		let updatedLink = new Link(linkData["url"],linkData["title"])
+		updatedLink.id = linkData["linkId"]
+		let linkView = this.linkViews[updatedLink.id]
 
-		let success = this.linkController.Update(link)
-	 	if (success) 
+
+		this.linkController.Update(updatedLink)
+	 	.done( () =>
 	 	{
-			this.linkController.SetNoLinkDialogue()
-			let linkView = this.linkViews[link.id]
-			linkView.UpdateHyperLink(link)
-			linkView.CancelEditForm(false)
-			this.observer.EmitEvent(Events.ExitLinkForm,{})
-		}
+			linkView.UpdateHyperLink(updatedLink)
+		})
+
+		this.linkController.SetNoLinkDialogue()
+		linkView.CancelEditForm(false)
+		this.observer.EmitEvent(Events.ExitLinkForm,{})
 	}
 
 	LinkDeleteSelected = (linkId:number) =>
@@ -115,12 +117,18 @@ class LinkEvents
 
 	LinkDeleteConfirmed = (linkId:number) => 
 	{
-	 	this.linkController.Delete(linkId)
-	 	// if successful
 	 	let linkView = this.linkViews[linkId]		 	
+	 	this.linkController.Delete(linkId)
+	 	.done(() =>
+	 	{
+	 		linkView.RenderDelete()
+	 		delete this.linkViews[linkId]
+	 	})
+	 	.fail( () => 
+	 	{
+	 		linkView.CancelDeleteForm(false)
+	 	})
 	 	this.linkController.SetNoLinkDialogue()
-	 	linkView.RenderDelete()
-	 	delete this.linkViews[linkId]
 	 	this.observer.EmitEvent(Events.ExitLinkForm,{})
 	}
 }

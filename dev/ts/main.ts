@@ -13,7 +13,7 @@
 let observer 		= new Observer()
 
 let userController  = new UserController(observer)
-let linkController  = new LinkController(observer)
+let linkController  = new LinkController()
 
 let welcomePage 	= new WelcomePage()
 
@@ -29,7 +29,8 @@ observer.AddEvent(Events.NavigateUserPage,() => welcomePage.Hide())
 
 // Load initial data from API
 userController.Load()
-.then( () => {
+.done( () => 
+{
 	let users = userController.GetAll()
 	for (let user of users)
 	{
