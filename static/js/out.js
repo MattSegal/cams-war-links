@@ -175,7 +175,7 @@ var LinkController = (function () {
     LinkController.prototype.Load = function () {
         var linkStore = this.linkModel.links;
         console.log('Link GET');
-        this.linksRepository.GetAll()
+        return this.linksRepository.GetAll()
             .done(function (links) {
             console.log('Success');
             for (var _i = 0, links_1 = links; _i < links_1.length; _i++) {
@@ -353,6 +353,41 @@ var UserController = (function () {
     }
     return UserController;
 }());
+var LINK_PAGE_TEMPLATE = '#link-page-template';
+var USER_PAGE_TEMPLATE = '#user-page-template';
+var LINK_TEMPLATE = '#link-template';
+var USER_FORM_TEMPLATE = '#user-form-template';
+var NAVBAR_USER_TEMPLATE = '#navbar-user-template';
+var PAGE_ROOT = '#page-root';
+var WELCOME_PAGE = '#welcome-page';
+var USER_PAGE = '#user-page';
+var LINK_PAGE = '#link-page';
+var LINK_LIST = '#link-list';
+var USER_NAVBAR = '#users-navbar';
+var EDIT_USERS_BUTTON = '#edit-users-button';
+var NAVBAR_USERS_LIST = '#users-navbar-list';
+var NEW_LINK_BUTTON = '#new-item-button';
+var NEW_LINK_FORM = '#new-item-form';
+var NEW_LINK_URL_CLASS = '.url';
+var NEW_LINK_TITLE_CLASS = '.title';
+var NEW_LINK_CANCEL_BUTTON_CLASS = '.cancel';
+var NEW_LINK_SUBMIT_BUTTON_CLASS = '.submit';
+var ADD_USER_FORM = '#new-user-form';
+var ADD_USER_BUTTON = '#new-user-button';
+var CONFIRM_ADD_USER_BUTTON = '#confirm-new-user-button';
+var CANCEL_ADD_USER_BUTTON = '#cancel-new-user-button';
+var USERNAME_TEXTBOX = '#new-user-name';
+var LINK_DELETE_BUTTON = '.link-delete-button';
+var LINK_DELETE_FORM = '.link-delete-form';
+var CONFIRM_LINK_DELETE_BUTTON = '.delete';
+var CANCEL_LINK_DELETE_BUTTON = '.cancel';
+var LINK_EDIT_BUTTON = '.link-edit-button';
+var LINK_EDIT_FORM = '.link-edit-form';
+var CONFIRM_LINK_EDIT_BUTTON = '.submit';
+var CANCEL_LINK_EDIT_BUTTON = '.cancel';
+var LINK_EDIT_TITLE = '.title';
+var LINK_EDIT_URL = '.url';
+var LINK_HYPERLINK = 'a';
 var LinkView = (function () {
     function LinkView(link, observer) {
         var _this = this;
@@ -364,7 +399,7 @@ var LinkView = (function () {
             _this.hyperlink.html(link.title);
         };
         this.RenderEditForm = function () {
-            _this.link.addClass('active');
+            _this.SetLinkActive();
             _this.editUrl.val(_this.hyperlink.attr('href'));
             _this.editTitle.val(_this.hyperlink.html());
             _this.editForm.slideDown(200);
@@ -374,87 +409,66 @@ var LinkView = (function () {
             _this.CancelDeleteForm(true);
         };
         this.CancelEditForm = function (fastHide) {
-            _this.link.removeClass('active');
+            _this.SetLinkInactive();
             if (fastHide) {
                 _this.editForm.hide();
-                _this.FixHoverBug(true);
             }
             else {
                 _this.editForm.slideUp(300);
-                _this.FixHoverBug(false);
             }
-            _this.FixHoverBug(false);
         };
         this.RenderDeleteForm = function () {
-            _this.link.addClass('active');
+            _this.SetLinkActive();
             _this.deleteForm.slideDown(200);
         };
         this.CancelDeleteForm = function (fastHide) {
-            _this.link.removeClass('active');
+            _this.SetLinkInactive();
             if (fastHide) {
                 _this.deleteForm.hide();
-                _this.FixHoverBug(true);
             }
             else {
                 _this.deleteForm.slideUp(300);
-                _this.FixHoverBug(false);
             }
         };
         this.RenderDelete = function () {
             _this.link.fadeOut(300, _this.DestroyLink);
         };
-        this.RenderLinkHover = function () {
-            if (_this.link.hasClass('active')) {
-                return;
-            }
-            if (_this.link.hasClass('hover')) {
-                _this.link.removeClass('hover');
-                _this.deleteButton.removeClass('hover');
-                _this.editButton.removeClass('hover');
-            }
-            else {
-                _this.link.addClass('hover');
-                _this.deleteButton.addClass('hover');
-                _this.editButton.addClass('hover');
-            }
+        this.SetLinkActive = function () {
+            _this.link.addClass('active-link');
         };
-        this.FixHoverBug = function (fastHide) {
-            var delay = fastHide ? 0 : 302;
-            setTimeout(function () {
-                if (_this.link.hasClass('hover') && !_this.link.is(":hover")) {
-                    _this.RenderLinkHover.call(_this.link);
-                }
-            }, delay);
+        this.SetLinkInactive = function () {
+            if (_this.link.hasClass('active-link')) {
+                _this.link.removeClass('active-link');
+            }
         };
         this.linkId = link.id;
-        $('.linkList').prepend(Mustache.render($('#linkTemplate').html(), link));
+        $(LINK_LIST).prepend(Mustache.render($(LINK_TEMPLATE).html(), link));
         this.link = $('#link' + this.linkId);
-        this.deleteButton = this.link.find('.linkDelete');
-        this.editButton = this.link.find('.linkEdit');
-        this.deleteForm = this.link.find('.linkDeleteForm');
-        this.editForm = this.link.find('.linkEditForm');
-        this.editTitle = this.editForm.find('.title');
-        this.editUrl = this.editForm.find('.url');
-        this.hyperlink = this.link.find('a');
-        this.link.on('mouseenter mouseleave', this.RenderLinkHover);
+        this.deleteButton = this.link.find(LINK_DELETE_BUTTON);
+        this.editButton = this.link.find(LINK_EDIT_BUTTON);
+        this.deleteForm = this.link.find(LINK_DELETE_FORM);
+        this.editForm = this.link.find(LINK_EDIT_FORM);
+        this.editTitle = this.editForm.find(LINK_EDIT_TITLE);
+        this.editUrl = this.editForm.find(LINK_EDIT_URL);
+        this.hyperlink = this.link.find(LINK_HYPERLINK);
         var publishEditButtonPress = function () { return observer.EmitEvent(Events.EditLinkButtonPress, _this.linkId); };
         this.editButton.on('click', publishEditButtonPress);
         var publishEditCancelPress = function () { return observer.EmitEvent(Events.CancelEditLinkButtonPress, _this.linkId); };
-        this.editForm.find('.cancel').on('click', publishEditCancelPress);
+        this.editForm.find(CANCEL_LINK_EDIT_BUTTON).on('click', publishEditCancelPress);
         var publishEditConfirmPress = function () { return observer.EmitEvent(Events.ConfirmEditLinkButtonPress, {
             url: _this.editUrl.val(),
             title: _this.editTitle.val(),
             linkId: _this.linkId
         }); };
-        this.editForm.find('.submit').on('click', publishEditConfirmPress);
+        this.editForm.find(CONFIRM_LINK_EDIT_BUTTON).on('click', publishEditConfirmPress);
         this.editTitle.on('keypress', function (e) { return OnEnterPress(e, publishEditConfirmPress); });
         this.editUrl.on('keypress', function (e) { return OnEnterPress(e, publishEditConfirmPress); });
         var publishDeleteButtonPress = function () { return observer.EmitEvent(Events.DeleteLinkButtonPress, _this.linkId); };
         this.deleteButton.on('click', publishDeleteButtonPress);
         var publishDeleteCancelPress = function () { return observer.EmitEvent(Events.CancelDeleteLinkButtonPress, _this.linkId); };
-        this.deleteForm.find('.cancel').on('click', publishDeleteCancelPress);
+        this.deleteForm.find(CANCEL_LINK_DELETE_BUTTON).on('click', publishDeleteCancelPress);
         var publishDeleteConfimPress = function () { return observer.EmitEvent(Events.ConfirmDeleteLinkButtonPress, _this.linkId); };
-        this.deleteForm.find('.delete').on('click', publishDeleteConfimPress);
+        this.deleteForm.find(CONFIRM_LINK_DELETE_BUTTON).on('click', publishDeleteConfimPress);
     }
     return LinkView;
 }());
@@ -555,16 +569,17 @@ var LinkEvents = (function () {
 var LinkPage = (function () {
     function LinkPage() {
         var _this = this;
-        this.template = $('#userBoxTemplate').html();
         this.Show = function (username, o) {
-            $('.userBox').append(Mustache.render(_this.template, { name: username }));
-            _this.page = $('#' + username);
-            _this.newLinkButton = $('.newItemButton');
-            _this.newLinkForm = $('.newItemForm');
-            _this.newLinkUrl = _this.newLinkForm.find('.url');
-            _this.newLinkTitle = _this.newLinkForm.find('.title');
-            _this.cancelNewLinkButton = _this.newLinkForm.find('.cancel');
-            _this.confirmNewLinkButton = _this.newLinkForm.find('.submit');
+            _this.template = $(LINK_PAGE_TEMPLATE).html();
+            var pageTitle = username.slice(-1) === 's' ? username + "' Links" : username + "'s Links";
+            $(PAGE_ROOT).append(Mustache.render(_this.template, { name: pageTitle }));
+            _this.page = $(LINK_PAGE);
+            _this.newLinkButton = $(NEW_LINK_BUTTON);
+            _this.newLinkForm = $(NEW_LINK_FORM);
+            _this.newLinkUrl = _this.newLinkForm.find(NEW_LINK_URL_CLASS);
+            _this.newLinkTitle = _this.newLinkForm.find(NEW_LINK_TITLE_CLASS);
+            _this.cancelNewLinkButton = _this.newLinkForm.find(NEW_LINK_CANCEL_BUTTON_CLASS);
+            _this.confirmNewLinkButton = _this.newLinkForm.find(NEW_LINK_SUBMIT_BUTTON_CLASS);
             _this.newLinkButton.on('click', _this.RenderNewLinkForm);
             _this.cancelNewLinkButton.on('click', _this.RenderNewLinkButton);
             var submitNewLink = function () {
@@ -583,7 +598,7 @@ var LinkPage = (function () {
         };
         this.RenderNewLinkForm = function () {
             _this.newLinkButton.hide();
-            _this.newLinkForm.slideDown(200);
+            _this.newLinkForm.fadeIn(200);
         };
         this.RenderNewLinkButton = function () {
             _this.HideNewLinkForm();
@@ -652,14 +667,14 @@ var UserPage = (function () {
     function UserPage() {
         var _this = this;
         this.Show = function (observer) {
-            _this.template = $('#editScreenTemplate').html();
+            _this.template = $(USER_PAGE_TEMPLATE).html();
             var pageHtml = Mustache.render(_this.template, {});
-            $('.userBox').append(pageHtml);
-            _this.page = $('.editScreen');
-            _this.addUserButton = $('.addUser');
-            _this.confirmAddUserButton = $('.add');
-            _this.usernameField = $('.name');
-            _this.newUserForm = $('.newUserForm');
+            $(PAGE_ROOT).append(pageHtml);
+            _this.page = $(USER_PAGE);
+            _this.newUserForm = _this.page.find(ADD_USER_FORM);
+            _this.usernameField = _this.page.find(USERNAME_TEXTBOX);
+            _this.addUserButton = _this.page.find(ADD_USER_BUTTON);
+            _this.confirmAddUserButton = _this.page.find(CONFIRM_ADD_USER_BUTTON);
             var publishAddUser = function () {
                 var username = _this.usernameField.val();
                 var newUser = new User(username);
@@ -670,7 +685,7 @@ var UserPage = (function () {
                 publishAddUser();
             } });
             _this.addUserButton.on('click', function () { return _this.RenderNewUserForm(); });
-            var cancelAddUserButton = $('.cancel');
+            var cancelAddUserButton = $(CANCEL_ADD_USER_BUTTON);
             cancelAddUserButton.on('click', _this.HideNewUserForm);
             _this.page.fadeIn(600);
         };
@@ -707,20 +722,20 @@ var UserView = (function () {
         };
         this.RenderDeleteForm = function () {
             _this.isDeleteFormOpen = true;
-            _this.deleteButton.addClass('deleteConfirm');
+            _this.deleteButton.addClass('confirm-user-delete-button');
             _this.cancelDeleteButton.animate({ width: 'show' }, 350);
         };
         this.CancelDeleteForm = function () {
             _this.isDeleteFormOpen = false;
-            _this.deleteButton.removeClass('deleteConfirm');
+            _this.deleteButton.removeClass('confirm-user-delete-button');
             _this.deleteButton.on('click', _this.RenderDeleteForm);
             _this.cancelDeleteButton.animate({ width: 'hide' }, 350);
         };
         this.username = user.name;
         this.isDeleteFormOpen = false;
-        this.template = $('#editUserTemplate').html();
+        this.template = $(USER_FORM_TEMPLATE).html();
         var userHtml = Mustache.render(this.template, { name: user.name });
-        $('.editScreen').find('ul').append(userHtml);
+        $(USER_PAGE).find('ul').append(userHtml);
         this.userElement = $('#edit' + user.name);
         this.deleteButton = $('#delete' + user.name);
         this.cancelDeleteButton = $('#cancel' + user.name);
@@ -785,6 +800,9 @@ var UserPageEvents = (function () {
 var UserNavbarView = (function () {
     function UserNavbarView(observer) {
         var _this = this;
+        this.GetUserSelector = function (user) {
+            return _this.navbar.find("#select" + user.name);
+        };
         this.AddUsers = function (users) {
             for (var _i = 0, users_2 = users; _i < users_2.length; _i++) {
                 var user = users_2[_i];
@@ -794,20 +812,21 @@ var UserNavbarView = (function () {
         this.AddUser = function (user) {
             _this.RenderUser(user);
             var publishNavigateLinks = _this.publishNavigateLinksFactory(user);
-            $('#select' + user.name).on('click', publishNavigateLinks);
+            _this.GetUserSelector(user).on('click', publishNavigateLinks);
         };
         this.RemoveUser = function (user) {
-            _this.navbar.find('#select' + user.name).slideUp(300);
-            var removeUser = function () { return _this.navbar.find('#select' + user.name).remove(); };
+            _this.GetUserSelector(user).slideUp(300);
+            var removeUser = function () { return _this.GetUserSelector(user).remove(); };
             setTimeout(removeUser, 300);
         };
         this.RenderUser = function (user) {
             var html = Mustache.render(_this.template, { name: user.name });
-            _this.navbar.find('ul').append(html);
+            _this.userList.append(html);
         };
-        this.template = $('#userListTemplate').html();
-        this.navbar = $('.userNav');
-        this.editButton = $('.editUsersButton');
+        this.template = $(NAVBAR_USER_TEMPLATE).html();
+        this.navbar = $(USER_NAVBAR);
+        this.userList = $(NAVBAR_USERS_LIST);
+        this.editButton = $(EDIT_USERS_BUTTON);
         var publishUserPageNavigate = function () { return observer.EmitEvent(Events.NavigateUserPage, {}); };
         this.editButton.on('click', publishUserPageNavigate);
         this.publishNavigateLinksFactory = function (user) {
@@ -833,17 +852,12 @@ var NavbarEvents = (function () {
 }());
 var WelcomePage = (function () {
     function WelcomePage() {
-        var _this = this;
-        this.Show = function () {
-            $('.userBox').append(_this.template);
-        };
         this.Hide = function () {
-            var welcomePage = $('#welcomeUser');
+            var welcomePage = $(WELCOME_PAGE);
             if (welcomePage) {
                 welcomePage.remove();
             }
         };
-        this.template = $('#welcomeTemplate').html();
     }
     return WelcomePage;
 }());
@@ -855,7 +869,6 @@ var linkEvents = new LinkEvents(observer, linkController);
 var linkPageEvents = new LinkPageEvents(observer, linkController, userController);
 var userPageEvents = new UserPageEvents(observer, userController);
 var navbarEvents = new NavbarEvents(observer);
-welcomePage.Show();
 observer.AddEvent(Events.NavigateLinks, function () { return welcomePage.Hide(); });
 observer.AddEvent(Events.NavigateUserPage, function () { return welcomePage.Hide(); });
 userController.Load()
@@ -865,5 +878,7 @@ userController.Load()
         var user = users_3[_i];
         observer.EmitEvent(Events.UserCreated, user);
     }
-    linkController.Load();
+    linkController.Load()
+        .done(function () {
+    });
 });

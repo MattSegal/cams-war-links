@@ -1,3 +1,4 @@
+/// <reference path="view_constants.ts" />
 /// <reference path="../tools/mustache.d.ts" />
 /// <reference path="../tools/jquery.d.ts" />
 /// <reference path="../tools/observer.ts" />
@@ -17,16 +18,16 @@ class UserPage
 	Show = (observer:Observer) => 
 	{
 		// Render the screen
-		this.template = $('#editScreenTemplate').html();
+		this.template = $(USER_PAGE_TEMPLATE).html();
 		var pageHtml = Mustache.render(this.template,{})
-		$('.userBox').append(pageHtml);
+		$(PAGE_ROOT).append(pageHtml);
 
 		// Cache the DOM
-		this.page = $('.editScreen');
-		this.addUserButton = $('.addUser')
-		this.confirmAddUserButton = $('.add')
-		this.usernameField = $('.name')
-		this.newUserForm = $('.newUserForm')
+		this.page = $(USER_PAGE);
+		this.newUserForm = this.page.find(ADD_USER_FORM)
+		this.usernameField = this.page.find(USERNAME_TEXTBOX)
+		this.addUserButton = this.page.find(ADD_USER_BUTTON)
+		this.confirmAddUserButton = this.page.find(CONFIRM_ADD_USER_BUTTON)
 
 		// Bind confirm add user event
 		let publishAddUser = () =>
@@ -42,7 +43,7 @@ class UserPage
 		this.addUserButton.on('click', () => this.RenderNewUserForm()) 
 
 		// Bind cancel add user event
-		let cancelAddUserButton = $('.cancel')
+		let cancelAddUserButton = $(CANCEL_ADD_USER_BUTTON)
 		cancelAddUserButton.on('click',this.HideNewUserForm)
 		
 		// Show form

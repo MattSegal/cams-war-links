@@ -1,3 +1,4 @@
+/// <reference path="view_constants.ts" />
 /// <reference path="../tools/jquery.d.ts" />
 /// <reference path="../tools/observer.ts" />
 /// <reference path="../tools/helper.ts" />
@@ -20,34 +21,32 @@ class LinkView
 		this.linkId = link.id
 
 		// Render link.
-		$('.linkList').prepend(Mustache.render($('#linkTemplate').html(),link));
+		$(LINK_LIST).prepend(Mustache.render($(LINK_TEMPLATE).html(),link));
 
 		// Cache the DOM for this link.
 		this.link    		= $('#link'+this.linkId);
-		this.deleteButton 	= this.link.find('.linkDelete')
-		this.editButton 	= this.link.find('.linkEdit')
-		this.deleteForm		= this.link.find('.linkDeleteForm')
-		this.editForm 		= this.link.find('.linkEditForm')
-		this.editTitle 		= this.editForm.find('.title')
-		this.editUrl 		= this.editForm.find('.url')
-		this.hyperlink 		= this.link.find('a');
+		this.deleteButton 	= this.link.find(LINK_DELETE_BUTTON)
+		this.editButton 	= this.link.find(LINK_EDIT_BUTTON)
+		this.deleteForm		= this.link.find(LINK_DELETE_FORM)
+		this.editForm 		= this.link.find(LINK_EDIT_FORM)
+		this.editTitle 		= this.editForm.find(LINK_EDIT_TITLE)
+		this.editUrl 		= this.editForm.find(LINK_EDIT_URL)
+		this.hyperlink 		= this.link.find(LINK_HYPERLINK)
 
-		// Bind events.
-		this.link.on('mouseenter mouseleave',this.RenderLinkHover);
-		
+		// Bind events.		
 		// Edit link events.	
 		let publishEditButtonPress = () => observer.EmitEvent(Events.EditLinkButtonPress,this.linkId)
 		this.editButton.on('click',publishEditButtonPress);  		
 
 		let publishEditCancelPress = () => observer.EmitEvent(Events.CancelEditLinkButtonPress,this.linkId)
-		this.editForm.find('.cancel').on('click',publishEditCancelPress);
+		this.editForm.find(CANCEL_LINK_EDIT_BUTTON).on('click',publishEditCancelPress);
 
 		let publishEditConfirmPress = () => observer.EmitEvent(Events.ConfirmEditLinkButtonPress, {
 			url 	: this.editUrl.val(),
 			title 	: this.editTitle.val(),
 			linkId 	: this.linkId
 		})
-		this.editForm.find('.submit').on('click',publishEditConfirmPress)
+		this.editForm.find(CONFIRM_LINK_EDIT_BUTTON).on('click',publishEditConfirmPress)
 		this.editTitle.on('keypress',(e) => OnEnterPress(e,publishEditConfirmPress)); 
 		this.editUrl.on('keypress',(e) => OnEnterPress(e,publishEditConfirmPress)); 
 		
@@ -56,10 +55,10 @@ class LinkView
 		this.deleteButton.on('click',publishDeleteButtonPress)	
 
 		let publishDeleteCancelPress = () => observer.EmitEvent(Events.CancelDeleteLinkButtonPress,this.linkId)
-		this.deleteForm.find('.cancel').on('click',publishDeleteCancelPress); 
+		this.deleteForm.find(CANCEL_LINK_DELETE_BUTTON).on('click',publishDeleteCancelPress); 
 
 		let publishDeleteConfimPress = () => observer.EmitEvent(Events.ConfirmDeleteLinkButtonPress,this.linkId)
-		this.deleteForm.find('.delete').on('click',publishDeleteConfimPress); 
+		this.deleteForm.find(CONFIRM_LINK_DELETE_BUTTON).on('click',publishDeleteConfimPress); 
 	}
 
 	private DestroyLink = () => 
@@ -76,7 +75,7 @@ class LinkView
 
 	RenderEditForm = () => 
 	{
-		this.link.addClass('active')
+		this.SetLinkActive()
 		this.editUrl.val(this.hyperlink.attr('href'))
 		this.editTitle.val(this.hyperlink.html())
 		this.editForm.slideDown(200);
@@ -90,35 +89,33 @@ class LinkView
 
 	CancelEditForm = (fastHide:boolean) => 
 	{
-		this.link.removeClass('active')
+		this.SetLinkInactive()
  		if (fastHide)
  		{
 			this.editForm.hide()
-			this.FixHoverBug(true)
 		} 
 		else 
 		{
 			this.editForm.slideUp(300)
-			this.FixHoverBug(false)
 		}
-		this.FixHoverBug(false)
 	}
 
 	RenderDeleteForm = () => 
 	{
-		this.link.addClass('active')
+		this.SetLinkActive()
 		this.deleteForm.slideDown(200);
 	}
 	
 	CancelDeleteForm = (fastHide:boolean) => 
 	{
-		this.link.removeClass('active')
-		if (fastHide) {
+		this.SetLinkInactive()
+		if (fastHide) 
+		{
 			this.deleteForm.hide();
-			this.FixHoverBug(true)
-		} else {
+		} 
+		else 
+		{
 			this.deleteForm.slideUp(300)
-			this.FixHoverBug(false)
 		}
 	}
 
@@ -127,34 +124,16 @@ class LinkView
 		this.link.fadeOut(300,this.DestroyLink);
 	}
 
-	
-	// TODO - REPLACE WITH CSS
-	private RenderLinkHover = () => 
+	private SetLinkActive = () => 
 	{
-		// if link is being edited, dont remove hover
-		if (this.link.hasClass('active')) {return}
-		// reveals edit and delete buttons when a link is mousehovered
-		if (this.link.hasClass('hover')) {
-			this.link.removeClass('hover')
-			this.deleteButton.removeClass('hover')
-			this.editButton.removeClass('hover')
-		} else {
-			this.link.addClass('hover')
-			this.deleteButton.addClass('hover')
-			this.editButton.addClass('hover')
-		}
+		this.link.addClass('active-link')
 	}
 
-	private FixHoverBug = (fastHide:boolean) => 
+	private SetLinkInactive = () => 
 	{
-		// try to stop perma hover bug
-		var delay = fastHide ? 0 : 302
-		setTimeout( () =>
-		{ 
-			if(this.link.hasClass('hover') && !this.link.is(":hover")) 
-			{
-				this.RenderLinkHover.call(this.link);
-			}
-		},delay)
+		if (this.link.hasClass('active-link')) 
+		{
+			this.link.removeClass('active-link')
+		}
 	}
 }

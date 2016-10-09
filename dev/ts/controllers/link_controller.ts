@@ -11,11 +11,11 @@ class LinkController
 		return this.linkModel.GetUserLinks(user)
 	}
 
-	Load() 
+	Load() : JQueryPromise<any>
 	{
 		let linkStore = this.linkModel.links
 		console.log('Link GET')
-		this.linksRepository.GetAll()
+		return this.linksRepository.GetAll()
 		.done((links) => 
 		{
 			console.log('Success')

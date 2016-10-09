@@ -1,0 +1,63 @@
+@import constants
+
+#link-list 
+	margin: 0
+	padding: 0 0 80px 0
+
+#page-root
+	h2#link-user-name
+		margin-bottom: 0
+
+#new-item-wrapper
+	height: 80px
+	margin: 5px 0 0 0
+
+#new-item-button
+	width: 130px
+	padding-top: 48px
+	height: 27px
+	opacity: 0.8
+	+unselectable()
+	&:hover 
+		color: #666
+		text-decoration: underline
+		cursor: pointer
+
+	#new-item-text
+		position: relative
+		top: -7px
+		left: 3px
+		line-height: 1
+		color: #666
+
+	#new-item-icon 
+		position: relative
+		display: inline-block
+		top: 0px
+		left: 0px
+		height: 25px
+		width: 25px
+		background-image: url(../img/new_item.png)
+		background-size: 100% auto
+
+#new-item-form
+	display: none
+	#new-item-form-buttons
+		float: left
+		button
+			width: 87px
+			height: 33px
+			border: solid 3.5px #aaa
+			display: block
+			margin: 5px 0 0 0
+	#new-item-form-fields
+		float: right
+		width: 500px
+		input
+			box-sizing: border-box
+			margin: 5px 0 0 0
+			width: 100%
+
+
+
+

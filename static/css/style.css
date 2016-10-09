@@ -1,3 +1,315 @@
+#users-navbar {
+  margin-top: 0.50em;
+  overflow: hidden;
+  float: right;
+  width: 120px;
+  border-radius: 10px;
+  background-color: #eee;
+  padding: 0 10px 10px 10px;
+  -webkit-user-select: none;
+    -webkit-user-select--moz-user-select: none;
+    -webkit-user-select--ms-user-select: none; }
+  #users-navbar .horizontal-line {
+    clear: both;
+    background-color: #999;
+    height: 1px;
+    margin: 0px 0px; }
+  #users-navbar h3 {
+    font-family: 'Oswald',sans-serif;
+    color: #046380;
+    font-weight: 400;
+    font-size: 20px;
+    opacity: 0.9;
+    margin: 0.33em 0 5px 0; }
+  #users-navbar ul#users-navbar-list {
+    margin: 5px 0 0 0;
+    padding: 0; }
+  #users-navbar li {
+    margin: 0 0 3px 0;
+    padding: 0;
+    list-style: none;
+    font-family: 'Oswald',sans-serif;
+    font-size: 18px;
+    color: #666; }
+    #users-navbar li:hover {
+      color: #B61818;
+      cursor: pointer; }
+
+#edit-users-button {
+  width: 130px;
+  height: 18px;
+  opacity: 0.8;
+  margin-top: 5px;
+  padding-top: 2px;
+  -webkit-user-select: none;
+    -webkit-user-select--moz-user-select: none;
+    -webkit-user-select--ms-user-select: none; }
+  #edit-users-button:hover {
+    color: #666;
+    text-decoration: underline;
+    cursor: pointer; }
+
+#edit-users-text {
+  position: relative;
+  top: -3px;
+  left: 3px;
+  line-height: 1;
+  color: #666; }
+
+#edit-users-icon {
+  position: relative;
+  display: inline-block;
+  top: 0px;
+  left: 0px;
+  height: 15px;
+  width: 15px;
+  background-image: url(../img/new_item.png);
+  background-size: 100% auto; }
+
+#link-list {
+  margin: 0;
+  padding: 0 0 80px 0; }
+
+#page-root h2#link-user-name {
+  margin-bottom: 0; }
+
+#new-item-wrapper {
+  height: 80px;
+  margin: 5px 0 0 0; }
+
+#new-item-button {
+  width: 130px;
+  padding-top: 48px;
+  height: 27px;
+  opacity: 0.8;
+  -webkit-user-select: none;
+    -webkit-user-select--moz-user-select: none;
+    -webkit-user-select--ms-user-select: none; }
+  #new-item-button:hover {
+    color: #666;
+    text-decoration: underline;
+    cursor: pointer; }
+  #new-item-button #new-item-text {
+    position: relative;
+    top: -7px;
+    left: 3px;
+    line-height: 1;
+    color: #666; }
+  #new-item-button #new-item-icon {
+    position: relative;
+    display: inline-block;
+    top: 0px;
+    left: 0px;
+    height: 25px;
+    width: 25px;
+    background-image: url(../img/new_item.png);
+    background-size: 100% auto; }
+
+#new-item-form {
+  display: none; }
+  #new-item-form #new-item-form-buttons {
+    float: left; }
+    #new-item-form #new-item-form-buttons button {
+      width: 87px;
+      height: 33px;
+      border: solid 3.5px #aaa;
+      display: block;
+      margin: 5px 0 0 0; }
+  #new-item-form #new-item-form-fields {
+    float: right;
+    width: 500px; }
+    #new-item-form #new-item-form-fields input {
+      box-sizing: border-box;
+      margin: 5px 0 0 0;
+      width: 100%; }
+
+.link {
+  font-family: 'Open Sans', sans-serif;
+  line-height: 1.8;
+  display: inline-block;
+  vertical-align: middle;
+  width: 100%; }
+  .link a {
+    text-decoration: none;
+    font-weight: 600;
+    color: #386AE8; }
+  .link:hover, .link.active-link {
+    background-color: #eee;
+    border-radius: 5px;
+    margin-left: -10px;
+    padding-left: 10px;
+    -webkit-user-select: none;
+      -webkit-user-select--moz-user-select: none;
+      -webkit-user-select--ms-user-select: none; }
+    .link:hover .link-delete-button, .link:hover .link-edit-button, .link.active-link .link-delete-button, .link.active-link .link-edit-button {
+      display: inline-block; }
+  .link .link-content {
+    float: left;
+    width: 90%;
+    overflow: hidden;
+    white-space: nowrap; }
+  .link .link-delete-button {
+    display: none;
+    vertical-align: middle;
+    float: right;
+    margin: 5px;
+    height: 18px;
+    width: 18px;
+    background-image: url(../img/delete.png);
+    background-size: 100% auto;
+    cursor: pointer; }
+  .link .link-edit-button {
+    display: none;
+    vertical-align: middle;
+    float: right;
+    margin: 5px;
+    height: 18px;
+    width: 18px;
+    background-image: url(../img/edit.png);
+    background-size: 100% auto;
+    cursor: pointer; }
+  .link .button-title {
+    display: none; }
+
+.link-edit-form {
+  display: none;
+  margin-top: 30px;
+  margin-bottom: 5px;
+  width: 100%;
+  height: 120px; }
+  .link-edit-form p {
+    margin: 5px 0px;
+    height: 35px; }
+  .link-edit-form input {
+    width: 83%;
+    float: left;
+    height: 100%;
+    border-color: #647EEB;
+    box-sizing: border-box; }
+  .link-edit-form .submit, .link-edit-form .cancel {
+    margin-right: 2px;
+    margin-top: 5px;
+    padding: 3px 5px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #647EEB;
+    border: solid 2px #647EEB;
+    border-radius: 3px;
+    font-size: 14px;
+    -webkit-user-select: none;
+      -webkit-user-select--moz-user-select: none;
+      -webkit-user-select--ms-user-select: none; }
+    .link-edit-form .submit:active, .link-edit-form .cancel:active {
+      color: #666;
+      background-color: #ccc;
+      border: solid 2px #aaa;
+      outline: 0; }
+  .link-edit-form label {
+    float: left;
+    clear: left;
+    width: 50px;
+    background-color: #647EEB;
+    color: #fff;
+    margin-right: -3.5px;
+    border-radius: 3px 0px 0px 3px;
+    height: 100%;
+    box-sizing: border-box;
+    padding-left: 5px;
+    padding-right: 5px;
+    text-align: center;
+    border: solid 3.5px #647EEB;
+    font-weight: 600;
+    font-size: 15px;
+    font-family: sans-serif; }
+
+.link-delete-form {
+  display: none;
+  width: 100%;
+  margin: 25px 0 10px 0; }
+  .link-delete-form p {
+    text-align: left;
+    margin: 0 0 5px 0px;
+    width: 100%; }
+  .link-delete-form .delete, .link-delete-form .cancel {
+    width: 90%;
+    padding: 3px 5px;
+    border-radius: 3px;
+    box-sizing: border-box;
+    font-weight: bold;
+    font-size: 14px;
+    color: #fff;
+    -webkit-user-select: none;
+      -webkit-user-select--moz-user-select: none;
+      -webkit-user-select--ms-user-select: none; }
+  .link-delete-form .delete {
+    background-color: #EB6464;
+    border: solid 2px #CE5151; }
+  .link-delete-form .cancel {
+    background-color: #647EEB;
+    border: solid 2px #566DCD; }
+
+/* EDIT USER PAGE */
+#user-page {
+  display: none; }
+  #user-page ul {
+    margin: 0;
+    padding: 0; }
+
+.edit-user-row {
+  margin: 0 0 20px 0;
+  padding: 0;
+  list-style: none;
+  height: 22px; }
+  .edit-user-row h3 {
+    float: left;
+    width: 200px;
+    vertical-align: bottom;
+    display: inline;
+    margin: 0 0 -10px 0;
+    font-family: 'Oswald',sans-serif;
+    color: #B43737;
+    font-weight: 400;
+    font-size: 24px;
+    opacity: 0.8; }
+  .edit-user-row button.delete:hover {
+    color: #fff;
+    background-color: #EB6464;
+    border: solid 2px #CE5151; }
+
+#new-user-button {
+  width: 260px; }
+  #new-user-button:hover {
+    color: #fff;
+    background-color: #647EEB;
+    border: solid 2px #647EEB; }
+
+.confirm-user-delete-button {
+  color: #fff;
+  background-color: #EB6464;
+  border: solid 2px #CE5151; }
+
+.cancel-user-delete-button {
+  display: none;
+  width: 55%;
+  color: #fff;
+  background-color: #647EEB;
+  border: solid 2px #647EEB; }
+
+#new-user-form {
+  display: none;
+  background-color: #eee;
+  border-radius: 5px;
+  padding: 10px;
+  width: 70%; }
+  #new-user-form button {
+    color: #fff;
+    background-color: #647EEB;
+    border: solid 2px #647EEB; }
+  #new-user-form input {
+    border-color: #647EEB;
+    margin-bottom: 5px;
+    width: 95%; }
+
 /* PAGE THEME */
 a {
   text-decoration: none; }
@@ -39,7 +351,7 @@ html, body {
 body {
   background-color: #F5F4DF; }
 
-.wrapper {
+#page-wrapper {
   background-color: #fff;
   margin: 45px auto 50px auto;
   width: 800px;
@@ -50,44 +362,10 @@ header {
   height: 300px;
   overflow: hidden;
   background-size: 100% auto;
-  background-position: 0 -50px; }
-  header h1 {
-    /*positioning*/
-    position: relative;
-    top: 230px;
-    right: -500px;
-    background-color: #E4D9D9;
-    /*display*/
-    opacity: 0.7;
-    padding: 3px;
-    /*text*/
-    line-height: 0.9;
-    font-family: "Oswald", sans-serif;
-    font-weight: 400;
-    color: #B61818; }
-
-header {
+  background-position: 0 -50px;
   background-image: url(../img/hero.png); }
 
-footer {
-  overflow: hidden;
-  padding: 3px 30px 10px 30px;
-  color: #000;
-  font-family: sans-serif;
-  font-size: 12px; }
-  footer .horizontalRule {
-    clear: both;
-    background-color: #999;
-    height: 1px;
-    margin: 5px 0px; }
-  footer a {
-    color: #000; }
-  footer .left {
-    float: left; }
-  footer .right {
-    float: right; }
-
-main {
+#main {
   display: block;
   overflow: auto;
   box-sizing: border-box;
@@ -98,346 +376,21 @@ main {
   line-height: 130%;
   min-height: 700px; }
 
-.welcome {
+p#welcome {
   color: #666;
   font-size: 18px;
   font-family: 'Oswald',sans-serif;
   letter-spacing: 0.7px; }
 
-.userBox {
+#page-root {
   width: 80%;
   float: left; }
-  .userBox h2 {
+  #page-root h2 {
     font-family: "Oswald", sans-serif;
     color: #046380;
     font-weight: 400;
     font-size: 28px;
     opacity: 0.9; }
-
-/* NEW ITEM */
-.newItemWrapper {
-  height: 100px;
-  margin-top: 5px; }
-
-.newItemButton {
-  width: 130px;
-  height: 27px;
-  opacity: 0.8;
-  padding-top: 2px;
-  -webkit-user-select: none;
-    -webkit-user-select--moz-user-select: none;
-    -webkit-user-select--ms-user-select: none; }
-  .newItemButton:hover {
-    color: #666;
-    text-decoration: underline;
-    cursor: pointer; }
-
-.newItemText {
-  position: relative;
-  top: -7px;
-  left: 3px;
-  line-height: 1;
-  color: #666; }
-
-.newItemIcon {
-  position: relative;
-  display: inline-block;
-  top: 0px;
-  left: 0px;
-  height: 25px;
-  width: 25px;
-  background-image: url(../img/new_item.png);
-  background-size: 100% auto; }
-
-.newItemForm {
-  height: 100px;
-  display: none; }
-  .newItemForm p {
-    margin: 5px 0px; }
-  .newItemForm button {
-    margin-right: 3px; }
-
-/* USER LIST */
-.editUsersButton {
-  width: 130px;
-  height: 18px;
-  opacity: 0.8;
-  margin-top: 5px;
-  padding-top: 2px;
-  -webkit-user-select: none;
-    -webkit-user-select--moz-user-select: none;
-    -webkit-user-select--ms-user-select: none; }
-  .editUsersButton:hover {
-    color: #666;
-    text-decoration: underline;
-    cursor: pointer; }
-
-.editUsersText {
-  position: relative;
-  top: -3px;
-  left: 3px;
-  line-height: 1;
-  color: #666; }
-
-.editUsersIcon {
-  position: relative;
-  display: inline-block;
-  top: 0px;
-  left: 0px;
-  height: 15px;
-  width: 15px;
-  background-image: url(../img/new_item.png);
-  background-size: 100% auto; }
-
-.userNav {
-  margin-top: 0.50em;
-  overflow: hidden;
-  float: right;
-  width: 120px;
-  border-radius: 10px;
-  background-color: #eee;
-  padding: 0 10px 10px 10px;
-  -webkit-user-select: none;
-    -webkit-user-select--moz-user-select: none;
-    -webkit-user-select--ms-user-select: none; }
-  .userNav .horizontalRule {
-    clear: both;
-    background-color: #999;
-    height: 1px;
-    margin: 0px 0px; }
-  .userNav h3 {
-    font-family: 'Oswald',sans-serif;
-    color: #046380;
-    font-weight: 400;
-    font-size: 20px;
-    opacity: 0.9;
-    margin: 0.33em 0 5px 0; }
-  .userNav ul {
-    margin: 5px 0 0 0;
-    padding: 0; }
-  .userNav li {
-    margin: 0 0 3px 0;
-    padding: 0;
-    list-style: none;
-    font-family: 'Oswald',sans-serif;
-    font-size: 18px;
-    color: #666; }
-    .userNav li:hover {
-      color: #B61818;
-      cursor: pointer; }
-
-/* LINKS */
-.user {
-  display: none; }
-
-.linkList {
-  margin: 0px;
-  padding: 0px; }
-
-.link {
-  font-family: 'Open Sans', sans-serif;
-  line-height: 1.8;
-  display: inline-block;
-  vertical-align: middle;
-  width: 100%; }
-  .link a {
-    text-decoration: none;
-    font-weight: 600;
-    color: #386AE8; }
-
-.link.hover {
-  background-color: #eee;
-  border-radius: 5px;
-  margin-left: -10px;
-  padding-left: 10px;
-  -webkit-user-select: none;
-    -webkit-user-select--moz-user-select: none;
-    -webkit-user-select--ms-user-select: none; }
-
-.linkContent {
-  float: left;
-  width: 90%;
-  overflow: hidden;
-  white-space: nowrap; }
-
-.linkDelete {
-  display: none;
-  vertical-align: middle;
-  float: right;
-  margin: 5px;
-  height: 18px;
-  width: 18px;
-  background-image: url(../img/delete.png);
-  background-size: 100% auto;
-  cursor: pointer; }
-
-.linkEdit {
-  display: none;
-  vertical-align: middle;
-  float: right;
-  margin: 5px;
-  height: 18px;
-  width: 18px;
-  background-image: url(../img/edit.png);
-  background-size: 100% auto;
-  cursor: pointer; }
-
-.linkDelete.hover {
-  display: inline-block; }
-
-.linkEdit.hover {
-  display: inline-block; }
-
-.buttonTitle {
-  display: none; }
-
-/* END LINKS */
-/* LINK EDIT */
-.linkEditForm {
-  display: none;
-  margin-top: 30px;
-  margin-bottom: 5px;
-  width: 100%;
-  height: 120px; }
-  .linkEditForm p {
-    margin: 5px 0px;
-    height: 35px; }
-  .linkEditForm input {
-    width: 83%;
-    float: left;
-    height: 100%;
-    border-color: #647EEB;
-    box-sizing: border-box; }
-  .linkEditForm .submit, .linkEditForm .cancel {
-    margin-right: 2px;
-    margin-top: 5px;
-    padding: 3px 5px;
-    font-weight: bold;
-    color: #fff;
-    background-color: #647EEB;
-    border: solid 2px #647EEB;
-    border-radius: 3px;
-    font-size: 14px;
-    -webkit-user-select: none;
-      -webkit-user-select--moz-user-select: none;
-      -webkit-user-select--ms-user-select: none; }
-    .linkEditForm .submit:active, .linkEditForm .cancel:active {
-      color: #666;
-      background-color: #ccc;
-      border: solid 2px #aaa;
-      outline: 0; }
-  .linkEditForm label {
-    float: left;
-    clear: left;
-    width: 50px;
-    background-color: #647EEB;
-    color: #fff;
-    margin-right: -3.5px;
-    border-radius: 3px 0px 0px 3px;
-    height: 100%;
-    box-sizing: border-box;
-    padding-left: 5px;
-    padding-right: 5px;
-    text-align: center;
-    border: solid 3.5px #647EEB;
-    font-weight: 600;
-    font-size: 15px;
-    font-family: sans-serif; }
-
-/* LINK DELETE  */
-.linkDeleteForm {
-  display: none;
-  width: 100%;
-  margin: 25px 0 10px 0; }
-  .linkDeleteForm p {
-    text-align: left;
-    margin: 0 0 5px 0px;
-    width: 100%; }
-  .linkDeleteForm .delete, .linkDeleteForm .cancel {
-    width: 90%;
-    padding: 3px 5px;
-    border-radius: 3px;
-    box-sizing: border-box;
-    font-weight: bold;
-    font-size: 14px;
-    color: #fff;
-    -webkit-user-select: none;
-      -webkit-user-select--moz-user-select: none;
-      -webkit-user-select--ms-user-select: none; }
-  .linkDeleteForm .delete {
-    background-color: #EB6464;
-    border: solid 2px #CE5151; }
-  .linkDeleteForm .cancel {
-    background-color: #647EEB;
-    border: solid 2px #566DCD; }
-
-/* EDIT USER PAGE */
-.editScreen {
-  display: none; }
-  .editScreen ul {
-    margin: 0;
-    padding: 0; }
-
-.editUser {
-  margin: 0 0 20px 0;
-  padding: 0;
-  list-style: none;
-  height: 22px; }
-  .editUser h3 {
-    float: left;
-    width: 200px;
-    vertical-align: bottom;
-    display: inline;
-    margin: 0 0 -10px 0;
-    font-family: 'Oswald',sans-serif;
-    color: #B43737;
-    font-weight: 400;
-    font-size: 24px;
-    opacity: 0.8; }
-
-button.addUser {
-  width: 260px; }
-  button.addUser:hover {
-    color: #fff;
-    background-color: #647EEB;
-    border: solid 2px #647EEB; }
-
-.editUser button.delete:hover {
-  color: #fff;
-  background-color: #EB6464;
-  border: solid 2px #CE5151; }
-
-.deleteUserForm {
-  display: none;
-  margin-left: 190px;
-  margin: 0 0 0 200px; }
-
-.deleteConfirm {
-  color: #fff;
-  background-color: #EB6464;
-  border: solid 2px #CE5151; }
-
-.deleteCancel {
-  display: none;
-  width: 55%;
-  color: #fff;
-  background-color: #647EEB;
-  border: solid 2px #647EEB; }
-
-.newUserForm {
-  display: none;
-  background-color: #eee;
-  border-radius: 5px;
-  padding: 10px;
-  width: 70%; }
-  .newUserForm button {
-    color: #fff;
-    background-color: #647EEB;
-    border: solid 2px #647EEB; }
-  .newUserForm input {
-    border-color: #647EEB;
-    margin-bottom: 5px;
-    width: 95%; }
 
 @media (max-width: 800px) {
   body {

@@ -1,22 +1,11 @@
+/// <reference path="view_constants.ts" />
 /// <reference path="../tools/jquery.d.ts" />
 
 class WelcomePage
 {
-	template:string
-
-	constructor()
-	{
-		this.template = $('#welcomeTemplate').html()
-	}
-
-	Show = () =>
-	{
-		$('.userBox').append(this.template)
-	}
-
 	Hide = () =>
 	{
-		let welcomePage = $('#welcomeUser')
+		let welcomePage = $(WELCOME_PAGE)
 		if (welcomePage)
 		{
 			welcomePage.remove()

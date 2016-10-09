@@ -32,9 +32,10 @@ gulp.task('typescript:watch', function () {
 
  // sass
 var sassDir = './dev/sass/**/*.sass'
+var sassFile = './dev/sass/style.sass'
 var cssDir  = './static/css/'
 gulp.task('sass', function () {
-  gulp.src(sassDir)
+  gulp.src(sassFile)
     .pipe(sass().on('error', sass.logError))
     .pipe(gulp.dest(cssDir));
 });

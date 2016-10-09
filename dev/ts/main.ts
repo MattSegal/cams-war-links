@@ -22,8 +22,6 @@ let linkPageEvents  = new LinkPageEvents(observer,linkController,userController)
 let userPageEvents  = new UserPageEvents(observer,userController)
 let navbarEvents 	= new NavbarEvents(observer)
 
-// Load the welcome page
-welcomePage.Show()
 observer.AddEvent(Events.NavigateLinks,() => welcomePage.Hide())
 observer.AddEvent(Events.NavigateUserPage,() => welcomePage.Hide())
 
@@ -37,4 +35,12 @@ userController.Load()
 		observer.EmitEvent(Events.UserCreated,user)
 	}
 	linkController.Load()
+	.done( () => 
+	{
+		// DEBUG
+
+		// Navigate to first user's page
+		// observer.EmitEvent(Events.NavigateLinks,users[0])
+	})
 })
+

@@ -1,3 +1,4 @@
+/// <reference path="view_constants.ts" />
 /// <reference path="../tools/mustache.d.ts" />
 /// <reference path="../tools/jquery.d.ts" />
 /// <reference path="../tools/observer.ts" />
@@ -6,7 +7,7 @@
 
 class LinkPage
 {
-	template:string = $('#userBoxTemplate').html();
+	template:string
 	page : JQuery
 	newLinkButton : JQuery
 	newLinkForm : JQuery		
@@ -18,16 +19,19 @@ class LinkPage
 	Show = (username:string,o:Observer) => 
 	{
 		// Render user's links page
-		$('.userBox').append(Mustache.render(this.template,{name:username}));
+		this.template = $(LINK_PAGE_TEMPLATE).html()
+
+		let pageTitle = username.slice(-1) === 's' ? `${username}' Links` : `${username}'s Links`
+		$(PAGE_ROOT).append(Mustache.render(this.template,{name:pageTitle}));
 		
 		// cache the DOM
-		this.page 					= $('#'+username)
-		this.newLinkButton 			= $('.newItemButton');
-		this.newLinkForm  			= $('.newItemForm');
-		this.newLinkUrl  			= this.newLinkForm.find('.url');
-		this.newLinkTitle  			= this.newLinkForm.find('.title');
-		this.cancelNewLinkButton 	= this.newLinkForm.find('.cancel');
-		this.confirmNewLinkButton 	= this.newLinkForm.find('.submit');
+		this.page 					= $(LINK_PAGE)
+		this.newLinkButton 			= $(NEW_LINK_BUTTON);
+		this.newLinkForm  			= $(NEW_LINK_FORM);
+		this.newLinkUrl  			= this.newLinkForm.find(NEW_LINK_URL_CLASS);
+		this.newLinkTitle  			= this.newLinkForm.find(NEW_LINK_TITLE_CLASS);
+		this.cancelNewLinkButton 	= this.newLinkForm.find(NEW_LINK_CANCEL_BUTTON_CLASS);
+		this.confirmNewLinkButton 	= this.newLinkForm.find(NEW_LINK_SUBMIT_BUTTON_CLASS);
 
 		// Bind form navigation events
 		this.newLinkButton.on('click',this.RenderNewLinkForm)
@@ -59,7 +63,7 @@ class LinkPage
 	RenderNewLinkForm = () => 
 	{
 		this.newLinkButton.hide();
-		this.newLinkForm.slideDown(200);
+		this.newLinkForm.fadeIn(200);
 	}
 
 	RenderNewLinkButton = () => 

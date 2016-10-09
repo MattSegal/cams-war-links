@@ -105,7 +105,7 @@ def user_post(username):
         response = Response(response=message, status = 201)
     else:
         message = "User {0} already exists.".format(username)
-        response = Response(response=message, status = 200)
+        response = Response(response=message, status = 409)
     return response
 
 @app.route('/api/user/<username>', methods=['DELETE'])
