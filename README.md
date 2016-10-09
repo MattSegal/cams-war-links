@@ -5,10 +5,7 @@
 ### Overview
 The aim of this website is to allow me and my friends to share interesting links with each other. 
 
-I initially made this site to help me learn JavaScript/jQuery in 2015. Now I'm looking to expand its features.
-
-### To Do - Bugfixes
- * Fix responsive design after UI changes are completed
+I initially made this site to help me learn JavaScript/jQuery in 2015. Now I'm looking to expand its features and learn TypeScript
   
 ### To Do - New Features
 * Add optional link description to each link
@@ -26,3 +23,4 @@ I initially made this site to help me learn JavaScript/jQuery in 2015. Now I'm l
 * Add automatic db backups
 * Add selenium regression tests
 * Add API regression tests
+* Add responsive design back again
