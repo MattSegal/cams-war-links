@@ -7,7 +7,8 @@
             "js",
             "img",
             "fonts",
-            "templates"
+            "templates",
+            "database"
         ]
     },
 

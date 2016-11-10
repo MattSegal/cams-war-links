@@ -18,7 +18,6 @@ I initially made this site to help me learn JavaScript/jQuery in 2015. Now I'm l
 	- Only authorised users can edit/delete links (optional?)
 
 ### To Do - Improvements
-* Move the add link button to the top
 * Make the MYSQL db easier to deploy
 * Add automatic db backups
 * Add selenium regression tests
