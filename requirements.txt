@@ -1,0 +1,6 @@
+flask
+mysql-connector-python==2.0.4
+selenium
+pytest
+pytest-xdist
+requests

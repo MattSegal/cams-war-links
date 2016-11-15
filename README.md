@@ -23,3 +23,4 @@ I initially made this site to help me learn JavaScript/jQuery in 2015. Now I'm l
 * Add selenium regression tests
 * Add API regression tests
 * Add responsive design back again
+* move mysql connector to SQLAlchemy
