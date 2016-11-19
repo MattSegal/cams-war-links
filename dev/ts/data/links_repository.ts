@@ -7,7 +7,7 @@ class LinksRepository
 	{
 		return $.ajax({
 			type: 'GET',
-			url: '/api/links'
+			url: '/links/api/links'
 		});
 	}
 
@@ -15,7 +15,7 @@ class LinksRepository
 	{
 		return $.ajax({
 			type: 'DELETE',
-			url: '/api/link/'+linkId,
+			url: '/links/api/link/'+linkId,
 			success: function(resp) {
 				console.log('link DELETE - success')
 				console.log('server says: '+resp);
@@ -31,7 +31,7 @@ class LinksRepository
 	{
 		return $.ajax({
 			type: 'POST',
-			url: '/api/link',
+			url: '/links/api/link',
 			contentType: 'application/json',
 			data: JSON.stringify(newLink)
 		});
@@ -41,7 +41,7 @@ class LinksRepository
 	{
 		return $.ajax({
 			type: 'PUT',
-			url: '/api/link/'+newLink.id,
+			url: '/links/api/link/'+newLink.id,
 			contentType: 'application/json',
 			data: JSON.stringify(newLink)
 		});

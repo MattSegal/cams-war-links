@@ -7,7 +7,7 @@ class UserRepository
 	{
 		return $.ajax({
 			type: 'GET',
-			url: '/api/user/'
+			url: '/links/api/user/'
 		});
 	}
 
@@ -15,7 +15,7 @@ class UserRepository
 	{
 		return $.ajax({
 			type: 'POST',
-			url: '/api/user/'+username
+			url: '/links/api/user/'+username
 		});
 	}
 
@@ -23,7 +23,7 @@ class UserRepository
 	{
 		return $.ajax({
 			type: 'DELETE',
-			url: '/api/user/'+username,	
+			url: '/links/api/user/'+username,	
 		});
 	}
 }

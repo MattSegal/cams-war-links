@@ -12,7 +12,7 @@
     "gulp": "*",
     "gulp-jade": "*",
     "gulp-sass": "*",
-    "typescript": "rc",
+    "typescript": "*",
     "gulp-typescript": "*",
     "merge2" : "*"
   }

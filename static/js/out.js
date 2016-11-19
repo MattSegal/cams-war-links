@@ -129,13 +129,13 @@ var LinksRepository = (function () {
     LinksRepository.prototype.GetAll = function () {
         return $.ajax({
             type: 'GET',
-            url: '/api/links'
+            url: '/links/api/links'
         });
     };
     LinksRepository.prototype.Delete = function (linkId) {
         return $.ajax({
             type: 'DELETE',
-            url: '/api/link/' + linkId,
+            url: '/links/api/link/' + linkId,
             success: function (resp) {
                 console.log('link DELETE - success');
                 console.log('server says: ' + resp);
@@ -149,7 +149,7 @@ var LinksRepository = (function () {
     LinksRepository.prototype.Create = function (newLink) {
         return $.ajax({
             type: 'POST',
-            url: '/api/link',
+            url: '/links/api/link',
             contentType: 'application/json',
             data: JSON.stringify(newLink)
         });
@@ -157,7 +157,7 @@ var LinksRepository = (function () {
     LinksRepository.prototype.Update = function (newLink) {
         return $.ajax({
             type: 'PUT',
-            url: '/api/link/' + newLink.id,
+            url: '/links/api/link/' + newLink.id,
             contentType: 'application/json',
             data: JSON.stringify(newLink)
         });
@@ -275,19 +275,19 @@ var UserRepository = (function () {
     UserRepository.prototype.GetAll = function () {
         return $.ajax({
             type: 'GET',
-            url: '/api/user/'
+            url: '/links/api/user/'
         });
     };
     UserRepository.prototype.Create = function (username) {
         return $.ajax({
             type: 'POST',
-            url: '/api/user/' + username
+            url: '/links/api/user/' + username
         });
     };
     UserRepository.prototype.Delete = function (username) {
         return $.ajax({
             type: 'DELETE',
-            url: '/api/user/' + username
+            url: '/links/api/user/' + username
         });
     };
     return UserRepository;

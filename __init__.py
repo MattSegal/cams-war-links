@@ -5,6 +5,8 @@ import config
 
 app = Flask(__name__)
 app.config.from_object('config.Config')
+base_url = '/links' if app.config['DEBUG'] else ''
+
 
 # Setup Database
 con = db.connection.Connection(app.config)
@@ -16,12 +18,12 @@ def disconnect(exception):
     con.disconnect()
 
 # Web Page
-@app.route('/links/')
+@app.route(base_url+'/')
 def  links():
     return render_template('links.html')
 
 # Links
-@app.route('/api/links', methods=['GET'])
+@app.route(base_url+'/api/links', methods=['GET'])
 def links_get():
     links = link_repo.get_all()
     links_json = json.dumps(links)
@@ -32,7 +34,7 @@ def links_get():
     }
     return Response(**response)
 
-@app.route('/api/link', methods=['POST'])
+@app.route(base_url+'/api/link', methods=['POST'])
 def links_post():
     new_link = request.get_json()
 
@@ -45,7 +47,7 @@ def links_post():
         response = Response(response=message, status = 400)
     return response
 
-@app.route('/api/link/<id>', methods=['PUT'])
+@app.route(base_url+'/api/link/<id>', methods=['PUT'])
 def links_put(id):
     link_id = int(id)
 
@@ -69,7 +71,7 @@ def links_put(id):
     return response
 
          
-@app.route('/api/link/<id>', methods=['DELETE'])
+@app.route(base_url+'/api/link/<id>', methods=['DELETE'])
 def links_delete(id):
     link_id = int(id)
     link_exists = link_repo.check_exists(link_id)
@@ -85,7 +87,7 @@ def links_delete(id):
     return response
 
 # User
-@app.route('/api/user/', methods=['GET'])
+@app.route(base_url+'/api/user/', methods=['GET'])
 def user_get():
     users = user_repo.get_all()
     users_json = json.dumps(users)
@@ -96,7 +98,7 @@ def user_get():
     }
     return Response(**response)
 
-@app.route('/api/user/<username>', methods=['POST'])
+@app.route(base_url+'/api/user/<username>', methods=['POST'])
 def user_post(username):
     user_exists = user_repo.check_exists(username)
     if not user_exists:
@@ -108,7 +110,7 @@ def user_post(username):
         response = Response(response=message, status = 409)
     return response
 
-@app.route('/api/user/<username>', methods=['DELETE'])
+@app.route(base_url+'/api/user/<username>', methods=['DELETE'])
 def user_delete(username):
     user_exists = user_repo.check_exists(username)
 
