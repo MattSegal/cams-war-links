@@ -328,7 +328,7 @@ input {
   transition: box-shadow 0.3s, border 0.3s; }
   input:focus {
     border: solid 3.5px #707070;
-      border-box-shadow: 0 0 5px 1px #969696; }
+    box-shadow: 0 0 5px 1px #969696; }
 
 button {
   font-weight: bold;

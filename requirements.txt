@@ -1,5 +1,6 @@
 flask
-mysql-connector-python==2.0.4
+sqlalchemy
+pymysql
 selenium
 pytest
 pytest-xdist

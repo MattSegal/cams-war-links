@@ -8,11 +8,11 @@ var ts   = require('gulp-typescript');
 var merge = require('merge2');
 
 // typescript
-var tsDir = './dev/ts/**/*.ts'
+var tsDir = './dev_content/ts/**/*.ts'
 var jsDir = './static/js/'
-var defDir = './dev/definitions'
+var defDir = './dev_content/definitions'
 
-var tsProject = ts.createProject('./dev/ts/tsconfig.json');
+var tsProject = ts.createProject('./dev_content/ts/tsconfig.json');
 
 gulp.task('typescript', function () {
   var tsResult = gulp.src(tsDir)
@@ -31,8 +31,8 @@ gulp.task('typescript:watch', function () {
 });
 
  // sass
-var sassDir = './dev/sass/**/*.sass'
-var sassFile = './dev/sass/style.sass'
+var sassDir = './dev_content/sass/**/*.sass'
+var sassFile = './dev_content/sass/style.sass'
 var cssDir  = './static/css/'
 gulp.task('sass', function () {
   gulp.src(sassFile)
@@ -45,7 +45,7 @@ gulp.task('sass:watch', function () {
 });
 
 // jade
-var jadeDir = './dev/jade/**/*.jade'
+var jadeDir = './dev_content/jade/**/*.jade'
 var htmlDir = './templates/'
 gulp.task('jade', function() {
   var YOUR_LOCALS = {}; // wat

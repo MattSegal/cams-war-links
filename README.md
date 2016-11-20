@@ -7,6 +7,11 @@ The aim of this website is to allow me and my friends to share interesting links
 
 I initially made this site to help me learn JavaScript/jQuery in 2015. Now I'm looking to expand its features and learn TypeScript
   
+### Stack
+* Flask webserver
+* TypeScript
+* SASS + Jade for CSS/HTML
+
 ### To Do - New Features
 * Add optional link description to each link
 * Add a refresh button or polling mechanism to keep content up to date

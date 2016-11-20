@@ -5,8 +5,8 @@ html(lang="en")
     //- meta(name = "viewport",content = "width=device-width,initial-scale=1.0")
     link(href='https://fonts.googleapis.com/css?family=Oswald:400,300', rel='stylesheet', type='text/css')
     link(href='https://fonts.googleapis.com/css?family=Open+Sans|Open+Sans+Condensed:300', rel='stylesheet', type='text/css')
-    link(rel="stylesheet", type="text/css", href="{{ url_for('static',filename='./css/style.css') }}")
-    link(rel="shortcut icon", href="{{ url_for('static',filename='site_icon.ico') }}")
+    link(rel="stylesheet", type="text/css", href="{{ url_for('page.static',filename='./css/style.css') }}")
+    link(rel="shortcut icon", href="{{ url_for('page.static',filename='site_icon.ico') }}")
     title Links
     style.
       #pre-load-image 
@@ -116,16 +116,16 @@ html(lang="en")
       button.delete(id="delete{{name}}") Delete
     {% endraw %}  
 
-  script(src="{{ url_for('static',filename='js/jquery-2.1.4.js') }}")
-  script(src="{{ url_for('static',filename='js/mustache.min.js') }}")
-  script(src="{{ url_for('static',filename='js/out.js') }}")
+  script(src="{{ url_for('page.static',filename='js/jquery-2.1.4.js') }}")
+  script(src="{{ url_for('page.static',filename='js/mustache.min.js') }}")
+  script(src="{{ url_for('page.static',filename='js/out.js') }}")
   script.
     // when bg image loaded, swap out full image
     window.onload = function loadSharpImages() {
       // Quit early if older browser (e.g. IE 8).
       if (!('addEventListener' in window)) return
       var preLoadBackground = document.querySelector("#pre-load-image")
-      var backgroundSourceFile = "{{url_for('static',filename='img/hero.png')}}"
+      var backgroundSourceFile = "{{url_for('page.static',filename='img/hero.png')}}"
       var backgroundImage = new Image();
       backgroundImage.src = backgroundSourceFile
       backgroundImage.onload = function() {
