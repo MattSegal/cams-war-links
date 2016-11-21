@@ -8,8 +8,17 @@
             "img",
             "fonts",
             "templates",
-            "database"
+            "app",
+            "database",
+            "api",
+            "page",
+            "controllers",
+            "models"
+        ],
+        "non-deployable" : [
+            "tests"
         ]
+        }
     },
 
     "files" : {
@@ -30,10 +39,12 @@
             "woff"
         ],
         "deployable" : [
-        
+            "requirements.txt",
+            "debian.txt",
         ],
         "non-deployable" : [
-            "gulpfile.js"
+            "gulpfile.js",
+            "package.json"
         ]
     }
 }
