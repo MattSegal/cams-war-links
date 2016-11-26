@@ -4,7 +4,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from app import Config
 
 
-connection_string = 'mysql+pymysql://{user}:{password}@{host}/{database}'.format(
+connection_string = 'mysql+pymysql://{user}:{password}@{host}/{database}?charset=utf8'.format(
     user=Config.DB_USER,
     password=Config.DB_PASSWORD,
     host=Config.DB_HOST,
