@@ -31,7 +31,6 @@ def post_link():
 def put_link(id):
     link = Link(**request.get_json())
     link.id = int(id)
-
     is_valid_link = link.is_valid() and link.id
 
     if is_valid_link and link.exists():

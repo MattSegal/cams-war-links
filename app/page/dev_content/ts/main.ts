@@ -25,7 +25,7 @@ let navbarEvents 	= new NavbarEvents(observer)
 observer.AddEvent(Events.NavigateLinks,() => welcomePage.Hide())
 observer.AddEvent(Events.NavigateUserPage,() => welcomePage.Hide())
 
-// Load initial data from API
+// Load data from API to initialise page
 userController.Load()
 .done( () => 
 {
@@ -37,10 +37,7 @@ userController.Load()
 	linkController.Load()
 	.done( () => 
 	{
-		// DEBUG
-
-		// Navigate to first user's page
-		// observer.EmitEvent(Events.NavigateLinks,users[0])
+		observer.EmitEvent(Events.LinksLoaded,{})
 	})
 })
 

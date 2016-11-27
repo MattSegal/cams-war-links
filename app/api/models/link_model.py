@@ -11,12 +11,6 @@ class Link(Base):
     title   = Column(VARCHAR(500))
     user    = Column(VARCHAR(20))
 
-    def __init__(self,id=None,url=None,title=None,user=None):
-        self.id     = id
-        self.url    = url
-        self.title  = title
-        self.user   = user
-
     def __repr__(self):
         return "<Link(id = '%s', title='%s', user='%s', url='%s')>" % (self.id,self.title,self.user,self.url)
 
@@ -33,10 +27,12 @@ class Link(Base):
 
     def update(self):
         assert self.id
-        Link.__table__\
-            .update()\
-            .where(Link.id==self.id)\
-            .values(title=self.title,url=self.url)
+        Link.query\
+            .filter_by(id=self.id)\
+            .update({
+                'title' : self.title,
+                'url' : self.url
+            })
         db_session.commit()
 
     def exists(self):

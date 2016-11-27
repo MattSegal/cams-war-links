@@ -9,9 +9,6 @@ class User(Base):
     id      = Column(Integer, primary_key=True)
     name    = Column(VARCHAR(20))
 
-    def __init__(self,name=None):
-        self.name = name
-
     def __repr__(self):
         return "<User(name='%s')>" % (self.name)
 

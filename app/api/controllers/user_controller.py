@@ -16,7 +16,7 @@ def get_user():
 
 @bp.route('/user/<username>', methods=['POST'])
 def post_user(username):
-    user = User(username)
+    user = User(name=username)
     if not user.exists():
         user.create()
         message = "User {0} created.".format(username)
@@ -28,7 +28,7 @@ def post_user(username):
 
 @bp.route('/user/<username>', methods=['DELETE'])
 def delete_user(username):
-    user = User(username)
+    user = User(name=username)
     if user.exists():
         user.delete()
         message = "Successful delete of user {0}".format(username)

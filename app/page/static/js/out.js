@@ -2,21 +2,22 @@ var Events;
 (function (Events) {
     Events[Events["NavigateUserPage"] = 0] = "NavigateUserPage";
     Events[Events["NavigateLinks"] = 1] = "NavigateLinks";
-    Events[Events["CreateLinkSubmit"] = 2] = "CreateLinkSubmit";
-    Events[Events["CreateLinkSuccess"] = 3] = "CreateLinkSuccess";
-    Events[Events["CreateLinkFailure"] = 4] = "CreateLinkFailure";
-    Events[Events["DeleteLinkButtonPress"] = 5] = "DeleteLinkButtonPress";
-    Events[Events["CancelDeleteLinkButtonPress"] = 6] = "CancelDeleteLinkButtonPress";
-    Events[Events["ConfirmDeleteLinkButtonPress"] = 7] = "ConfirmDeleteLinkButtonPress";
-    Events[Events["EditLinkButtonPress"] = 8] = "EditLinkButtonPress";
-    Events[Events["CancelEditLinkButtonPress"] = 9] = "CancelEditLinkButtonPress";
-    Events[Events["ConfirmEditLinkButtonPress"] = 10] = "ConfirmEditLinkButtonPress";
-    Events[Events["OpenLinkForm"] = 11] = "OpenLinkForm";
-    Events[Events["ExitLinkForm"] = 12] = "ExitLinkForm";
-    Events[Events["CreateUserButtonPress"] = 13] = "CreateUserButtonPress";
-    Events[Events["DeleteUserButtonPress"] = 14] = "DeleteUserButtonPress";
-    Events[Events["UserCreated"] = 15] = "UserCreated";
-    Events[Events["UserDeleted"] = 16] = "UserDeleted";
+    Events[Events["LinksLoaded"] = 2] = "LinksLoaded";
+    Events[Events["CreateLinkSubmit"] = 3] = "CreateLinkSubmit";
+    Events[Events["CreateLinkSuccess"] = 4] = "CreateLinkSuccess";
+    Events[Events["CreateLinkFailure"] = 5] = "CreateLinkFailure";
+    Events[Events["DeleteLinkButtonPress"] = 6] = "DeleteLinkButtonPress";
+    Events[Events["CancelDeleteLinkButtonPress"] = 7] = "CancelDeleteLinkButtonPress";
+    Events[Events["ConfirmDeleteLinkButtonPress"] = 8] = "ConfirmDeleteLinkButtonPress";
+    Events[Events["EditLinkButtonPress"] = 9] = "EditLinkButtonPress";
+    Events[Events["CancelEditLinkButtonPress"] = 10] = "CancelEditLinkButtonPress";
+    Events[Events["ConfirmEditLinkButtonPress"] = 11] = "ConfirmEditLinkButtonPress";
+    Events[Events["OpenLinkForm"] = 12] = "OpenLinkForm";
+    Events[Events["ExitLinkForm"] = 13] = "ExitLinkForm";
+    Events[Events["CreateUserButtonPress"] = 14] = "CreateUserButtonPress";
+    Events[Events["DeleteUserButtonPress"] = 15] = "DeleteUserButtonPress";
+    Events[Events["UserCreated"] = 16] = "UserCreated";
+    Events[Events["UserDeleted"] = 17] = "UserDeleted";
 })(Events || (Events = {}));
 var Observer = (function () {
     function Observer() {
@@ -646,6 +647,17 @@ var LinkPageEvents = (function () {
                 _this.observer.EmitEvent(Events.CreateLinkSuccess, link);
             }
         };
+        this.LinksLoaded = function () {
+            var currentUser = _this.userController.GetCurrent();
+            if (currentUser.name === '') {
+                return;
+            }
+            var userLinks = _this.linkController.Get(currentUser);
+            for (var _i = 0, userLinks_2 = userLinks; _i < userLinks_2.length; _i++) {
+                var link = userLinks_2[_i];
+                _this.observer.EmitEvent(Events.CreateLinkSuccess, link);
+            }
+        };
         this.PageExited = function () {
             var nullUser = new User('');
             _this.userController.SetCurrent(nullUser);
@@ -654,6 +666,7 @@ var LinkPageEvents = (function () {
         this.linkController = linkController;
         this.userController = userController;
         this.linkPage = new LinkPage();
+        o.AddEvent(Events.LinksLoaded, this.LinksLoaded);
         o.AddEvent(Events.NavigateLinks, this.NavigateLinkPage);
         o.AddEvent(Events.NavigateUserPage, this.PageExited);
         o.AddEvent(Events.ExitLinkForm, this.LinkEditFormClosed);
@@ -880,5 +893,6 @@ userController.Load()
     }
     linkController.Load()
         .done(function () {
+        observer.EmitEvent(Events.LinksLoaded, {});
     });
 });

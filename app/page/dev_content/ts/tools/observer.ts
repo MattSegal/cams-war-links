@@ -5,6 +5,7 @@ enum Events
 	NavigateLinks,
 
 	// Links
+	LinksLoaded,
 	CreateLinkSubmit,
 	CreateLinkSuccess,
 	CreateLinkFailure,

@@ -16,6 +16,7 @@ class LinkPageEvents
 		this.userController = userController
 		this.linkPage = new LinkPage()
 
+		o.AddEvent(Events.LinksLoaded,this.LinksLoaded)
 		o.AddEvent(Events.NavigateLinks,this.NavigateLinkPage)
 		o.AddEvent(Events.NavigateUserPage,this.PageExited)
 		o.AddEvent(Events.ExitLinkForm,this.LinkEditFormClosed)
@@ -54,6 +55,19 @@ class LinkPageEvents
 
 		// Populate page with links
 		var userLinks : Array<Link> = this.linkController.Get(user)
+		for (let link of userLinks)
+		{
+			this.observer.EmitEvent(Events.CreateLinkSuccess,link)
+		}
+	}
+
+	LinksLoaded = () => 
+	{
+		let currentUser = this.userController.GetCurrent()
+		if (currentUser.name === '')  { return }
+			
+		// Populate page with links
+		var userLinks : Array<Link> = this.linkController.Get(currentUser)
 		for (let link of userLinks)
 		{
 			this.observer.EmitEvent(Events.CreateLinkSuccess,link)
