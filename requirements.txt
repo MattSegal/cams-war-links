@@ -1,7 +1,6 @@
-flask
-sqlalchemy
-pymysql
-selenium
-pytest
-pytest-xdist
-requests
+Django==1.10.5
+django-webpack-loader==0.4.1
+djangorestframework==3.5.3
+packaging==16.8
+pyparsing==2.1.10
+six==1.10.0

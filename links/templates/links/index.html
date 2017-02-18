@@ -1,0 +1,14 @@
+{% load render_bundle from webpack_loader %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Wooo</title>
+    <script type="text/javascript">
+    let bootstrapData = JSON.parse('{{bootstrap_data | escapejs }}')
+    </script>
+</head>
+<body>
+<div id="react-app"></div>
+{% render_bundle 'main' %}
+</body>
+</html>

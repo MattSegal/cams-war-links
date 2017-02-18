@@ -1,0 +1,17 @@
+:local
+{
+    .user 
+    {
+        user-select: none;
+        &:hover
+        {
+            cursor: pointer;
+            text-decoration: underline;
+        }
+    }
+
+    .selected
+    {
+        color: red;
+    }
+}
