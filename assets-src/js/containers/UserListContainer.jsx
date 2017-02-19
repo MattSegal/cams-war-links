@@ -7,9 +7,13 @@ class UserListContainer extends Component
 {
     render()
     {
+        let users = this.props.users.map(user => ({
+            ...user,
+            isActive: user.id === this.props.activeUserId
+        }))
         return (
             <UserList 
-                users={this.props.users} 
+                users={users} 
                 onUserClick={this.props.onUserClick} 
             />
         )
@@ -17,11 +21,13 @@ class UserListContainer extends Component
 }
 
 let mapStateToProps = (state) => ({
-    users: state.users
+    users: state.users.items,
+    isFetching: state.users.isFetching,
+    activeUserId: state.users.activeUserId
 })
 
 let mapDispatchToProps = (dispatch) => ({
-    onUserClick: (username) => dispatch(Actions.setActiveUser(username))
+    onUserClick: (user_id) => dispatch(Actions.setActiveUser(user_id))
 })
 
 module.exports = connect(

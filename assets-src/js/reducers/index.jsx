@@ -1,32 +1,71 @@
-import {combineReducers} from 'redux'
+import {types} from 'actions'
 
-const activeUserReducer = (users = [], action) => {
-    let isActive = user => user.isActive ? false : user.name === action.username
-    return users.map(user => ({
-        ...user,
-        isActive: isActive(user)
-    }))
-}
+const activeUserReducer = (action) => (state) => {
+    switch(action.type)
+    {
+        case types.SET_ACTIVE_USER:
+        {
+            let isSelectedUserAlreadyActive = state.users.activeUserId 
+                ? state.users.activeUserId === action.user_id
+                : false
 
-const activeUserLinkReducer  = (links = [], action) => {
-    let isActive = link => link.isActive ? false : link.user === action.username
-    return links.map(link => ({
-        ...link,
-        isActive: isActive(link)
-    }))
-}
-
-// Reducers take state, action 
-const reducer = (state,action) =>
-{
-     switch(action.type)
-     {
-        case 'SET_ACTIVE_USER': return {
-            users: activeUserReducer(state.users, action),
-            links: activeUserLinkReducer(state.links, action),
+            let activeUserId = isSelectedUserAlreadyActive ? -1 : action.user_id
+            return {
+                ...state,
+                users: {
+                    ...state.users,
+                    activeUserId: activeUserId
+                }
+            }
         }
         default: return {...state}
-     }
+    }
 }
+
+
+const requestLinksReducer = (action) => (state) => {
+    switch(action.type)
+    {
+        case types.REQUEST_LINKS: return {
+            ...state,
+            links: {
+                ...state.links,
+                isFetching: true,
+            }
+        }
+        default: return {...state}
+    }
+}
+
+
+const receiveLinksReducer = (action) => (state) => {
+    switch(action.type)
+    {
+        case types.RECEIVE_LINKS:
+        {
+            return {
+                ...state,
+                links: {
+                    items: action.links,
+                    isFetching: false,
+                }
+            }
+        }
+        default: return {...state}
+    }
+}
+
+
+// Lets us use pipe syntax eg. pipe(f,g,h)(x)
+const _pipe = (f, g) => (...args) => g(f(...args))
+const pipe = (...fns) => fns.reduce(_pipe)
+
+const reducer = (state,action) =>
+    pipe(
+        receiveLinksReducer(action),
+        requestLinksReducer(action),
+        activeUserReducer(action)
+    )(state)
+
 
 module.exports = reducer

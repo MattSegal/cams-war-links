@@ -6,7 +6,7 @@ class Link extends Component
         id: PropTypes.number,
         title: PropTypes.string,
         url: PropTypes.string,
-        user: PropTypes.string
+        user: PropTypes.number
     }
 
     render() 

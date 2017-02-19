@@ -41,6 +41,9 @@ WEBPACK_LOADER = {
 }
 
 INSTALLED_APPS = [
+    # Links
+    'api.apps.ApiConfig',
+    # Third Party
     'rest_framework',
     'webpack_loader',
     # Default

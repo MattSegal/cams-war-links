@@ -1,15 +1,28 @@
 from django.http import HttpResponse
 from django.template import loader
+from api.serializers import UserSerializer, LinkSerializer
+from api.models import Link
 
-from HTMLParser import HTMLParser
+from django.contrib.auth.models import User
 
-LINKS_DATA_FILE = 'D:\\code\\web\\links\\assets-build\\json\\data.json'
-LINKS_JSON = open(LINKS_DATA_FILE,'r').read()\
-    .replace('\n','')\
-    .replace('\r','')
-
+import json
 
 def index(request):
     template = loader.get_template('links/index.html')
-    context = {'bootstrap_data': LINKS_JSON}
+
+    users = User.objects.all()
+    links = Link.objects.all()
+
+    context = {
+        'bootstrap_data': json.dumps({
+                'users': {
+                    'isFetching': False,
+                    'items': UserSerializer(users, many=True).data
+                },
+                'links': {
+                    'isFetching': False,
+                    'items': LinkSerializer(links, many=True).data
+                }
+        })
+    }
     return HttpResponse(template.render(context,request))

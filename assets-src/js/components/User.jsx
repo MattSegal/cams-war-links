@@ -5,7 +5,7 @@ class User extends Component
 {
     static propTypes = {
         id: PropTypes.number,
-        name: PropTypes.string,
+        username: PropTypes.string,
         isCurrent: PropTypes.bool,
         onUserClick: PropTypes.func,
     }
@@ -16,9 +16,9 @@ class User extends Component
         userStyle += this.props.isActive ? ' '+style.selected : ''
         return (
             <li 
-                onClick={() => this.props.onUserClick(this.props.name)} 
+                onClick={() => this.props.onUserClick(this.props.id)} 
                 className={userStyle}>
-                {this.props.name}
+                {this.props.username}
             </li>
         )
     }
