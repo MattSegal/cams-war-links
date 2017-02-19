@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 class Link(models.Model):
     """ A hyperlink belonging to a user
     """
-    id              = models.IntegerField(primary_key=True)
+    id              = models.AutoField(primary_key=True)
     user            = models.ForeignKey(User, related_name='links')  
     title           = models.CharField(max_length=250) # Unsure of max_length
     url             = models.URLField(max_length=250) # Unsure of max_length

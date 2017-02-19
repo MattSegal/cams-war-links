@@ -8,6 +8,8 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('id','username',)
 
 class LinkSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(read_only=True)
+
     class Meta:
         model = Link
         fields = ('id','user','title','url',)
