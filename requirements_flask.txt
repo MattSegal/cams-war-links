@@ -1,7 +1,0 @@
-flask
-sqlalchemy
-pymysql
-selenium
-pytest
-pytest-xdist
-requests
