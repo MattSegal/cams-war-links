@@ -4,7 +4,7 @@ import React from 'react';
 import ReactDOM from 'react-dom'
 import {applyMiddleware, createStore} from 'redux'
 import {Provider} from 'react-redux'
-import thunkMiddleware from 'redux-thunk' // https://www.youtube.com/watch?v=Td-2D-_7Y2E#t=538.370979
+import thunkMiddleware from 'redux-thunk'
 import createLogger  from 'redux-logger'
 
 import App from 'components/App'
@@ -17,8 +17,15 @@ const middleware = applyMiddleware(
     loggerMiddleware
 )
 
+
+// // hack
+// import {CLOSED} from 'constants'
+// bootstrapData.links.items = bootstrapData.links.items.map(link =>
+//     ({...link, status: {delete: CLOSED, edit: CLOSED}})
+// )
 // Assume we have loaded bootstrapData
 console.log('Loading bootstrap data', bootstrapData)
+
 const store  = createStore(reducer, bootstrapData, middleware)
 
 // Initial render.

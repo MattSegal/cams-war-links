@@ -4,15 +4,29 @@ import Link from './Link'
 class LinkList extends Component 
 {
     static propTypes = {
-        links: PropTypes.array
+        links: PropTypes.array,
+        readOnly: PropTypes.bool,
+        onTryDeleteLink: React.PropTypes.func,
+        onCancelDeleteLink: React.PropTypes.func,
+        onConfirmDeleteLink: React.PropTypes.func,
     }
 
     render() 
     {
-        let links = this.props.links
-            .sort( link => link.id )
-            .map( link => (<Link key={link.id} {...link} />))
-        return (<ul>{links}</ul>)
+        let links = this.props.links.map( link => 
+        (<Link 
+            key={link.id} 
+            readOnly={this.props.readOnly} 
+            onTryDeleteLink={this.props.onTryDeleteLink} 
+            onCancelDeleteLink={this.props.onCancelDeleteLink} 
+            onConfirmDeleteLink={this.props.onConfirmDeleteLink} 
+            {...link} 
+        />))
+        return (
+            <ul>
+                {links}
+            </ul>
+        )
     }
 }
 
