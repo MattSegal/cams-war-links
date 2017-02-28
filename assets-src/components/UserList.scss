@@ -1,0 +1,30 @@
+:local
+{
+    .userList
+    {
+        display: flex;
+        margin-bottom: 3em;
+    }
+
+    .user 
+    {
+        user-select: none;
+        width: 4em;
+        overflow: hidden;
+        &:hover
+        {
+            cursor: pointer;
+
+        }
+    }
+
+    .user + .user 
+    {
+        margin-left: 2em;
+    }
+
+    .selected
+    {
+        font-weight: bold;
+    }
+}

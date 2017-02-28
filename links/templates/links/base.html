@@ -1,9 +1,30 @@
 <!DOCTYPE html>
 <html>
 <head>
+    {% load static %}
+    <link href="{% static "main.css" %}" rel="stylesheet" type="text/css" />
     {% block head %}{% endblock head %}
 </head>
 <body>
-{% block content %}{% endblock content %}
+<header>
+    <h1>LINKRLYFISTERGRAM</h1>
+    <div class="headerOptionWrapper">
+        {% block header %}{% endblock header %}
+    </div>
+    <div class="headerOptionWrapper">
+        {% if user.is_authenticated %}
+        <span>{{ user.username }}</span>
+        <a href="/logout/">Log Out</a>
+        <a href="/change/">Change Password</a></p>
+        {% else %}
+        <a href="/login/">Log In</a>
+        <a href="/signup/">Sign Up</a>
+        {% endif %}
+    </div>
+</header>
+<div class="headerSpacer"></div>
+<div class="contentWrapper">
+    {% block content %}{% endblock content %}
+</div>
 </body>
 </html>

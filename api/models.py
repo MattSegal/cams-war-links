@@ -11,6 +11,7 @@ class Link(models.Model):
     user            = models.ForeignKey(User, related_name='links')  
     title           = models.CharField(max_length=250) # Unsure of max_length
     url             = models.CharField(max_length=250) # Unsure of max_length
+    description     = models.TextField(default='', blank=True)
     created         = models.DateTimeField(auto_now_add=True)
     modified        = models.DateTimeField(auto_now=True)
 

@@ -10,7 +10,7 @@ class UserSerializer(serializers.ModelSerializer):
 class LinkSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
     created = serializers.DateTimeField(read_only=True)
-
+    
     class Meta:
         model = Link
-        fields = ('id','user','title','url','created',)
+        fields = ('id','user','title','url','created','description',)

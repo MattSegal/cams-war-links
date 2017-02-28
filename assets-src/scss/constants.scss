@@ -1,0 +1,26 @@
+$font-family: sans-serif;
+$font-size: 14px;
+
+$link-color: #38C;
+$text-color: #333;
+$light-grey: #eee;
+$text-grey: #888;
+$red: #EB6464;
+$blue: #647EEB;
+
+html, body
+{   
+    font-family: $font-family;
+    font-size: $font-size;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+h1, h2, h3, h4, h5, h6, ul, li, p
+{
+    color: $text-color;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}

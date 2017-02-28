@@ -1,0 +1,100 @@
+@import '../scss/constants';
+
+:local
+{
+    .link
+    {
+        font-family: sans-serif;
+        margin-bottom: 1em;
+        text-decoration: none;
+    }
+
+    
+    .hyperlink
+    {
+        text-decoration: none;
+        font-weight: bold;
+        color: $link-color;
+        &:visited
+        {
+            color: $link-color;
+        }
+    }
+
+    .details
+    {
+        color: $text-grey;
+        font-size: x-small;
+    }
+
+    .linkFormContainer
+    {
+        padding: 1em;
+    }
+    
+    .button
+    {
+        font-size: 1.1em;
+        cursor: pointer;
+        float: right;
+        color: $text-grey;
+        &:hover
+        {
+            color: $text-color;
+        }
+    }
+
+    .button + .button
+    {
+        margin-right: 0.5em;
+    }
+
+    .formButton
+    {
+        width: 48%;
+        padding: 3px 5px;
+        border-radius: 3px;
+        font-weight: bold;
+        font-size: 14px;
+        color: #fff;
+        user-select: none; 
+        cursor: pointer
+    }
+
+    .formInput
+    {
+        width: 48%;
+        margin-bottom: 3px;
+        font-size: 14px;
+        
+        input 
+        {
+            width: 100%
+        }
+    }
+
+    .deleteForm
+    {
+        display: flex;
+        justify-content: space-around;
+
+        .deleteFormButton
+        {
+            cursor: pointer;
+            font-size: 2em;
+            text-align: center;
+        }
+
+        .deleteButton
+        {
+            @extend .deleteFormButton;
+            color: $red;
+        }
+
+        .cancelButton
+        {
+            @extend .deleteFormButton;
+            color: $blue;
+        }
+    }
+}

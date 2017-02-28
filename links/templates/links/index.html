@@ -1,14 +1,22 @@
+{% extends "links/base.html" %}
 {% load render_bundle from webpack_loader %}
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Wooo</title>
-    <script type="text/javascript">
-    let bootstrapData = JSON.parse('{{bootstrap_data | escapejs }}')
-    </script>
-</head>
-<body>
-<div id="react-app"></div>
+
+{% block head %}
+<title>Links</title>
+<script type="text/javascript">
+let bootstrapData = JSON.parse('{{bootstrap_data | escapejs }}')
+{% if user.is_authenticated %}
+bootstrapData['currentUser'] = {'id': {{ user.id }},'username': '{{ user.username }}',}
+{% endif %}
+</script>
+{% endblock head %}
+
+{% block header %}
+<div id="react-app-header"></div>
+{% endblock header %}
+
+
+{% block content %}
+<div id="react-app-content"></div>
 {% render_bundle 'main' %}
-</body>
-</html>
+{% endblock content %}

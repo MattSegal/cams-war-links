@@ -3,21 +3,18 @@ const webpack           = require('webpack')
 const BundleTracker     = require('webpack-bundle-tracker')
 const combineLoaders    = require('webpack-combine-loaders');
 const autoprefixer      = require('autoprefixer');
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = {
     context: path.resolve('./assets-src'),
 
-    entry: './js/index',
+    entry: './index',
 
     output: {
-        path: path.resolve('./assets-build/js/'),
+        path: path.resolve('./assets-build/'),
         filename: "[name]-[hash].js",
     },
-
-    plugins: [
-        new BundleTracker({filename: './webpack-stats.json'})
-    ],
-
+    
     postcss: [
         autoprefixer({
           browsers: ['last 3 versions', 'safari >= 8', 'ie > 8'],
@@ -37,26 +34,29 @@ module.exports = {
             }, 
             {
                 test: /\.scss$/,
-                loader: combineLoaders([
-                    {
-                        loader: 'style-loader'
-                    },
-                    {
-                        loader: 'css-loader?-autoprefixer&localIdentName=[name]__[local]-[sha1:hash:hex:8]',
-                    },
-                    {
-                        loader: 'postcss-loader',
-                    },
-                    {
-                        loader: 'sass-loader',
-                    },
-                ])
-            },
+                loader: ExtractTextPlugin.extract("style-loader", combineLoaders([
+                        {
+                            loader: 'css-loader?-autoprefixer&localIdentName=[name]__[local]',
+                        },
+                        {
+                            loader: 'postcss-loader',
+                        },
+                        {
+                            loader: 'sass-loader',
+                        }
+                    ])
+                )
+            }
         ],
     },
-
+    plugins: [
+        new ExtractTextPlugin('[name].css', {allChunks: true}),
+        new BundleTracker({filename: './webpack-stats.json'})
+    ],
     resolve: {
-        root: [path.resolve('./assets-src/js')],
+        root: [
+            path.resolve('./assets-src'),
+        ],
         modulesDirectories: ['node_modules'],
         extensions: ['', '.js', '.jsx','.scss'],
     },
