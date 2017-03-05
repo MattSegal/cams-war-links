@@ -13,3 +13,4 @@ assets-build/
 *.sqlite3
 webpack-stats.json
 env/
+npm-debug.log.*
