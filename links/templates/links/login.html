@@ -1,20 +1,35 @@
 {% extends "links/base.html" %}
+{% load static %}
 
 {% block head %}
 <title>Login</title>
+<link rel="stylesheet" type="text/css" href="{% static 'main.css' %}" />
 {% endblock head %}
 
 {% block content %}
-<h1>Login</h1>
 
-{% if form.errors %}
-<p>Your username and password didn't match. Please try again.</p>
-{% endif %}
-
-<form method="post" action="/login/">
+<form class="login" method="post" action="/login/">
+    <h1>Login</h1>
     {% csrf_token %}
-    {{ form }}
-    <input class="btn btn-success btn-sm" type="submit" value="login" />
+    <input 
+        class="form-control {{ login_error|yesno:"error," }}" 
+        id="id_username" 
+        maxlength="30" 
+        name="username" 
+        type="text" 
+        required=""
+        placeholder="Username" 
+    >
+    <input 
+        class="{{ login_error|yesno:"error," }}"
+        id="id_password" 
+        maxlength="30" 
+        name="password" 
+        type="password" 
+        required=""
+        placeholder="Password" 
+    >
+    <input class="submit" type="submit" value="Submit" />
 </form>
 
 {% endblock content %}

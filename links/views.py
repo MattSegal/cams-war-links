@@ -38,21 +38,23 @@ def index(request):
 
 
 def login(request):
+    login_error = False
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
 
         form = LoginForm(request.POST)
         user = authenticate(username=username, password=password)
-        print form.is_valid(), user
         if form.is_valid() and user is not None:
             auth_login(request, user)
             return HttpResponseRedirect('/')
+        else:
+            login_error = True
     else:
         form = LoginForm()
 
     template = loader.get_template('links/login.html')
-    context = {'form': LoginForm}
+    context = {'form': LoginForm, 'login_error': login_error}
     return HttpResponse(template.render(context,request))
 
 def logout(request):
@@ -60,14 +62,31 @@ def logout(request):
     return HttpResponseRedirect('/')
 
 def signup(request):
-    # 
+    # TODO - FINISH
     template = loader.get_template('links/signup.html')
     context = {}
     return HttpResponse(template.render(context,request))
 
 
-@login_required(login_url="/login/")
+@login_required(login_url="/change/")
 def change_password(request):
+    # TODO - FINISH
+    validation_error = False
+    if request.method == 'POST':
+        old_password = request.POST['old_password']
+        new_password = request.POST['new_password']
+        valid_password = request.POST['valid_password']
+
+        form = LoginForm(request.POST)
+        user = authenticate(username=username, password=password)
+        if form.is_valid() and user is not None:
+            auth_login(request, user)
+            return HttpResponseRedirect('/')
+        else:
+            validation_error = True
+    else:
+        form = LoginForm()
+
     template = loader.get_template('links/change_password.html')
-    context = {}
+    context = {'form': LoginForm, 'validation_error': validation_error}
     return HttpResponse(template.render(context,request))

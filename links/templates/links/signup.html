@@ -1,9 +1,35 @@
 {% extends "links/base.html" %}
+{% load static %}
 
 {% block head %}
 <title>Sign Up</title>
+<link rel="stylesheet" type="text/css" href="{% static 'main.css' %}" />
 {% endblock head %}
 
 {% block content %}
-<h1>Sign Up</h1>
+
+<form class="login" method="post" action="/login/">
+    <h1>Sign Up</h1>
+    {% csrf_token %}
+    <input 
+        class="form-control {{ login_error|yesno:"error," }}" 
+        id="id_username" 
+        maxlength="30" 
+        name="username" 
+        type="text" 
+        required=""
+        placeholder="Username" 
+    >
+    <input 
+        class="{{ login_error|yesno:"error," }}"
+        id="id_password" 
+        maxlength="30" 
+        name="password" 
+        type="password" 
+        required=""
+        placeholder="Password" 
+    >
+    <input class="submit" type="submit" value="Submit" />
+</form>
+
 {% endblock content %}
