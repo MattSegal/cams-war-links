@@ -34,11 +34,13 @@ class LinkFactory(factory.Factory):
     modified = factory.LazyFunction(timezone.now)
 
 def build_users(num_users):
+    models.Link.objects.all().delete()
     User.objects.all().delete()
 
     users = UserFactory.build_batch(num_users)
 
     for user in users:
+        user.username = user.username.lower()
         user.save()
         print 'Successfully created user {0}'.format(user.username)
 

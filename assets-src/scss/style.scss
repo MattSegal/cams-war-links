@@ -9,11 +9,11 @@
     padding: 1em 2em;
 }
 
-.login
+.form
 {
     display: flex;
     flex-direction: column;
-    max-width: 400px;
+    max-width: 380px;
     margin: 0 auto;
     h1 
     {
@@ -24,16 +24,25 @@
         margin-bottom: 10px;
         color: $red;
     }
-    .error
-    {
-        border-color: $red;
-    }
     input
     {
         border: 1px solid $text-grey;
         display: block;
-        margin-bottom: 10px;
+        margin: 0 0 0.8em 0;
         padding: 4px;
+    }
+    .errorPill
+    {
+        padding: 0.4em;
+        box-sizing: border-box;
+        margin: -0.8em 0 0.8em 0;
+        text-align: center;
+        background-color: #fcc;
+        color: #c44;
+        & > ul, li
+        {
+            color: #c44;
+        }
     }
     .submit
     {

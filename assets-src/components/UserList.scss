@@ -3,13 +3,15 @@
     .userList
     {
         display: flex;
-        margin-bottom: 3em;
+        margin: 0 auto 3em auto;
+        max-width: 600px;
+        justify-content: space-between;
     }
 
     .user 
     {
         user-select: none;
-        width: 4em;
+        // width: 5.5em;
         overflow: hidden;
         &:hover
         {

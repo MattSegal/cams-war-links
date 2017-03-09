@@ -18,25 +18,6 @@ class LinkListContainer extends Component
         }
         return usernames
     }
-    /*
-    
-    TODO: 
-         add signup
-         add new styles
-         add tags
-         group links by month
-         group recent links by days
-         add user comments
-         add 'read' checkbox and 'to-read'
-             we can have views of these
-         use soft delete
-         reconstruct created data?
-         add links as Anon
-             claim links later
-             sign in with Google?
-         search
-
-    */
 
     render() 
     {

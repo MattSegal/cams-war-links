@@ -2,7 +2,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from api.serializers import UserSerializer, LinkSerializer
 from api.models import Link
-from forms import LoginForm
+from forms import LoginForm, SignupForm, ChangePasswordForm
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
@@ -38,23 +38,25 @@ def index(request):
 
 
 def login(request):
-    login_error = False
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-
         form = LoginForm(request.POST)
-        user = authenticate(username=username, password=password)
-        if form.is_valid() and user is not None:
-            auth_login(request, user)
-            return HttpResponseRedirect('/')
-        else:
-            login_error = True
+        if form.is_valid():
+            username = request.POST.get('username','').lower()
+            password = request.POST['password']
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                auth_login(request, user)
+                return HttpResponseRedirect('/')
+            else:
+                form.add_error(
+                    None,
+                    'Invalid username or password',
+                )
     else:
         form = LoginForm()
 
     template = loader.get_template('links/login.html')
-    context = {'form': LoginForm, 'login_error': login_error}
+    context = {'form': form}
     return HttpResponse(template.render(context,request))
 
 def logout(request):
@@ -62,31 +64,37 @@ def logout(request):
     return HttpResponseRedirect('/')
 
 def signup(request):
-    # TODO - FINISH
+    if request.method == 'POST':
+        form = SignupForm(request.POST)
+        if form.is_valid():
+            username = request.POST['username'].lower()
+            password = request.POST['password']
+            user = User.objects.create_user(
+                username=username,
+                password=password,
+            )
+            auth_login(request, user)
+            return HttpResponseRedirect('/')
+    else:
+        form = SignupForm()
+
     template = loader.get_template('links/signup.html')
-    context = {}
+    context = {'form': form}
     return HttpResponse(template.render(context,request))
 
 
 @login_required(login_url="/change/")
 def change_password(request):
-    # TODO - FINISH
-    validation_error = False
     if request.method == 'POST':
-        old_password = request.POST['old_password']
-        new_password = request.POST['new_password']
-        valid_password = request.POST['valid_password']
-
-        form = LoginForm(request.POST)
-        user = authenticate(username=username, password=password)
-        if form.is_valid() and user is not None:
-            auth_login(request, user)
+        form = ChangePasswordForm(request.POST)
+        if form.is_valid():
+            new_password = form.cleaned_data['password']
+            request.user.set_password(new_password)
+            request.user.save()  #Django auto logs you out
             return HttpResponseRedirect('/')
-        else:
-            validation_error = True
     else:
-        form = LoginForm()
+        form = ChangePasswordForm()
 
     template = loader.get_template('links/change_password.html')
-    context = {'form': LoginForm, 'validation_error': validation_error}
+    context = {'form': form}
     return HttpResponse(template.render(context,request))
