@@ -33,19 +33,41 @@ class LinkFactory(factory.Factory):
     created = factory.LazyFunction(timezone.now)
     modified = factory.LazyFunction(timezone.now)
 
-def build_users(num_users):
+def build():
+    """
+    py manage.py shell -c "from api.factories import build;build()"
+    """
+    from django.db import transaction
+    import requests
+
+    r = requests.get('http://mattdsegal.com/links/api/user')
+    user_data = r.json() 
+  
+
+    r = requests.get('http://mattdsegal.com/links/api/links')
+    link_data = r.json()
+   
+    models.Link.objects.all().delete()
     User.objects.all().delete()
 
-    users = UserFactory.build_batch(num_users)
+    with transaction.atomic():
 
-    for user in users:
-        user.save()
-        print 'Successfully created user {0}'.format(user.username)
+        for u_data in user_data:
+            user = UserFactory(username=u_data['name'])
 
-    import json
-    file_path = 'D:\\code\\web\\links\\api\\fixtures\\new_links.json'
-    with open(file_path, 'r') as f:
-        links = json.load(f)
-        for link in links:
-            link = LinkFactory(url=link['url'],title=link['title'])
-            link.save()
+            user_links = [
+                l for l in link_data
+                if l['user'] == u_data['name']
+            ]
+
+            print len(user_links)
+
+            for l_data in user_links:
+                link = LinkFactory(
+                    user=user,
+                    title=l_data['title'],
+                    url=l_data['url']
+                )
+                link.save()
+
+            print 'Successfully created user {0}'.format(user.username)
