@@ -1,4 +1,4 @@
-import {NO_USER_SELECTED, OPEN, CLOSED} from 'constants'
+import {NO_USER_SELECTED, OPEN, CLOSED, INACTIVE} from 'constants'
 
 // Lets us use pipe syntax eg. pipe(f,g,h)(x)
 const _pipe = (f, g) => (...args) => g(f(...args))
@@ -15,7 +15,7 @@ const setupLinkState = (links) => ({
     ...links,
     add: CLOSED,
     items: links.items.map(link =>
-        ({...link, status: {edit: CLOSED, delete: CLOSED, details: CLOSED}})
+        ({...link, status: {edit: CLOSED, delete: CLOSED, details: CLOSED, bookmark: INACTIVE}})
     ),
 })
 

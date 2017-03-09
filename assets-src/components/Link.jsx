@@ -5,6 +5,7 @@ import DeleteButton from 'components/DeleteButton'
 import DeleteLinkForm from 'components/DeleteLinkForm'
 import EditButton from 'components/EditButton'
 import LinkForm from 'components/LinkForm'
+import ToReadButton from 'components/ToReadButton'
 import style from 'components/Link.scss'
 import {OPEN, WAITING, CLOSED} from 'constants'
 
@@ -106,6 +107,11 @@ class Link extends Component
                 <a className={style.hyperlink} href={this.props.url}>
                     {this.props.title}
                 </a>
+                <ToReadButton 
+                    linkId={this.props.id} 
+                    status={this.props.status.bookmark} 
+                    {...this.props.bookmarkLink}
+                />
                 {moreInfoButton}
                 {editButton}
                 {deleteButton}

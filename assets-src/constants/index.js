@@ -3,4 +3,6 @@ module.exports = {
     OPEN: 'OPEN',
     WAITING: 'WAITING',
     CLOSED: 'CLOSED',
+    ACTIVE: 'ACTIVE',
+    INACTIVE: 'INACTIVE',
 }
