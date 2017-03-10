@@ -1,6 +1,7 @@
 import axios from 'axios'
 import Cookies from 'js-cookie'
 import {types} from './types'
+import {ACTIVE, INACTIVE} from 'constants'
 
 const setActiveUser = (user_id) => ({
     type: types.SET_ACTIVE_USER,
@@ -159,6 +160,32 @@ const receiveLinks = (links) => ({
 const fetchError = () => ({
     type: types.ERROR_LINKS,
 })
+
+// Bookmark links
+// const tryBookmarkLink = (link) => (dispatch) => {
+//     dispatch(requestBookmarkLink(link.id))
+//     let csrftoken = Cookies.get('csrftoken')
+//     return axios.post(`api/link/${link.id}/bookmark`, newBookmarkStatus, {headers: {'X-CSRFToken': csrftoken}})
+//         .then( response => dispatch(receiveBookmarkLink(link)))
+//         .catch( error => {
+//             handleHttpError('Bookmark Link', error)
+//             dispatch(errorBookmarkLink)
+//         })
+// }
+
+// const requestBookmarkLink = (link_id) => ({
+//     type: types.REQUEST_BOOKMARK_LINK,
+//     link_id,
+// })
+
+// const receiveBookmarkLink = (link) => ({
+//     type: types.RECEIVE_BOOKMARK_LINK,
+//     link,
+// })
+
+// const errorBookmarkLink = () => ({
+//     type: types.ERROR_BOOKMARK_LINK,
+// })
 
 const handleHttpError = (actionName, error,) => {
     console.log(`#{actionName} Error`)

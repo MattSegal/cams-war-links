@@ -1,5 +1,6 @@
 import {types} from 'actions'
 import {OPEN, WAITING, CLOSED} from 'constants'
+import {closeAll, closeAllExcept} from 'utilities'
 
 
 const deleteLinkReducer = (action) => (state) =>
@@ -23,8 +24,8 @@ const tryDeleteLinkReducer = (action, state) => ({
         add: CLOSED,
         items: state.links.items.map(link =>
             link.id === action.link_id
-                ? {...link, status: {delete: OPEN, edit: CLOSED, details: CLOSED}}
-                : {...link, status: {delete: CLOSED, edit: CLOSED, details: CLOSED}}
+                ? {...link, status: closeAllExcept(link.status, 'delete', OPEN)}
+                : {...link, status: closeAll(link.status)}
         ),
     }
 })
@@ -35,7 +36,7 @@ const cancelDeleteLinkReducer = (action, state) => ({
     links: {
         ...state.links,
         items: state.links.items.map(link =>
-            ({...link, status: {delete: CLOSED, edit: CLOSED, details: CLOSED}})
+            ({...link, status: closeAll(link.status)})
         ),
     }
 })
@@ -47,8 +48,8 @@ const requestDeleteLinkReducer = (action, state) => ({
         ...state.links,
         items: state.links.items.map(link =>
             link.id === action.link_id
-                ? {...link, status: {delete: WAITING, edit: CLOSED, details: CLOSED}}
-                : {...link, status: {delete: CLOSED, edit: CLOSED, details: CLOSED}}
+                ? {...link, status: closeAllExcept(link.status, 'delete', WAITING)}
+                : {...link}
         ),
     }
 })
@@ -64,6 +65,17 @@ const receiveDeleteLinkReducer = (action, state) => ({
     }
 })
 
+const errorDeleteLinkReducer = (action, state) => ({
+    ...state,
+    links: {
+        ...state.links,
+        items: state.links.items.map(link =>
+            link.id === action.link_id
+                ? {...link, status: {...link.status, delete: CLOSED}}
+                : {...link}
+        ),
+    }
+})
 
 module.exports = {
     deleteLinkReducer

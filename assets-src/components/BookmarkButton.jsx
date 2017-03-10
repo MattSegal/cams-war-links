@@ -5,7 +5,7 @@ import FaBookmark from 'react-icons/lib/fa/bookmark'
 import FaBookmarkO from 'react-icons/lib/fa/bookmark-o'
 
 
-class ToReadButton extends Component 
+class BookmarkButton extends Component 
 {
     static propTypes = {
         linkId: React.PropTypes.number,
@@ -36,4 +36,4 @@ class ToReadButton extends Component
     }
 }
 
-module.exports = ToReadButton
+module.exports = BookmarkButton

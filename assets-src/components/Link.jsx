@@ -5,117 +5,107 @@ import DeleteButton from 'components/DeleteButton'
 import DeleteLinkForm from 'components/DeleteLinkForm'
 import EditButton from 'components/EditButton'
 import LinkForm from 'components/LinkForm'
-import ToReadButton from 'components/ToReadButton'
+import BookmarkButton from 'components/BookmarkButton'
 import style from 'components/Link.scss'
-import {OPEN, WAITING, CLOSED} from 'constants'
+import {OPEN, WAITING, CLOSED, NO_USER_SELECTED} from 'constants'
+import {getTimeSince} from 'utilities'
 
 
-class Link extends Component 
+const Link = (props) =>
 {
-    static propTypes = {
-        id: PropTypes.number,
-        title: PropTypes.string,
-        url: PropTypes.string,
-        user: PropTypes.number,
-        username: PropTypes.string,
-        description: PropTypes.string,
-        noActiveUser: PropTypes.bool,
-        status: PropTypes.object,
-        deleteLink: React.PropTypes.object,
-        editLink: React.PropTypes.object,
-        linkDetails: React.PropTypes.object,
-    }
+    const ownerOnly = (jsx) => props.user === props.currentUser.id ? jsx : null
+    const loggedInOnly = (jsx) => props.currentUser.id !== NO_USER_SELECTED ? jsx : null
 
-    timeSince = (date) => 
-    {
-        var seconds = Math.floor((new Date() - new Date(date)) / 1000);
-        var interval = Math.floor(seconds / 31536000);
-        if (interval > 1) { return interval + " years" }
-        interval = Math.floor(seconds / 2592000);
-        if (interval > 1) { return interval + " months" }
-        interval = Math.floor(seconds / 86400);
-        if (interval > 1) { return interval + " days" }
-        interval = Math.floor(seconds / 3600);
-        if (interval > 1) { return interval + " hours" }
-        interval = Math.floor(seconds / 60);
-        if (interval > 1) { return interval + " minutes" }
-        return Math.floor(seconds) + " seconds";
-    }
+    const moreInfoButton = <MoreInfoButton
+        linkId={props.id}
+        status={props.status.details}
+        {...props.linkDetails} />
 
-    render() 
-    {
-        let userOwnsLink = this.props.user === this.props.currentUser.id
+    const bookmarkButton = loggedInOnly(
+        <BookmarkButton 
+            linkId={props.id} 
+            status={props.bookmark} 
+            {...props.bookmarkLink} />)
 
-        const moreInfoButton = (<MoreInfoButton
-            linkId={this.props.id}
-            status={this.props.status.details}
-            {...this.props.linkDetails}
-        />)
+    const description = props.description !== ""
+        ? <p>{props.description}</p>
+        : <p>No description</p>
+    
+    const moreInfoDisplay = props.status.details === OPEN 
+        ? description
+        : null
 
-        const description = this.props.description !== ""
-            ? <p>{this.props.description}</p>
-            : <p>No description</p>
-        
-        const moreInfoDisplay = this.props.status.details === OPEN 
-            ? description
-            : null
+    const deleteButton = ownerOnly(
+        <DeleteButton 
+            linkId={props.id} 
+            status={props.status} 
+            {...props.deleteLink} />)
 
-        const deleteButton = userOwnsLink
-            ? <DeleteButton linkId={this.props.id} status={this.props.status} {...this.props.deleteLink} />
-            : null
+    const deleteLinkForm =  ownerOnly(
+        <DeleteLinkForm 
+            linkId={props.id} 
+            status={props.status} 
+            {...props.deleteLink} />)
 
-        const deleteLinkForm =  userOwnsLink
-            ? <DeleteLinkForm linkId={this.props.id} status={this.props.status} {...this.props.deleteLink} />
-            : null
 
-        const editButton = userOwnsLink
-            ? <EditButton linkId={this.props.id} status={this.props.status} {...this.props.editLink} />
-            : null
+    const editButton = ownerOnly(
+        <EditButton 
+            linkId={props.id} 
+            status={props.status} 
+            {...props.editLink} />)
 
-        const editLinkForm = userOwnsLink
-            ? <LinkForm 
-                linkId={this.props.id} 
-                description={this.props.description} 
-                title={this.props.title} 
-                url={this.props.url} 
-                formStatus={this.props.status.edit} 
-                {...this.props.editLink} />
-            : null
+    const editLinkForm = ownerOnly(
+        <LinkForm 
+            linkId={props.id} 
+            description={props.description} 
+            title={props.title} 
+            url={props.url} 
+            formStatus={props.status.edit} 
+            {...props.editLink} />)
 
-        const details = this.props.noActiveUser
-            ? (<p className={style.details} >{this.props.username} - {this.timeSince(this.props.created)} ago</p>)
-            : (<p className={style.details} >{this.timeSince(this.props.created)} ago</p>)
+    const details = props.noActiveUser
+        ? (<p className={style.details} >{props.username} - {getTimeSince(props.created)} ago</p>)
+        : (<p className={style.details} >{getTimeSince(props.created)} ago</p>)
 
-        let displayContainer = this.props.status.edit === OPEN ||
-            this.props.status.delete === OPEN ||
-            this.props.status.details === OPEN 
+    let displayContainer = props.status.edit === OPEN ||
+        props.status.delete === OPEN ||
+        props.status.details === OPEN 
 
-        const linkFormContainer = displayContainer ? (
-            <div className={style.linkFormContainer}>
-                {deleteLinkForm}
-                {editLinkForm}
-                {moreInfoDisplay}
-            </div>
-        ) : null
+    const linkFormContainer = displayContainer ? (
+        <div className={style.linkFormContainer}>
+            {deleteLinkForm}
+            {editLinkForm}
+            {moreInfoDisplay}
+        </div>
+    ) : null
 
-        return (
-            <li className={style.link}>
-                <a className={style.hyperlink} href={this.props.url}>
-                    {this.props.title}
-                </a>
-                <ToReadButton 
-                    linkId={this.props.id} 
-                    status={this.props.status.bookmark} 
-                    {...this.props.bookmarkLink}
-                />
-                {moreInfoButton}
-                {editButton}
-                {deleteButton}
-                {details}
-                {linkFormContainer}
-            </li>
-        )
-    }
+    return (
+        <li className={style.link}>
+            <a className={style.hyperlink} href={props.url}>
+                {props.title}
+            </a>
+            {moreInfoButton}
+            {editButton}
+            {deleteButton}
+            {details}
+            {linkFormContainer}
+        </li>
+    )
+}
+
+Link.propTypes = {
+    id: PropTypes.number,
+    title: PropTypes.string,
+    url: PropTypes.string,
+    user: PropTypes.number,
+    username: PropTypes.string,
+    description: PropTypes.string,
+    noActiveUser: PropTypes.bool,
+    status: PropTypes.object,
+    bookmark: PropTypes.string,
+    deleteLink: PropTypes.object,
+    editLink: PropTypes.object,
+    linkDetails: PropTypes.object,
 }
 
 let mapStateToProps = (state) => ({

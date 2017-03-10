@@ -53,7 +53,7 @@ def build():
     with transaction.atomic():
 
         for u_data in user_data:
-            user = UserFactory(username=u_data['name'])
+            user = UserFactory(username=u_data['name'].lower())
 
             user_links = [
                 l for l in link_data

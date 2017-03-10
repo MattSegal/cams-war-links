@@ -1,6 +1,8 @@
 import {types} from 'actions'
 import {pipe} from 'utilities'
 import {OPEN, WAITING, CLOSED} from 'constants'
+import {closeAll} from 'utilities'
+
 
 const addLinkReducer = (action) => (state) =>
 {
@@ -21,7 +23,7 @@ const tryAddLinkReducer = (action, state) => ({
         ...state.links,
         add: OPEN,
         items: state.links.items.map(link =>
-            ({...link, status: {edit: CLOSED, delete: CLOSED, details: CLOSED}})
+            ({...link, status: closeAll(link.status)})
         ),
     }
 })
@@ -32,9 +34,6 @@ const cancelAddLinkReducer = (action, state) => ({
     links: {
         ...state.links,
         add: CLOSED,
-        items: state.links.items.map(link =>
-            ({...link, status: {edit: CLOSED, delete: CLOSED, details: CLOSED}})
-        ),
     }
 })
 
@@ -44,9 +43,6 @@ const requestAddLinkReducer = (action, state) =>  ({
     links: {
         ...state.links,
         add: WAITING,
-        items: state.links.items.map(link =>
-            ({...link, status: {edit: CLOSED, delete: CLOSED, details: CLOSED}})
-        ),
     }
 })
 
@@ -56,10 +52,6 @@ const receiveAddLinkReducer = (action, state) => ({
     links: {
         ...state.links,
         add: CLOSED,
-        items: [
-            ...state.links.items,
-            {...action.link, status: {edit: CLOSED, delete: CLOSED, details: CLOSED}}
-        ]
     }
 })
 

@@ -1,6 +1,6 @@
 import {types} from 'actions'
 import {OPEN, WAITING, CLOSED} from 'constants'
-
+import {closeAll, closeAllExcept} from 'utilities'
 
 const linkDetailsReducer = (action) => (state) =>
 {
@@ -20,8 +20,8 @@ const showLinkDetailsReducer = (action, state) => ({
         add: CLOSED,
         items: state.links.items.map(link =>
             link.id === action.link_id
-                ? {...link, status: {details: OPEN, delete: CLOSED, edit: CLOSED}}
-                : {...link, status: {details: CLOSED, delete: CLOSED, edit: CLOSED}}
+                ? {...link, status: closeAllExcept(link.status, 'details', OPEN)}
+                : {...link, status: closeAll(link.status)}
         ),
     }
 })
@@ -32,7 +32,7 @@ const hideLinkDetailsReducer = (action, state) => ({
     links: {
         ...state.links,
         items: state.links.items.map(link =>
-            ({...link, status: {details: CLOSED, delete: CLOSED, edit: CLOSED}})
+            ({...link, status: closeAll(link.status)})
         ),
     }
 })

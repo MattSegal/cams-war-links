@@ -1,6 +1,7 @@
 import {types} from 'actions'
 import {pipe} from 'utilities'
 import {OPEN, WAITING, CLOSED} from 'constants'
+import {closeAll, closeAllExcept} from 'utilities'
 
 
 const editLinkReducer = (action) => (state) =>
@@ -23,8 +24,8 @@ const tryEditLinkReducer = (action, state) => ({
         add: CLOSED,
         items: state.links.items.map(link =>
             link.id === action.link_id
-                ? {...link, status: {edit: OPEN, delete: CLOSED, details: CLOSED}}
-                : {...link, status: {edit: CLOSED, delete: CLOSED, details: CLOSED}}
+                ? {...link, status: closeAllExcept(link.status, 'edit', OPEN)}
+                : {...link, status: closeAll(link.status)}
         ),
     }
 })
@@ -35,7 +36,7 @@ const cancelEditLinkReducer = (action, state) => ({
     links: {
         ...state.links,
         items: state.links.items.map(link =>
-            ({...link, status: {edit: CLOSED, delete: CLOSED, details: CLOSED}})
+            ({...link, status: closeAll(link.status)})
         ),
     }
 })
@@ -47,8 +48,8 @@ const requestEditLinkReducer = (action, state) => ({
         ...state.links,
         items: state.links.items.map(link =>
             link.id === action.link_id
-                ? {...link, status: {edit: WAITING, delete: CLOSED, details: CLOSED}}
-                : {...link, status: {edit: CLOSED, delete: CLOSED, details: CLOSED}}
+                ? {...link, status: closeAllExcept(link.status, 'edit', WAITING)}
+                : {...link}
         ),
     }
 })
@@ -60,8 +61,20 @@ const receiveEditLinkReducer = (action, state) => ({
         ...state.links,
         items: state.links.items.map(link =>
             link.id === action.link.id
-            ? {...link, ...(action.link), status: {edit: CLOSED, delete: CLOSED, details: CLOSED}}
+            ? {...link, ...(action.link), status: closeAll(link.status)}
             : link
+        ),
+    }
+})
+
+const errorEditLinkReducer = (action, state) => ({
+    ...state,
+    links: {
+        ...state.links,
+        items: state.links.items.map(link =>
+            link.id === action.link_id
+                ? {...link, status: {...link.status, edit: CLOSED}}
+                : {...link}
         ),
     }
 })
