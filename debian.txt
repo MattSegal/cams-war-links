@@ -1,5 +1,0 @@
-apache2
-libapache2-mod-wsgi
-python-pip
-curl
-mysql-server

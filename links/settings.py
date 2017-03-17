@@ -26,8 +26,8 @@ SECRET_KEY = 'rn@6za8rsag%e&7qy+!6i2kp8wqx@)in3(4=qcj*0uzms18u_!'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+# You win Django - I'll hardcode this for now
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS').split(',')
 
 # Application definition
 STATICFILES_DIRS = (
