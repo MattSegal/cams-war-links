@@ -5,13 +5,20 @@ const combineLoaders    = require('webpack-combine-loaders');
 const autoprefixer      = require('autoprefixer');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
-module.exports = {
+// Settings
+const IS_PROD =  process.env.DEPLOY_STATUS === 'PROD'
+const IS_TEST = process.env.DEPLOY_STATUS === 'TEST'
+console.log('Webpack running with PROD settings: '+IS_PROD)
+console.log('Webpack running with TEST settings '+IS_TEST)
+
+// Dev config
+let config = {
     context: path.resolve('./assets-src'),
 
     entry: './index',
 
     output: {
-        path: path.resolve('./assets-build/'),
+        path: path.resolve('./assets/'),
         filename: "[name]-[hash].js",
     },
     
@@ -50,7 +57,7 @@ module.exports = {
         ],
     },
     plugins: [
-        new ExtractTextPlugin('[name].css', {allChunks: true}),
+        new ExtractTextPlugin('[name]-[hash].css', {allChunks: true}),
         new BundleTracker({filename: './webpack-stats.json'})
     ],
     resolve: {
@@ -61,3 +68,11 @@ module.exports = {
         extensions: ['', '.js', '.jsx','.scss'],
     },
 }
+
+if (IS_TEST || IS_PROD)
+{
+    console.log('======= APPLYING PROD WEBPACK SETTINGS =======')
+}
+
+
+module.exports = config

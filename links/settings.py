@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+IS_PROD = os.environ.get('DEPLOY_STATUS') == 'PROD'
+IS_TEST = os.environ.get('DEPLOY_STATUS') == 'TEST'
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -21,17 +23,18 @@ LOGIN_REDIRECT_URL = '/'
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+# DON'T TELL ME HOW TO LIVE MY LIFE DJANGO
+# I DO WHAT I WANT
 SECRET_KEY = 'rn@6za8rsag%e&7qy+!6i2kp8wqx@)in3(4=qcj*0uzms18u_!'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
-# You win Django - I'll hardcode this for now
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = not IS_PROD
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS').split(',')
 
 # Application definition
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'assets-build'),
+    os.path.join(BASE_DIR, 'assets'),
 )
 
 WEBPACK_LOADER = {
@@ -140,3 +143,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
+
+if IS_PROD or IS_TEST:
+    STATIC_ROOT = os.environ.get('DJANGO_STATIC_ROOT')

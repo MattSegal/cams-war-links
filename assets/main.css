@@ -1,0 +1,288 @@
+.react-spinner {
+  position: absolute;
+  width: 80%;
+  height: 80%;
+  top: 50%;
+  left: 50%; }
+
+.react-spinner_bar {
+  -webkit-animation: react-spinner_spin 1.2s linear infinite;
+  -moz-animation: react-spinner_spin 1.2s linear infinite;
+  animation: react-spinner_spin 1.2s linear infinite;
+  border-radius: 5px;
+  background-color: black;
+  position: absolute;
+  width: 20%;
+  height: 7.8%;
+  top: -3.9%;
+  left: -10%; }
+
+@keyframes react-spinner_spin {
+  0% {
+    opacity: 1; }
+  100% {
+    opacity: 0.15; } }
+
+@-moz-keyframes react-spinner_spin {
+  0% {
+    opacity: 1; }
+  100% {
+    opacity: 0.15; } }
+
+@-webkit-keyframes react-spinner_spin {
+  0% {
+    opacity: 1; }
+  100% {
+    opacity: 0.15; } }
+
+html, body {
+  font-family: sans-serif;
+  font-size: 14px;
+  height: 100%;
+  margin: 0;
+  padding: 0; }
+
+h1, h2, h3, h4, h5, h6, ul, li, p {
+  color: #333;
+  margin: 0;
+  padding: 0;
+  list-style: none; }
+
+html, body {
+  font-family: sans-serif;
+  font-size: 14px;
+  height: 100%;
+  margin: 0;
+  padding: 0; }
+
+h1, h2, h3, h4, h5, h6, ul, li, p {
+  color: #333;
+  margin: 0;
+  padding: 0;
+  list-style: none; }
+
+.headerSpacer {
+  height: 5em; }
+
+header {
+  position: fixed;
+  width: 100%;
+  box-sizing: border-box;
+  z-index: 1;
+  padding: 1em;
+  background-color: #eee;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-justify-content: space-between;
+      -ms-flex-pack: justify;
+          justify-content: space-between; }
+  header h1 {
+    display: inline-block;
+    font-size: 2em; }
+  header .headerOptionWrapper {
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+        -ms-flex-align: center;
+            align-items: center; }
+  header span, header a {
+    font-weight: bold;
+    color: #333;
+    text-decoration: none; }
+    header span:visited, header a:visited {
+      color: #333; }
+    header span + a, header a + a {
+      margin-left: 2em; }
+  header button {
+    font-size: 1.2em;
+    min-width: 2em;
+    cursor: pointer;
+    position: relative;
+    background-color: #eee;
+    border: none; }
+    header button:focus {
+      outline: none; }
+
+.contentWrapper {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1em 2em; }
+
+.form {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  max-width: 380px;
+  margin: 0 auto; }
+  .form h1 {
+    margin-bottom: 20px; }
+  .form p {
+    margin-bottom: 10px;
+    color: #EB6464; }
+  .form input {
+    border: 1px solid #888;
+    display: block;
+    margin: 0 0 0.8em 0;
+    padding: 4px; }
+  .form .errorPill {
+    padding: 0.4em;
+    box-sizing: border-box;
+    margin: -0.8em 0 0.8em 0;
+    text-align: center;
+    background-color: #fcc;
+    color: #c44; }
+    .form .errorPill > ul, .form .errorPill li {
+      color: #c44; }
+  .form .submit {
+    font-weight: bold;
+    cursor: pointer;
+    background-color: #fff;
+    border: none;
+    outline: none; }
+html, body {
+  font-family: sans-serif;
+  font-size: 14px;
+  height: 100%;
+  margin: 0;
+  padding: 0; }
+
+h1, h2, h3, h4, h5, h6, ul, li, p {
+  color: #333;
+  margin: 0;
+  padding: 0;
+  list-style: none; }
+
+.Link__link {
+  font-family: sans-serif;
+  margin-bottom: 1em;
+  text-decoration: none; }
+
+.Link__hyperlink {
+  text-decoration: none;
+  font-weight: bold;
+  color: #38C; }
+  .Link__hyperlink:visited {
+    color: #38C; }
+
+.Link__details {
+  color: #888;
+  font-size: x-small; }
+
+.Link__linkFormContainer {
+  padding: 1em;
+  max-width: 800px; }
+  .Link__linkFormContainer p {
+    line-height: 1.3em; }
+
+.Link__button {
+  font-size: 1.1em;
+  cursor: pointer;
+  float: right;
+  color: #888; }
+  .Link__button:hover {
+    color: #333; }
+
+.Link__button + .Link__button {
+  margin-right: 0.5em; }
+
+.Link__formButton {
+  width: 48%;
+  padding: 3px 5px;
+  border-radius: 3px;
+  font-weight: bold;
+  font-size: 14px;
+  color: #fff;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  cursor: pointer; }
+
+.Link__formInput {
+  width: 48%;
+  margin-bottom: 3px;
+  font-size: 14px; }
+  .Link__formInput input {
+    width: 100%; }
+
+.Link__deleteForm {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-justify-content: space-around;
+      -ms-flex-pack: distribute;
+          justify-content: space-around; }
+  .Link__deleteForm .Link__deleteFormButton, .Link__deleteForm .Link__deleteButton, .Link__deleteForm .Link__cancelButton {
+    cursor: pointer;
+    font-size: 2em;
+    text-align: center; }
+  .Link__deleteForm .Link__deleteButton {
+    color: #EB6464; }
+  .Link__deleteForm .Link__cancelButton {
+    color: #647EEB; }
+html, body {
+  font-family: sans-serif;
+  font-size: 14px;
+  height: 100%;
+  margin: 0;
+  padding: 0; }
+
+h1, h2, h3, h4, h5, h6, ul, li, p {
+  color: #333;
+  margin: 0;
+  padding: 0;
+  list-style: none; }
+
+.LinkForm__form {
+  margin: 0 auto 2em auto;
+  max-width: 800px; }
+
+.LinkForm__input {
+  margin-bottom: 1em; }
+  .LinkForm__input input, .LinkForm__input textarea {
+    font-size: 14px;
+    font-family: sans-serif;
+    padding: 0.5em;
+    width: 100%; }
+
+.LinkForm__button {
+  color: #888;
+  display: inline-block;
+  font-size: 1.5em;
+  cursor: pointer; }
+  .LinkForm__button:hover {
+    color: #333; }
+
+.LinkForm__button + .LinkForm__button {
+  margin-left: 1em; }
+.LinkList__list {
+  padding: 0;
+  list-style: none; }
+.UserList__userList {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-justify-content: space-around;
+      -ms-flex-pack: distribute;
+          justify-content: space-around;
+  margin-bottom: 3em; }
+
+.UserList__user {
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  overflow: hidden; }
+  .UserList__user:hover {
+    cursor: pointer; }
+
+.UserList__user + .UserList__user {
+  margin-left: 2em; }
+
+.UserList__selected {
+  font-weight: bold; }
