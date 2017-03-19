@@ -162,11 +162,11 @@ sshagent(['jenkins'])
     ssh("""
     touch ${VIRTUALENV_DIR}/bin/set_env_vars
 
-    cat << EOM
+    cat > ${VIRTUALENV_DIR}/bin/set_env_vars << EOM
     export DEPLOY_STATUS='${ENVIRONMENT_TYPE}'
     export DJANGO_STATIC_ROOT='/var/static'
     export ALLOWED_HOSTS='${TARGET_NODE_ADDRESS}'
-    EOM > ${VIRTUALENV_DIR}/bin/set_env_vars
+    EOM
     
     chmod +x ${VIRTUALENV_DIR}/bin/set_env_vars
     """)
