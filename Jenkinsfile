@@ -135,42 +135,42 @@ sh 'sudo salt "*" state.highstate  -l debug'
 
 sshagent(['jenkins']) 
 {
-    // Print box name as debug step
-    ssh('uname -a')
+// Print box name as debug step
+ssh('uname -a')
 
-    // Kill gunicorn
-    ssh("${VIRTUALENV_DIR}/bin/gunicorn_stop", [NAME: APP_NAME])
+// Kill gunicorn
+ssh("${VIRTUALENV_DIR}/bin/gunicorn_stop", [NAME: APP_NAME])
 
-    // STFP and extract zip file
-    ssh("rm -rf ${DEPLOY_DIR}/*")
-    sftp("./${ZIP_FILE}", "/tmp/")
-    ssh("tar -zxf /tmp/${ZIP_FILE} --directory ${DEPLOY_DIR}/")
-    ssh("rm /tmp/${ZIP_FILE}")
-    ssh("chown www-data: ${DEPLOY_DIR}")
+// STFP and extract zip file
+ssh("rm -rf ${DEPLOY_DIR}/*")
+sftp("./${ZIP_FILE}", "/tmp/")
+ssh("tar -zxf /tmp/${ZIP_FILE} --directory ${DEPLOY_DIR}/")
+ssh("rm /tmp/${ZIP_FILE}")
+ssh("chown www-data: ${DEPLOY_DIR}")
 
-    // Start gunicorn + Django
-    ssh("${VIRTUALENV_DIR}/bin/gunicorn_start deploy", [
-        ALLOWED_HOSTS: TARGET_NODE_ADDRESS,
-        APP_NAME: APP_NAME,
-        DJANGODIR: DEPLOY_DIR,
-        LOGFILE: "${VIRTUALENV_DIR}/gunicorn.log",
-        DJANGO_STATIC_ROOT: '/var/static',
-        DEPLOY_STATUS: ENVIRONMENT_TYPE
-    ])
+// Start gunicorn + Django
+ssh("${VIRTUALENV_DIR}/bin/gunicorn_start deploy", [
+    ALLOWED_HOSTS: TARGET_NODE_ADDRESS,
+    APP_NAME: APP_NAME,
+    DJANGODIR: DEPLOY_DIR,
+    LOGFILE: "${VIRTUALENV_DIR}/gunicorn.log",
+    DJANGO_STATIC_ROOT: '/var/static',
+    DEPLOY_STATUS: ENVIRONMENT_TYPE
+])
 
-    // use this to start gunicorn when ssh'd in
-    ssh("""
-    touch ${VIRTUALENV_DIR}/bin/set_env_vars
+// use this to start gunicorn when ssh'd in
+ssh("""
+touch ${VIRTUALENV_DIR}/bin/set_env_vars
 
-    cat > ${VIRTUALENV_DIR}/bin/set_env_vars << EOM
-    export DEPLOY_STATUS='${ENVIRONMENT_TYPE}'
-    export DJANGO_STATIC_ROOT='/var/static'
-    export ALLOWED_HOSTS='${TARGET_NODE_ADDRESS}'
-    EOM
-    
-    chmod +x ${VIRTUALENV_DIR}/bin/set_env_vars
-    """)
-}
+cat > ${VIRTUALENV_DIR}/bin/set_env_vars << EOM
+export DEPLOY_STATUS='${ENVIRONMENT_TYPE}'
+export DJANGO_STATIC_ROOT='/var/static'
+export ALLOWED_HOSTS='${TARGET_NODE_ADDRESS}'
+EOM
+
+chmod +x ${VIRTUALENV_DIR}/bin/set_env_vars
+""")
+} // sshagent
 
 echo 'Cleaning up workspace'
 sh 'rm -rf ./*'
