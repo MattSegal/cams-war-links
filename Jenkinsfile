@@ -36,11 +36,11 @@ with open(file_path,\"w\") as f:
     json.dump(stats,f)
 """
 
-def set_env_vars = """
-export DEPLOY_STATUS=\"${ENVIRONMENT_TYPE}\"
-export DJANGO_STATIC_ROOT=\"/var/static\"
-export ALLOWED_HOSTS=\"${TARGET_NODE_ADDRESS}\"
-"""
+def set_env_vars = [
+    "export DEPLOY_STATUS=\"${ENVIRONMENT_TYPE}\"",
+    "export DJANGO_STATIC_ROOT=\"/var/static\"",
+    "export ALLOWED_HOSTS=\"${TARGET_NODE_ADDRESS}\"",
+]​.join(';')​​​​​​​​​​​​​​
 
 def clone_or_pull(directory, remote)
 {
