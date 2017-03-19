@@ -37,6 +37,18 @@ with open(file_path,\"w\") as f:
     json.dump(stats,f)
 """
 
+def clone_or_pull(directory, remote)
+{
+    sh ("""
+    if [ ! -d ${directory}/.git ]
+    then
+        git clone ${remote} ${directory}
+    else
+        git -C ${directory} pull
+    fi
+    """)
+}
+
 def ssh(bash_commands, env_vars=[:])
 {
     env_str= ""
@@ -106,7 +118,6 @@ node
     }
 }
 
-
 stage 'Deploy' 
 echo '===== Deployment ====='
 node 
@@ -117,7 +128,8 @@ node
 
     // Apply configuration with SaltStack
     echo 'Pulling latest SaltStack config'
-    sh 'git -C /srv/salt pull'
+    sh 'mkdir -p /srv'
+    clone_or_pull('/srv/salt')
 
     echo 'Testing SaltStack connections'
     sh 'sudo salt "*" test.ping'
