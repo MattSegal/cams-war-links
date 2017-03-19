@@ -36,6 +36,12 @@ with open(file_path,\"w\") as f:
     json.dump(stats,f)
 """
 
+def set_env_vars = """
+export DEPLOY_STATUS=\"${ENVIRONMENT_TYPE}\"
+export DJANGO_STATIC_ROOT=\"/var/static\"
+export ALLOWED_HOSTS=\"${TARGET_NODE_ADDRESS}\"
+"""
+
 def clone_or_pull(directory, remote)
 {
     sh ("""
@@ -66,7 +72,7 @@ def sftp(local_file,remote_dir)
 
 node
 {
-echo "Begin deployment of $APP_NAME} to ${TARGET_NODE_ADDRESS} with environment type ${ENVIRONMENT_TYPE}"
+echo "Begin deployment of ${APP_NAME} to ${TARGET_NODE_ADDRESS} with environment type ${ENVIRONMENT_TYPE}"
 
 stage 'Checkout'
 echo '===== Git Checkout ====='
@@ -155,8 +161,11 @@ sshagent(['jenkins'])
         DJANGODIR: DEPLOY_DIR,
         LOGFILE: "${VIRTUALENV_DIR}/gunicorn.log",
         DJANGO_STATIC_ROOT: '/var/static',
-        DEPLOY_STATUS: "TEST"
+        DEPLOY_STATUS: ENVIRONMENT_TYPE
     ])
+
+    ssh("echo '${set_env_vars}' > ${VIRTUALENV_DIR}/bin/set_env_vars")
+    ssh("chmod +x ${VIRTUALENV_DIR}/bin/set_env_vars")
 }
 
 echo 'Cleaning up workspace'
