@@ -161,7 +161,7 @@ ssh("${VIRTUALENV_DIR}/bin/gunicorn_start deploy", [
 // use this to start gunicorn when ssh'd in
 // use . ../bin/set_env_vars
 // eg
-// . ../bin/set_env_vars;
+// . ../bin/activate;. ../bin/set_env_vars;python manage.py shell -c "from api.factories import build;build()"
 ssh("""
 touch ${VIRTUALENV_DIR}/bin/set_env_vars
 
@@ -173,21 +173,6 @@ EOM
 
 chmod +x ${VIRTUALENV_DIR}/bin/set_env_vars
 """)
-
-if (env.ENVIRONMENT_TYPE == 'TEST')
-{
-ssh("""
-touch ${VIRTUALENV_DIR}/bin/build_test_data
-
-cat > ${VIRTUALENV_DIR}/bin/build_test_data << EOM
-source ${VIRTUALENV_DIR}/bin/activate;
-source ${VIRTUALENV_DIR}/bin/set_env_vars;
-python ${VIRTUALENV_DIR}/app/manage.py shell -c 'from api.factories import build;build()'
-EOM
-
-chmod +x ${VIRTUALENV_DIR}/bin/build_test_data
-""")
-} // if
 
 } // sshagent
 
