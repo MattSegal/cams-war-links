@@ -164,9 +164,13 @@ sshagent(['jenkins'])
         DEPLOY_STATUS: ENVIRONMENT_TYPE
     ])
 
-    // use this for start gunicorn as well
-    ssh("echo '${set_env_vars}' > ${VIRTUALENV_DIR}/app/set_env_vars.sh")
-    ssh("chmod +x ${VIRTUALENV_DIR}/app/set_env_vars.sh")
+    // use this for start gunicorn as
+    ssh("""
+    SCRIPT='${VIRTUALENV_DIR}/bin/set_env_vars'
+    touch SCRIPT
+    echo '${set_env_vars}' > SCRIPT
+    chmod +x SCRIPT
+    """)
 }
 
 echo 'Cleaning up workspace'
