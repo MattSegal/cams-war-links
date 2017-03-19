@@ -1,5 +1,17 @@
 #!/usr/bin/env groovy
 
+properties([
+    parameters([
+        choice(choices: ['TEST', 'PROD'], description: '', name: 'ENVIRONMENT_TYPE'),
+        string(defaultValue: '192.168.2.3', description: '', name: 'TARGET_NODE_ADDRESS'),
+        string(defaultValue: 'links', description: '', name: 'APP_NAME')
+    ]),
+    pipelineTriggers([
+        githubPush()]
+    )]
+)
+
+
 def unwanted_files = [
     'Jenkinsfile',
     'package.json',
@@ -11,14 +23,10 @@ def unwanted_folders = [
     'assets-src',
 ]
 
-env.TARGET_IP = '192.168.2.3'
-def APP_NAME = 'links'
 def WEBAPPS_DIR = '/var/webapps'
 def DEPLOY_DIR = "${WEBAPPS_DIR}/${APP_NAME}/app"
 def VIRTUALENV_DIR = "${WEBAPPS_DIR}/${APP_NAME}"
 def ZIP_FILE = "${APP_NAME}.tar.gz"
-def ALLOWED_HOSTS = "${TARGET_IP}"
-
 
 def process_webpack_stats = """
 import json
@@ -56,13 +64,13 @@ def ssh(bash_commands, env_vars=[:])
     {
         env_str+= "export ${el.key}=\"${el.value}\";"
     }
-    sh "sudo ssh root@${TARGET_IP} '${env_str}${bash_commands}'"
+    sh "sudo ssh root@${TARGET_NODE_ADDRESS} '${env_str}${bash_commands}'"
 }
 
 
 def sftp(local_file,remote_dir)
 {
-    sh "echo 'put ${local_file}' | sudo sftp root@${TARGET_IP}:${remote_dir}"
+    sh "echo 'put ${local_file}' | sudo sftp root@${TARGET_NODE_ADDRESS}:${remote_dir}"
 }
 
 
@@ -154,7 +162,7 @@ node
 
         // Start gunicorn + Django
         ssh("${VIRTUALENV_DIR}/bin/gunicorn_start deploy", [
-            ALLOWED_HOSTS: ALLOWED_HOSTS,
+            ALLOWED_HOSTS: TARGET_NODE_ADDRESS,
             APP_NAME: APP_NAME,
             DJANGODIR: DEPLOY_DIR,
             LOGFILE: "${VIRTUALENV_DIR}/gunicorn.log",
