@@ -1,4 +1,6 @@
 #!/usr/bin/env groovy
+node
+{
 
 properties([
     parameters([
@@ -76,101 +78,97 @@ def sftp(local_file,remote_dir)
 
 stage 'Checkout'
 echo '===== Git Checkout ====='
-node
-{
-    checkout([
-        $class: 'GitSCM', 
-        branches: [[name: '*/django_links']], 
-        doGenerateSubmoduleConfigurations: false, 
-        extensions: [], 
-        submoduleCfg: [], 
-        userRemoteConfigs: [[url: 'https://github.com/MattSegal/Link-Sharing-Site.git']]
-    ])
-}
+
+checkout([
+    $class: 'GitSCM', 
+    branches: [[name: '*/django_links']], 
+    doGenerateSubmoduleConfigurations: false, 
+    extensions: [], 
+    submoduleCfg: [], 
+    userRemoteConfigs: [[url: 'https://github.com/MattSegal/Link-Sharing-Site.git']]
+])
 
 stage 'Build'
 echo '===== Building ====='
-node
+
+// Get cached node_modules
+sh ("""
+if [ -d /var/build/node_modules ]
+then 
+    cp -r /var/build/node_modules ./node_modules
+    npm rebuild node-sass
+else 
+    mkdir -p /var/build/node_modules
+fi
+""")
+sh 'npm install'
+
+// Build javascript 
+sh 'export DEPLOY_STATUS="TEST";webpack --config ./webpack.config.js'
+
+// Fix webpack-stats.json
+sh "echo '${process_webpack_stats}' | python"
+
+// Cache node_modules
+sh 'rm -rf /var/build/node_modules'
+sh 'mv ./node_modules /var/build/node_modules'
+
+// Delete stuff we don't want/need
+for (folder in unwanted_folders)
 {
-    // Get cached node_modules
-    sh ("""
-    if [ -d /var/build/node_modules ]
-    then 
-        cp -r /var/build/node_modules ./node_modules
-        npm rebuild node-sass
-    else 
-        mkdir -p /var/build/node_modules
-    fi
-    """)
-    sh 'npm install'
-
-    // Build javascript 
-    sh 'export DEPLOY_STATUS="TEST";webpack --config ./webpack.config.js'
-
-    // Fix webpack-stats.json
-    sh "echo '${process_webpack_stats}' | python"
-
-    // Cache node_modules
-    sh 'rm -rf /var/build/node_modules'
-    sh 'mv ./node_modules /var/build/node_modules'
-
-    // Delete stuff we don't want/need
-    for (folder in unwanted_folders)
-    {
-        sh "rm -rf ./${folder}"
-    }
-
-    for (file in unwanted_files)
-    {
-        sh "rm ./${file}"
-    }
+    sh "rm -rf ./${folder}"
 }
+
+for (file in unwanted_files)
+{
+    sh "rm ./${file}"
+}
+
 
 stage 'Deploy' 
 echo '===== Deployment ====='
-node 
+// Compress the payload
+sh "if [ -f ${ZIP_FILE} ];then rm ${ZIP_FILE};fi"
+sh "tar -zcf ${ZIP_FILE} ./*"
+
+// Apply configuration with SaltStack
+echo 'Pulling latest SaltStack config'
+sh 'mkdir -p /srv'
+clone_or_pull('/srv/salt', 'https://github.com/MattSegal/WebserverSalt.git')
+
+echo 'Testing SaltStack connections'
+sh 'sudo salt "*" test.ping'
+
+echo 'Applying latest SaltStack config'
+sh 'sudo salt "*" state.highstate  -l debug'
+
+sshagent(['jenkins']) 
 {
-    // Compress the payload
-    sh "if [ -f ${ZIP_FILE} ];then rm ${ZIP_FILE};fi"
-    sh "tar -zcf ${ZIP_FILE} ./*"
+    // Print box name as debug step
+    ssh('uname -a')
 
-    // Apply configuration with SaltStack
-    echo 'Pulling latest SaltStack config'
-    sh 'mkdir -p /srv'
-    clone_or_pull('/srv/salt', 'https://github.com/MattSegal/WebserverSalt.git')
+    // // Kill gunicorn
+    ssh("${VIRTUALENV_DIR}/bin/gunicorn_stop", [NAME: APP_NAME])
 
-    echo 'Testing SaltStack connections'
-    sh 'sudo salt "*" test.ping'
+    // STFP and extract zip file
+    ssh("rm -rf ${DEPLOY_DIR}/*")
+    sftp("./${ZIP_FILE}", "/tmp/")
+    ssh("tar -zxf /tmp/${ZIP_FILE} --directory ${DEPLOY_DIR}/")
+    ssh("rm /tmp/${ZIP_FILE}")
+    ssh("chown www-data: ${DEPLOY_DIR}")
 
-    echo 'Applying latest SaltStack config'
-    sh 'sudo salt "*" state.highstate  -l debug'
-
-    sshagent(['jenkins']) 
-    {
-        // Print box name as debug step
-        ssh('uname -a')
-
-        // // Kill gunicorn
-        ssh("${VIRTUALENV_DIR}/bin/gunicorn_stop", [NAME: APP_NAME])
-
-        // STFP and extract zip file
-        ssh("rm -rf ${DEPLOY_DIR}/*")
-        sftp("./${ZIP_FILE}", "/tmp/")
-        ssh("tar -zxf /tmp/${ZIP_FILE} --directory ${DEPLOY_DIR}/")
-        ssh("rm /tmp/${ZIP_FILE}")
-        ssh("chown www-data: ${DEPLOY_DIR}")
-
-        // Start gunicorn + Django
-        ssh("${VIRTUALENV_DIR}/bin/gunicorn_start deploy", [
-            ALLOWED_HOSTS: TARGET_NODE_ADDRESS,
-            APP_NAME: APP_NAME,
-            DJANGODIR: DEPLOY_DIR,
-            LOGFILE: "${VIRTUALENV_DIR}/gunicorn.log",
-            DJANGO_STATIC_ROOT: '/var/static',
-            DEPLOY_STATUS: "TEST"
-        ])
-    }
-
-    echo 'Cleaning up workspace'
-    sh 'rm -rf ./*'
+    // Start gunicorn + Django
+    ssh("${VIRTUALENV_DIR}/bin/gunicorn_start deploy", [
+        ALLOWED_HOSTS: TARGET_NODE_ADDRESS,
+        APP_NAME: APP_NAME,
+        DJANGODIR: DEPLOY_DIR,
+        LOGFILE: "${VIRTUALENV_DIR}/gunicorn.log",
+        DJANGO_STATIC_ROOT: '/var/static',
+        DEPLOY_STATUS: "TEST"
+    ])
 }
+
+echo 'Cleaning up workspace'
+sh 'rm -rf ./*'
+
+} // node
