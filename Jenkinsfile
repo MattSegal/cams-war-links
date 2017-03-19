@@ -76,7 +76,7 @@ node
         doGenerateSubmoduleConfigurations: false, 
         extensions: [], 
         submoduleCfg: [], 
-        userRemoteConfigs: [[url: '/var/links/.git']]
+        userRemoteConfigs: [[url: 'https://github.com/MattSegal/Link-Sharing-Site.git']]
     ])
 }
 
