@@ -36,12 +36,6 @@ with open(file_path,\"w\") as f:
     json.dump(stats,f)
 """
 
-def set_env_vars = [
-    "export DEPLOY_STATUS=\"${ENVIRONMENT_TYPE}\"",
-    "export DJANGO_STATIC_ROOT=\"/var/static\"",
-    "export ALLOWED_HOSTS=\"${TARGET_NODE_ADDRESS}\"",
-]​.join(';')​​​​​​​​​​​​​​
-
 def clone_or_pull(directory, remote)
 {
     sh ("""
@@ -167,7 +161,7 @@ sshagent(['jenkins'])
     // use this to start gunicorn when ssh'd in
     ssh("""
     touch ${VIRTUALENV_DIR}/bin/set_env_vars
-    echo '${set_env_vars}' > ${VIRTUALENV_DIR}/bin/set_env_vars
+    echo 'export DEPLOY_STATUS=\"${ENVIRONMENT_TYPE}\";export DJANGO_STATIC_ROOT=\"/var/static\";export ALLOWED_HOSTS=\"${TARGET_NODE_ADDRESS}\"' > ${VIRTUALENV_DIR}/bin/set_env_vars
     chmod +x ${VIRTUALENV_DIR}/bin/set_env_vars
     """)
 }
