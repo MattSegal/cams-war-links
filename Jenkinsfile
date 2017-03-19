@@ -129,7 +129,7 @@ node
     // Apply configuration with SaltStack
     echo 'Pulling latest SaltStack config'
     sh 'mkdir -p /srv'
-    clone_or_pull('/srv/salt')
+    clone_or_pull('/srv/salt', 'https://github.com/MattSegal/WebserverSalt.git')
 
     echo 'Testing SaltStack connections'
     sh 'sudo salt "*" test.ping'
