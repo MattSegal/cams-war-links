@@ -1,47 +1,7 @@
 #!/usr/bin/env groovy
-
-def clone_or_pull(directory, remote)
-{
-    sh ("""
-    if [ ! -d ${directory}/.git ]
-    then
-        git clone ${remote} ${directory}
-    else
-        git -C ${directory} pull
-    fi
-    """)
-}
-
-def ssh(bash_commands, env_vars=[:])
-{
-    env_str= ""
-    for (el in env_vars)
-    {
-        env_str+= "export ${el.key}=\"${el.value}\";"
-    }
-    sh "sudo ssh root@192.168.2.3 '${env_str}${bash_commands}'"
-}
-
-
-def sftp(local_file,remote_dir)
-{
-    sh "echo 'put ${local_file}' | sudo sftp root@192.168.2.3:${remote_dir}"
-}
-
-node
-{
-
-properties([
-    parameters([
-        choice(choices: ['TEST', 'PROD'], description: '', name: 'ENVIRONMENT_TYPE'),
-        string(defaultValue: '192.168.2.3', description: '', name: 'TARGET_NODE_ADDRESS'),
-        string(defaultValue: 'links', description: '', name: 'APP_NAME')
-    ]),
-    pipelineTriggers([
-        githubPush()]
-    )]
-)
-
+env.ENVIRONMENT_TYPE = env.ENVIRONMENT_TYPE ?: 'TEST' // TEST or PROD
+env.TARGET_NODE_ADDRESS = env.TARGET_NODE_ADDRESS :? '192.168.2.3'
+env.APP_NAME = env.APP_NAME :? 'links'
 
 def unwanted_files = [
     'Jenkinsfile',
@@ -76,12 +36,40 @@ with open(file_path,\"w\") as f:
     json.dump(stats,f)
 """
 
+def clone_or_pull(directory, remote)
+{
+    sh ("""
+    if [ ! -d ${directory}/.git ]
+    then
+        git clone ${remote} ${directory}
+    else
+        git -C ${directory} pull
+    fi
+    """)
+}
+
+def ssh(bash_commands, env_vars=[:])
+{
+    env_str= ""
+    for (el in env_vars)
+    {
+        env_str+= "export ${el.key}=\"${el.value}\";"
+    }
+    sh "sudo ssh root@${TARGET_NODE_ADDRESS} '${env_str}${bash_commands}'"
+}
 
 
+def sftp(local_file,remote_dir)
+{
+    sh "echo 'put ${local_file}' | sudo sftp root@${TARGET_NODE_ADDRESS}:${remote_dir}"
+}
+
+node
+{
+echo "Begin deployment of $APP_NAME} to ${TARGET_NODE_ADDRESS} with environment type ${ENVIRONMENT_TYPE}"
 
 stage 'Checkout'
 echo '===== Git Checkout ====='
-
 checkout([
     $class: 'GitSCM', 
     branches: [[name: '*/django_links']], 
@@ -127,9 +115,9 @@ for (file in unwanted_files)
     sh "rm ./${file}"
 }
 
-
 stage 'Deploy' 
 echo '===== Deployment ====='
+
 // Compress the payload
 sh "if [ -f ${ZIP_FILE} ];then rm ${ZIP_FILE};fi"
 sh "tar -zcf ${ZIP_FILE} ./*"
@@ -150,7 +138,7 @@ sshagent(['jenkins'])
     // Print box name as debug step
     ssh('uname -a')
 
-    // // Kill gunicorn
+    // Kill gunicorn
     ssh("${VIRTUALENV_DIR}/bin/gunicorn_stop", [NAME: APP_NAME])
 
     // STFP and extract zip file
