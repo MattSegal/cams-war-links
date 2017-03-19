@@ -164,12 +164,11 @@ sshagent(['jenkins'])
         DEPLOY_STATUS: ENVIRONMENT_TYPE
     ])
 
-    // use this for start gunicorn as
+    // use this to start gunicorn when ssh'd in
     ssh("""
-    SCRIPT='${VIRTUALENV_DIR}/bin/set_env_vars'
-    touch SCRIPT
-    echo '${set_env_vars}' > SCRIPT
-    chmod +x SCRIPT
+    touch ${VIRTUALENV_DIR}/bin/set_env_vars
+    echo '${set_env_vars}' > ${VIRTUALENV_DIR}/bin/set_env_vars
+    chmod +x ${VIRTUALENV_DIR}/bin/set_env_vars
     """)
 }
 
