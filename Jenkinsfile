@@ -1,4 +1,33 @@
 #!/usr/bin/env groovy
+
+def clone_or_pull(directory, remote)
+{
+    sh ("""
+    if [ ! -d ${directory}/.git ]
+    then
+        git clone ${remote} ${directory}
+    else
+        git -C ${directory} pull
+    fi
+    """)
+}
+
+def ssh(bash_commands, env_vars=[:])
+{
+    env_str= ""
+    for (el in env_vars)
+    {
+        env_str+= "export ${el.key}=\"${el.value}\";"
+    }
+    sh "sudo ssh root@192.168.2.3 '${env_str}${bash_commands}'"
+}
+
+
+def sftp(local_file,remote_dir)
+{
+    sh "echo 'put ${local_file}' | sudo sftp root@192.168.2.3:${remote_dir}"
+}
+
 node
 {
 
@@ -47,33 +76,7 @@ with open(file_path,\"w\") as f:
     json.dump(stats,f)
 """
 
-def clone_or_pull(directory, remote)
-{
-    sh ("""
-    if [ ! -d ${directory}/.git ]
-    then
-        git clone ${remote} ${directory}
-    else
-        git -C ${directory} pull
-    fi
-    """)
-}
 
-def ssh(bash_commands, env_vars=[:])
-{
-    env_str= ""
-    for (el in env_vars)
-    {
-        env_str+= "export ${el.key}=\"${el.value}\";"
-    }
-    sh "sudo ssh root@${TARGET_NODE_ADDRESS} '${env_str}${bash_commands}'"
-}
-
-
-def sftp(local_file,remote_dir)
-{
-    sh "echo 'put ${local_file}' | sudo sftp root@${TARGET_NODE_ADDRESS}:${remote_dir}"
-}
 
 
 stage 'Checkout'
