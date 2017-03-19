@@ -116,12 +116,12 @@ node
     sh "tar -zcf ${ZIP_FILE} ./*"
 
     // Apply configuration with SaltStack
-    echo 'Pulling latests SaltStack config'
+    echo 'Pulling latest SaltStack config'
     sh 'git -C /srv/salt pull'
 
     echo 'Testing SaltStack connections'
     sh 'sudo salt "*" test.ping'
-    
+
     echo 'Applying latest SaltStack config'
     sh 'sudo salt "*" state.highstate  -l debug'
 
