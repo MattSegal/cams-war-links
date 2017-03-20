@@ -1,4 +1,8 @@
 #!/usr/bin/env groovy
+// FUCK IT
+env.ENVIRONMENT_TYPE = env.ENVIRONMENT_TYPE ?: 'TEST' // TEST or PROD
+env.TARGET_NODE_ADDRESS = env.TARGET_NODE_ADDRESS ?: '45.55.161.12'
+env.APP_NAME = env.APP_NAME ?: 'links'
 
 def unwanted_files = [
     'Jenkinsfile',
