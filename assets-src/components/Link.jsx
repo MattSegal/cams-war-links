@@ -81,7 +81,7 @@ const Link = (props) =>
 
     return (
         <li className={style.link}>
-            <a className={style.hyperlink} href={props.url}>
+            <a className={style.hyperlink} href={props.url} target="_blank" rel="noopener noreferrer">
                 {props.title}
             </a>
             {moreInfoButton}
