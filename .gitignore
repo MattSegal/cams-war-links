@@ -14,3 +14,5 @@ sql/
 webpack-stats.json
 env/
 npm-debug.log.*
+.tmp/
+

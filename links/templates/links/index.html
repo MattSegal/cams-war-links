@@ -18,5 +18,5 @@ bootstrapData['currentUser'] = {'id': {{ user.id }},'username': '{{ user.usernam
 
 {% block content %}
 <div id="react-app-content"></div>
-{% render_bundle 'main' %}
+{% render_bundle 'main' 'js' %}
 {% endblock content %}

@@ -1,8 +1,8 @@
+{% load render_bundle from webpack_loader %}
 <!DOCTYPE html>
 <html>
 <head>
-    {% load static %}
-    <link href="{% static "main.css" %}" rel="stylesheet" type="text/css" />
+    {% render_bundle 'main' 'css' %}
     {% block head %}{% endblock head %}
 </head>
 <body>

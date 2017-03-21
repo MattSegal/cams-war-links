@@ -4,13 +4,6 @@ import {NO_USER_SELECTED, OPEN, CLOSED, INACTIVE} from 'constants'
 const _pipe = (f, g) => (...args) => g(f(...args))
 const pipe = (...fns) => fns.reduce(_pipe)
 
-const setupState = (state) => ({
-    ...state,
-    currentUser: state.currentUser ? state.currentUser : {id: NO_USER_SELECTED},
-    links: setupLinkState(state.links),
-    users: setupUserState(state.users),
-})
-
 const setupLinkState = (links) => ({
     ...links,
     add: CLOSED,
@@ -26,6 +19,13 @@ const setupLinkState = (links) => ({
 const setupUserState = (users) => ({
     ...users,
     activeUserId: NO_USER_SELECTED,
+})
+
+const setupState = (state) => ({
+    ...state,
+    currentUser: state.currentUser ? state.currentUser : {id: NO_USER_SELECTED},
+    links: setupLinkState(state.links),
+    users: setupUserState(state.users),
 })
 
 const getTimeSince = (date) => 
