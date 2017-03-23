@@ -13,10 +13,11 @@ import {getTimeSince} from 'utilities'
 
 const Link = (props) =>
 {
-    const ownerOnly = (jsx) => props.user === props.currentUser.id ? jsx : null
-    const loggedInOnly = (jsx) => props.currentUser.id !== NO_USER_SELECTED ? jsx : null
+    const ownerOnly = (jsx) => props.user === props.currentUser.id && jsx
+    const loggedInOnly = (jsx) => props.currentUser.id !== NO_USER_SELECTED && jsx
 
-    const moreInfoButton = <MoreInfoButton
+    const moreInfoButton = props.description
+    && <MoreInfoButton
         linkId={props.id}
         status={props.status.details}
         {...props.linkDetails} />
@@ -27,13 +28,8 @@ const Link = (props) =>
             status={props.bookmark} 
             {...props.bookmarkLink} />)
 
-    const description = props.description !== ""
-        ? <p>{props.description}</p>
-        : <p>No description</p>
-    
     const moreInfoDisplay = props.status.details === OPEN 
-        ? description
-        : null
+        && <p>{props.description}</p>
 
     const deleteButton = ownerOnly(
         <DeleteButton 
