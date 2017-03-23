@@ -1,6 +1,6 @@
 import {types} from 'actions'
 import {pipe, setupLinkState} from 'utilities'
-import {CLOSED} from 'constants'
+import {CLOSED, INACTIVE} from 'constants'
 import {closeAll} from 'utilities'
 
 
@@ -26,7 +26,11 @@ const receiveLinksReducer = (action, state) => ({
     ...state,
     links: {
         ...state.links,
-        items: action.links.map(link => ({...link, status: closeAll(link.status)})),
+        items: action.links ? action.links.map(link => ({
+            ...link, 
+            status: closeAll(link.status),
+            bookmark: INACTIVE // TODO: Fix this
+        })) : [...state.links.items],
         isFetching: false,
     }
 })

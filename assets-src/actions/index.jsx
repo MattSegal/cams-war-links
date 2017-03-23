@@ -205,12 +205,20 @@ const handleHttpError = (actionName, error,) => {
 module.exports = {
     types,
     setActiveUser,
+
+    // Fetch
     fetchLinks,
+    requestLinks,
+    receiveLinks,
+    fetchError,
 
     // Add
     tryAddLink,
+    requestAddLink,
+    receiveAddLink,
     cancelAddLink,
     confirmAddLink,
+    errorAddLink,
 
     // Delete
     tryDeleteLink,

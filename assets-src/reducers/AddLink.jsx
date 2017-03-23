@@ -1,6 +1,6 @@
 import {types} from 'actions'
 import {pipe} from 'utilities'
-import {OPEN, WAITING, CLOSED} from 'constants'
+import {OPEN, WAITING, CLOSED, INACTIVE} from 'constants'
 import {closeAll} from 'utilities'
 
 
@@ -51,6 +51,11 @@ const receiveAddLinkReducer = (action, state) => ({
     ...state,
     links: {
         ...state.links,
+        items: [...state.links.items, {
+            ...action.link,
+            status: closeAll(false),
+            bookmark: INACTIVE // TODO: Fix this
+        }],
         add: CLOSED,
     }
 })

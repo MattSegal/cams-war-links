@@ -3,24 +3,23 @@
     .userList
     {
         display: flex;
+        flex-wrap: wrap;
         justify-content: space-around;
-        margin-bottom: 3em;
+        margin-bottom: 1.5em;
     }
 
     .user 
     {
+        flex: 1;
+        min-width: 80px;
+        margin-bottom: 1.5em; 
+
         user-select: none;
-        overflow: hidden;
+        text-align: center;
         &:hover
         {
             cursor: pointer;
-
         }
-    }
-
-    .user + .user 
-    {
-        margin-left: 2em;
     }
 
     .selected

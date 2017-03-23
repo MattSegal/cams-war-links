@@ -45,12 +45,17 @@ const getTimeSince = (date) =>
 }
 
 const closeAll = (status) => {
-    var newStatus = {...status}
+    let newStatus = status 
+        ? {...status}
+        : {edit: CLOSED, delete: CLOSED, details: CLOSED}
     Object.keys(newStatus).forEach(k => newStatus[k] = CLOSED)
     return newStatus
 }
+
 const closeAllExcept = (status, exceptKey, exceptStatus) => {
-    var newStatus = {...status}
+    var newStatus = status 
+        ? {...status}
+        : {edit: CLOSED, delete: CLOSED, details: CLOSED}
     Object.keys(newStatus).forEach(k => 
         k === exceptKey
         ? newStatus[k] = exceptStatus
