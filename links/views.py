@@ -15,7 +15,8 @@ import json
 def index(request):
     template = loader.get_template('links/index.html')
 
-    users = User.objects.all()
+    # TODO: Use view data to bootstrap data, as this is duplication
+    users = User.objects.all().filter(is_superuser=False)
     links = Link.objects.all()
 
     # constant for JS - this sucks

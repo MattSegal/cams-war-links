@@ -10,7 +10,7 @@ class UserViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
     """
-    queryset = User.objects.all()
+    queryset = User.objects.all().filter(is_superuser=False)
     serializer_class = UserSerializer
 
 class LinkViewSet(viewsets.ModelViewSet):
