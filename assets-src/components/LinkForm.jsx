@@ -36,6 +36,23 @@ class LinkForm extends Component
         description: '',
     }
 
+    confirm = () =>
+    {
+        let link = {
+            title: this.state.title,
+            url: this.state.url,
+            description: this.state.description,
+            user: this.props.currentUser.id,
+        }
+        console.log(link)
+        if (this.props.linkId >= 0)
+        {
+            link['id'] = this.props.linkId
+        }
+
+        this.props.confirm(link)
+    }
+
     handleTitleChange(event) 
     {
         this.setState({
@@ -60,38 +77,27 @@ class LinkForm extends Component
         })
     }
 
-    confirm = () =>
-    {
-        let link = {
-            title: this.state.title,
-            url: this.state.url,
-            description: this.state.description,
-            user: this.props.currentUser.id,
-        }
-        console.log(link)
-        if (this.props.linkId >= 0)
-        {
-            link['id'] = this.props.linkId
-        }
-
-        this.props.confirm(link)
-    }
-
     render()
     {
         let isDialogueOpen = this.props.formStatus === OPEN
         if (!isDialogueOpen) {return null}
 
-        let cancel = () => this.props.cancel(this.props.linkId) 
+        const cancel = () => this.props.cancel(this.props.linkId) 
+        const confirmWithEnter = e => e.key === 'Enter' && this.confirm()
+        const cancelWithEnter = e => e.key === 'Enter' && this.props.cancel(this.props.linkId) 
+        const cancelwithEsc = e => e.keyCode === 27 && this.props.cancel(this.props.linkId) 
 
         return (
             <div className={style.form}>
                 <div className={style.input}>
                     <input 
+                        autoFocus
                         type="text" 
                         placeholder="Title"
                         value={this.state.title} 
-                        onChange={this.handleTitleChange} 
+                        onChange={this.handleTitleChange}
+                        onKeyPress={confirmWithEnter}
+                        onKeyDown={cancelwithEsc}
                     />
                 </div>
 
@@ -101,20 +107,33 @@ class LinkForm extends Component
                         placeholder="URL"
                         value={this.state.url} 
                         onChange={this.handleUrlChange} 
+                        onKeyPress={confirmWithEnter}
+                        onKeyDown={cancelwithEsc}
                     />
                 </div>
                 <div className={style.input}>
-                    <textarea 
-                        rows="1" 
-                        type="text" 
+                    <input 
+                        type="text"
                         placeholder="Description (Optional)"
                         value={this.state.description} 
                         onChange={this.handleDescriptionChange} 
+                        onKeyPress={confirmWithEnter}
+                        onKeyDown={cancelwithEsc}
                     />
                 </div>
                 <div>
-                    <div className={style.button} onClick={this.confirm}><FaCheck /></div>
-                    <div className={style.button} onClick={cancel}><FaClose /></div>
+                    <div 
+                        tabIndex="0" 
+                        className={style.button} 
+                        onClick={this.confirm}
+                        onKeyPress={confirmWithEnter}
+                    ><FaCheck /></div>
+                    <div 
+                        tabIndex="0" 
+                        className={style.button} 
+                        onClick={cancel}
+                        onKeyPress={cancelWithEnter}
+                    ><FaClose /></div>
                 </div>
             </div>
         )

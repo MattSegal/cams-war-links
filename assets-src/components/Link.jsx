@@ -59,10 +59,6 @@ const Link = (props) =>
             formStatus={props.status.edit} 
             {...props.editLink} />)
 
-    const details = props.noActiveUser
-        ? (<p className={style.details} >{props.username} - {getTimeSince(props.created)} ago</p>)
-        : (<p className={style.details} >{getTimeSince(props.created)} ago</p>)
-
     let displayContainer = props.status.edit === OPEN ||
         props.status.delete === OPEN ||
         props.status.details === OPEN 
@@ -75,15 +71,19 @@ const Link = (props) =>
         </div>
     ) : null
 
+    const visibilityStyle = props.isHidden ? 'hidden' : 'flip-in-hor-bottom'
+
     return (
-        <li className={style.link}>
+        <li className={`${style.link} ${visibilityStyle}`}>
             <a className={style.hyperlink} href={props.url} target="_blank" rel="noopener noreferrer">
                 {props.title}
             </a>
             {moreInfoButton}
             {editButton}
             {deleteButton}
-            {details}
+            <p className={style.details} >
+                {props.username} - {getTimeSince(props.created)} ago
+            </p>
             {linkFormContainer}
         </li>
     )
@@ -96,7 +96,7 @@ Link.propTypes = {
     user: PropTypes.number,
     username: PropTypes.string,
     description: PropTypes.string,
-    noActiveUser: PropTypes.bool,
+    isHidden: PropTypes.bool,
     status: PropTypes.object,
     bookmark: PropTypes.string,
     deleteLink: PropTypes.object,

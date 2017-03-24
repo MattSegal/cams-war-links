@@ -1,10 +1,8 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux'
-import UserLinkList from 'components/UserLinkList'
-import LatestLinkList from 'components/LatestLinkList'
+import LinkList from 'components/LinkList'
 import NewLinkForm from 'components/NewLinkForm'
 import Actions from 'actions'
-import {NO_USER_SELECTED} from 'constants'
 
 class LinkListContainer extends Component 
 {
@@ -21,7 +19,6 @@ class LinkListContainer extends Component
 
     render() 
     {
-        let noActiveUser = this.props.activeUserId === NO_USER_SELECTED
         let usernames = this.getUsernames(this.props.users)
 
         let links = this.props.links
@@ -31,28 +28,19 @@ class LinkListContainer extends Component
                 username: usernames[link.user]
             }))
 
-        let linkList = noActiveUser
-            ? (<LatestLinkList 
-                    links={links} 
-                    deleteLink={this.props.deleteLink} 
-                    editLink={this.props.editLink}
-                    linkDetails={this.props.linkDetails}
-                />)
-            : (<UserLinkList 
-                    activeUserId={this.props.activeUserId} 
-                    links={links} 
-                    deleteLink={this.props.deleteLink} 
-                    editLink={this.props.editLink}
-                    linkDetails={this.props.linkDetails}
-                />)
-
         return (
             <div>
                  <NewLinkForm
                     addFormStatus={this.props.addFormStatus} 
                     addLink={this.props.addLink} 
                 />
-                {linkList}
+                <LinkList 
+                    activeUserId={this.props.activeUserId} 
+                    links={links} 
+                    deleteLink={this.props.deleteLink} 
+                    editLink={this.props.editLink}
+                    linkDetails={this.props.linkDetails}
+                />
             </div>
         )
     }
