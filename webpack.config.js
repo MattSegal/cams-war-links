@@ -19,7 +19,7 @@ let config = {
 
     output: {
         path: path.resolve('./assets/'),
-        filename: "[name]-[hash].js",
+        filename: "[name].js",
     },
     
     postcss: [
@@ -57,7 +57,7 @@ let config = {
         ],
     },
     plugins: [
-        new ExtractTextPlugin('[name]-[hash].css', {allChunks: true}),
+        new ExtractTextPlugin('[name].css', {allChunks: true}),
         new BundleTracker({filename: './webpack-stats.json'})
     ],
     resolve: {
