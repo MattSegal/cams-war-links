@@ -45,14 +45,14 @@ def ssh(bash_commands, env_vars=[:])
 }
 
 
-def sftp_put(local,remote)
+def sftp_put(local_file,remote_dir)
 {
-    sh "echo 'put ${local}' | sudo sftp root@${TARGET_NODE_ADDRESS}:${remote}"
+    sh "echo 'put ${local_file}' | sudo sftp root@${TARGET_NODE_ADDRESS}:${remote_dir}"
 }
 
-def sftp_get(remote,local)
+def sftp_get(remote_path,local_filename)
 {
-    sh "echo 'get ${local}' | sudo sftp root@${TARGET_NODE_ADDRESS}:${remote}"
+    sh "echo 'get ${local_filename}' | sudo sftp root@${TARGET_NODE_ADDRESS}:${remote_path}"
 }
 
 node
@@ -188,14 +188,18 @@ stage('Deploy')
         // > cat $BACKUP.gz | gunzip | sudo -u postgres -i psql $APP_NAME
 
         def backup_dir = "/var/backups/${APP_NAME}"
-        def backup_file = "${backup_dir}/postgres_${BUILD_ID}.gz"
+        def backup_file = "postgres_${BUILD_ID}.gz"
+        def backup_path = "${backup_dir}/${backup_file}"
         ssh("""
         mkdir -p ${backup_dir}
         sudo -u postgres -i pg_dump ${APP_NAME} | gzip > ${backup_file}
         """)
 
-        sh("mkdir -p ${backup_dir}")
-        sftp_get(backup_file,backup_dir)
+        sftp_get(backup_path,backup_file)
+        sh("""
+        mkdir -p ${backup_dir}
+        mv ${backup_file} ${backup_path}
+        """)
         
         // Start gunicorn + Django
         ssh("${VIRTUALENV_DIR}/bin/gunicorn_start deploy", [
