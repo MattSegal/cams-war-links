@@ -194,7 +194,7 @@ stage('Deploy')
         sudo -u postgres -i pg_dump ${APP_NAME} | gzip > ${backup_file}
         """)
 
-        sh('mkdir -p ${backup_dir}')
+        sh("mkdir -p ${backup_dir}")
         sftp_get(backup_file,backup_file)
         
         // Start gunicorn + Django
