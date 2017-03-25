@@ -51,23 +51,21 @@ def build():
     User.objects.all().delete()
 
     with transaction.atomic():
-
-        for u_data in user_data:
-            user = UserFactory(username=u_data['name'].lower())
-
-            user_links = [
-                l for l in link_data
-                if l['user'] == u_data['name']
-            ]
-
-            print len(user_links)
-
-            for l_data in user_links:
-                link = LinkFactory(
-                    user=user,
-                    title=l_data['title'],
-                    url=l_data['url']
+        UserFactory(username='admin',is_staff=True,is_superuser=True)
+        users = [
+            UserFactory(username=u_data['name'].lower())
+            for u_data in user_data
+        ]
+        print 'Successfully created users: {}'.format(users)
+        for link in link_data:
+            link_users = [u for u in users if u.username == link['user'].lower()]
+            if len(link_users) == 1:
+                link_obj = LinkFactory(
+                    user=link_users[0],
+                    title=link['title'],
+                    url=link['url']
                 )
-                link.save()
+                link_obj.save()
 
-            print 'Successfully created user {0}'.format(user.username)
+                
+

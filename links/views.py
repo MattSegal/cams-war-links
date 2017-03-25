@@ -17,7 +17,7 @@ def index(request):
 
     # TODO: Use view data to bootstrap data, as this is duplication
     users = User.objects.all().filter(is_superuser=False)
-    links = Link.objects.all()
+    links = Link.objects.all().filter(active=True)
 
     # constant for JS - this sucks
     NO_ACTIVE_USER = -1

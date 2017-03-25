@@ -18,5 +18,14 @@ class LinkViewSet(viewsets.ModelViewSet):
     API endpoint that allows users to be viewed or edited.
     """
     permission_classes = (IsOwnerOrReadOnly,)
-    queryset = Link.objects.all()
+    queryset = Link.objects.all().filter(active=True)
     serializer_class = LinkSerializer
+
+    def destroy(self, request, *args, **kwargs):
+        """
+        Soft delete a link
+        """
+        link = self.get_object()
+        link.active = False
+        link.save()
+        return Response(status=status.HTTP_204_NO_CONTENT)

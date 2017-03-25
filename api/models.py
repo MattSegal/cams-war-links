@@ -14,6 +14,10 @@ class Link(models.Model):
     description     = models.TextField(default='', blank=True)
     created         = models.DateTimeField(auto_now_add=True)
     modified        = models.DateTimeField(auto_now=True)
+    active          = models.BooleanField(default=True)
 
     def __repr__(self):
         return '<Link: {0} - {1}>'.format(self.user,self.title)
+
+    def __str__(self):
+        return self.__repr__()

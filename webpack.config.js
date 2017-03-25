@@ -72,6 +72,11 @@ let config = {
 if (IS_TEST || IS_PROD)
 {
     console.log('======= APPLYING PROD WEBPACK SETTINGS =======')
+    config.output.filename = "[name]-[hash].js"
+    config.plugins[0] = new ExtractTextPlugin(
+        '[name]-[hash].css',
+        {allChunks: true}
+    )
 }
 
 
