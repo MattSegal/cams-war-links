@@ -70,8 +70,7 @@ checkout([
     userRemoteConfigs: [[url: 'https://github.com/MattSegal/Link-Sharing-Site.git']]
 ])
 
-try 
-{
+
 stage('Build')
 {
     echo '===== Building ====='
@@ -209,20 +208,10 @@ stage('Deploy')
         ])
     } // sshagent
 } // stage
-} // try
-catch (caughtError) 
-{
-    err = caughtError
-    print err
-    currentBuild.result = "FAILURE"
-}
-finally
-{
+
 stage('Cleanup')
 {
     echo 'Cleaning up job workspace'
     sh 'rm -rf ./*'
-
 } // stage
-} // finally
 } // node
