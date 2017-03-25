@@ -195,7 +195,7 @@ stage('Deploy')
         """)
 
         sh("mkdir -p ${backup_dir}")
-        sftp_get(backup_file,backup_file)
+        sftp_get(backup_file,backup_dir)
         
         // Start gunicorn + Django
         ssh("${VIRTUALENV_DIR}/bin/gunicorn_start deploy", [
