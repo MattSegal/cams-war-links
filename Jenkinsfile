@@ -167,7 +167,7 @@ stage('Deploy')
         """.stripMargin())
 
         // Update data from prod
-        if (emv.ENVIRONMENT_TYPE == 'TEST')
+        if (env.ENVIRONMENT_TYPE == 'TEST')
         {
            ssh("""
             source ${VIRTUALENV_DIR}/bin/activate
@@ -176,7 +176,7 @@ stage('Deploy')
             """)
         }
 
-        if (emv.ENVIRONMENT_TYPE == 'PROD')
+        if (env.ENVIRONMENT_TYPE == 'PROD')
         {
             // TODO: Create database backups
         }
