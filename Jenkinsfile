@@ -45,9 +45,14 @@ def ssh(bash_commands, env_vars=[:])
 }
 
 
-def sftp(local_file,remote_dir)
+def sftp_put(local,remote)
 {
-    sh "echo 'put ${local_file}' | sudo sftp root@${TARGET_NODE_ADDRESS}:${remote_dir}"
+    sh "echo 'put ${local}' | sudo sftp root@${TARGET_NODE_ADDRESS}:${remote}"
+}
+
+def sftp_get(remote,local)
+{
+    sh "echo 'get ${local}' | sudo sftp root@${TARGET_NODE_ADDRESS}:${remote}"
 }
 
 node
@@ -182,10 +187,16 @@ stage('Deploy')
         // restore with
         // > echo "DROP SCHEMA public CASCADE;CREATE SCHEMA public;" | sudo -u postgres -i psql $APP_NAME
         // > cat $BACKUP.gz | gunzip | sudo -u postgres -i psql $APP_NAME
+
+        def backup_dir = "/var/backups/${APP_NAME}"
+        def backup_file = "${backup_dir}/postgres_${BUILD_ID}.gz"
         ssh("""
-        mkdir -p /var/backups/${APP_NAME}/
-        sudo -u postgres -i pg_dump ${APP_NAME} | gzip > /var/backups/${APP_NAME}/postgres_${BUILD_ID}.gz 
+        mkdir -p ${backup_dir}
+        sudo -u postgres -i pg_dump ${APP_NAME} | gzip > ${backup_file}
         """)
+
+        sh('mkdir -p ${backup_dir}')
+        sftp_get(backup_file,backup_file)
         
         // Start gunicorn + Django
         ssh("${VIRTUALENV_DIR}/bin/gunicorn_start deploy", [
@@ -202,6 +213,7 @@ stage('Deploy')
 catch (caughtError) 
 {
     err = caughtError
+    print err
     currentBuild.result = "FAILURE"
 }
 finally
@@ -211,11 +223,6 @@ stage('Cleanup')
     echo 'Cleaning up job workspace'
     sh 'rm -rf ./*'
 
-    // Rethrow caught error
-    if (err)
-    {
-        throw err
-    }
 } // stage
 } // finally
 } // node
