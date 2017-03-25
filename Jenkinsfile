@@ -154,7 +154,7 @@ stage('Deploy')
 
         // STFP and extract zip file
         ssh("rm -rf ${DEPLOY_DIR}/*")
-        sftp("./${ZIP_FILE}", "/tmp/")
+        sftp_put("./${ZIP_FILE}", "/tmp/")
         ssh("tar -zxf /tmp/${ZIP_FILE} --directory ${DEPLOY_DIR}/")
         ssh("rm /tmp/${ZIP_FILE}")
         ssh("chown www-data: ${DEPLOY_DIR}")
