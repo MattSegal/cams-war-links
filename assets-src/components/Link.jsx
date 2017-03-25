@@ -78,9 +78,9 @@ const Link = (props) =>
             <a className={style.hyperlink} href={props.url} target="_blank" rel="noopener noreferrer">
                 {props.title}
             </a>
-            {moreInfoButton}
-            {editButton}
             {deleteButton}
+            {editButton}
+            {moreInfoButton}
             <p className={style.details} >
                 {props.username} - {getTimeSince(props.created)} ago
             </p>

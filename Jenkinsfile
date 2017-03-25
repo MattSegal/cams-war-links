@@ -1,8 +1,10 @@
 #!/usr/bin/env groovy
-// FUCK IT
-env.ENVIRONMENT_TYPE = env.ENVIRONMENT_TYPE ?: 'TEST' // TEST or PROD
-env.TARGET_NODE_ADDRESS = env.TARGET_NODE_ADDRESS ?: '45.55.161.12'
-env.APP_NAME = env.APP_NAME ?: 'links'
+
+def jenkinsEnvVars = Jenkins.instance.getGlobalNodeProperties()[0].getEnvVars() 
+
+env.ENVIRONMENT_TYPE = jenkinsEnvVars.ENVIRONMENT_TYPE ?: 'TEST' // TEST or PROD
+env.TARGET_NODE_ADDRESS = jenkinsEnvVars.TARGET_NODE_ADDRESS ?: '45.55.161.12'
+env.APP_NAME = 'links'
 
 def unwanted_files = [
     'Jenkinsfile',
@@ -19,23 +21,6 @@ def WEBAPPS_DIR = '/var/webapps'
 def DEPLOY_DIR = "${WEBAPPS_DIR}/${APP_NAME}/app"
 def VIRTUALENV_DIR = "${WEBAPPS_DIR}/${APP_NAME}"
 def ZIP_FILE = "${APP_NAME}.tar.gz"
-
-def process_webpack_stats = """
-import json
-file_path = \"./webpack-stats.json\"
-with open(file_path,\"r\") as f:
-    stats = json.load(f)
-
-if stats[\"status\"] != \"done\":
-    raise Exception(stats)
-
-for idx in range(len(stats[\"chunks\"][\"main\"])):
-    file_name = stats[\"chunks\"][\"main\"][idx][\"path\"].split(\"/\")[-1]
-    stats[\"chunks\"][\"main\"][idx][\"path\"] = \"${DEPLOY_DIR}/assets/\" + file_name
-
-with open(file_path,\"w\") as f:
-    json.dump(stats,f)
-"""
 
 def clone_or_pull(directory, remote)
 {
@@ -80,104 +65,126 @@ checkout([
     userRemoteConfigs: [[url: 'https://github.com/MattSegal/Link-Sharing-Site.git']]
 ])
 
-stage 'Build'
-echo '===== Building ====='
-
-// Get cached node_modules
-sh ("""
-if [ -d /var/build/node_modules ]
-then 
-    cp -r /var/build/node_modules ./node_modules
-    npm rebuild node-sass
-else 
-    mkdir -p /var/build/node_modules
-fi
-""")
-sh 'npm install'
-
-// Build javascript 
-sh 'export DEPLOY_STATUS="TEST";webpack --config ./webpack.config.js'
-
-// Fix webpack-stats.json
-sh "echo '${process_webpack_stats}' | python"
-
-// Cache node_modules
-sh 'rm -rf /var/build/node_modules'
-sh 'mv ./node_modules /var/build/node_modules'
-
-// Delete stuff we don't want/need
-for (folder in unwanted_folders)
+stage('Build')
 {
-    sh "rm -rf ./${folder}"
-}
+    echo '===== Building ====='
 
-for (file in unwanted_files)
+    // Get cached node_modules
+    sh ("""
+    if [ -d /var/build/node_modules ]
+    then 
+        cp -r /var/build/node_modules ./node_modules
+        npm rebuild node-sass
+    else 
+        mkdir -p /var/build/node_modules
+    fi
+    """)
+    sh 'npm install'
+
+    // Build javascript 
+    sh 'export DEPLOY_STATUS="TEST";webpack --config ./webpack.config.js'
+
+    // Fix webpack-stats.json
+    def process_webpack_stats = """
+    |import json
+    |file_path = \"./webpack-stats.json\"
+    |with open(file_path,\"r\") as f:
+    |    stats = json.load(f)
+    |
+    |if stats[\"status\"] != \"done\":
+    |    raise Exception(stats)
+    |
+    |for idx in range(len(stats[\"chunks\"][\"main\"])):
+    |    file_name = stats[\"chunks\"][\"main\"][idx][\"path\"].split(\"/\")[-1]
+    |    stats[\"chunks\"][\"main\"][idx][\"path\"] = \"${DEPLOY_DIR}/assets/\" + file_name
+    |
+    |with open(file_path,\"w\") as f:
+    |    json.dump(stats,f)
+    """.stripMargin()
+    sh "echo '${process_webpack_stats}' | python"
+
+    // Cache node_modules
+    sh 'rm -rf /var/build/node_modules'
+    sh 'mv ./node_modules /var/build/node_modules'
+
+    // Delete stuff we don't want/need
+    for (folder in unwanted_folders)
+    {
+        sh "rm -rf ./${folder}"
+    }
+
+    for (file in unwanted_files)
+    {
+        sh "rm ./${file}"
+    }
+} // stage
+
+stage('Deploy')
 {
-    sh "rm ./${file}"
-}
+    echo '===== Deployment ====='
 
-stage 'Deploy' 
-echo '===== Deployment ====='
+    // Compress the payload
+    sh "if [ -f ${ZIP_FILE} ];then rm ${ZIP_FILE};fi"
+    sh "tar -zcf ${ZIP_FILE} ./*"
 
-// Compress the payload
-sh "if [ -f ${ZIP_FILE} ];then rm ${ZIP_FILE};fi"
-sh "tar -zcf ${ZIP_FILE} ./*"
+    // Apply configuration with SaltStack
+    echo 'Pulling latest SaltStack config'
+    sh 'mkdir -p /srv'
+    clone_or_pull('/srv/salt', 'https://github.com/MattSegal/WebserverSalt.git')
 
-// Apply configuration with SaltStack
-echo 'Pulling latest SaltStack config'
-sh 'mkdir -p /srv'
-clone_or_pull('/srv/salt', 'https://github.com/MattSegal/WebserverSalt.git')
+    echo 'Testing SaltStack connections'
+    sh 'sudo salt "*" test.ping'
 
-echo 'Testing SaltStack connections'
-sh 'sudo salt "*" test.ping'
+    echo 'Applying latest SaltStack config'
+    sh 'sudo salt "*" state.highstate  -l debug'
 
-echo 'Applying latest SaltStack config'
-sh 'sudo salt "*" state.highstate  -l debug'
+    sshagent(['jenkins']) 
+    {
+        // Print box name as debug step
+        ssh('uname -a')
 
-sshagent(['jenkins']) 
+        // Kill gunicorn
+        ssh("${VIRTUALENV_DIR}/bin/gunicorn_stop", [NAME: APP_NAME])
+
+        // STFP and extract zip file
+        ssh("rm -rf ${DEPLOY_DIR}/*")
+        sftp("./${ZIP_FILE}", "/tmp/")
+        ssh("tar -zxf /tmp/${ZIP_FILE} --directory ${DEPLOY_DIR}/")
+        ssh("rm /tmp/${ZIP_FILE}")
+        ssh("chown www-data: ${DEPLOY_DIR}")
+
+        // Start gunicorn + Django
+        ssh("${VIRTUALENV_DIR}/bin/gunicorn_start deploy", [
+            ALLOWED_HOSTS: TARGET_NODE_ADDRESS,
+            APP_NAME: APP_NAME,
+            DJANGODIR: DEPLOY_DIR,
+            LOGFILE: "${VIRTUALENV_DIR}/gunicorn.log",
+            DJANGO_STATIC_ROOT: '/var/static',
+            DEPLOY_STATUS: ENVIRONMENT_TYPE
+        ])
+
+        // use this to start gunicorn when ssh'd in
+        // use . ../bin/set_env_vars
+        // eg
+        // . ../bin/activate;. ../bin/set_env_vars;python manage.py shell -c "from api.factories import build;build()"
+        ssh("""
+        |touch ${VIRTUALENV_DIR}/bin/set_env_vars
+        |
+        |cat > ${VIRTUALENV_DIR}/bin/set_env_vars << EOM
+        |export DEPLOY_STATUS='${ENVIRONMENT_TYPE}'
+        |export DJANGO_STATIC_ROOT='/var/static'
+        |export ALLOWED_HOSTS='${TARGET_NODE_ADDRESS}'
+        |EOM
+        |
+        |chmod +x ${VIRTUALENV_DIR}/bin/set_env_vars
+        """.stripMargin())
+    } // sshagent
+} // stage
+
+stage('Cleanup')
 {
-// Print box name as debug step
-ssh('uname -a')
-
-// Kill gunicorn
-ssh("${VIRTUALENV_DIR}/bin/gunicorn_stop", [NAME: APP_NAME])
-
-// STFP and extract zip file
-ssh("rm -rf ${DEPLOY_DIR}/*")
-sftp("./${ZIP_FILE}", "/tmp/")
-ssh("tar -zxf /tmp/${ZIP_FILE} --directory ${DEPLOY_DIR}/")
-ssh("rm /tmp/${ZIP_FILE}")
-ssh("chown www-data: ${DEPLOY_DIR}")
-
-// Start gunicorn + Django
-ssh("${VIRTUALENV_DIR}/bin/gunicorn_start deploy", [
-    ALLOWED_HOSTS: TARGET_NODE_ADDRESS,
-    APP_NAME: APP_NAME,
-    DJANGODIR: DEPLOY_DIR,
-    LOGFILE: "${VIRTUALENV_DIR}/gunicorn.log",
-    DJANGO_STATIC_ROOT: '/var/static',
-    DEPLOY_STATUS: ENVIRONMENT_TYPE
-])
-
-// use this to start gunicorn when ssh'd in
-// use . ../bin/set_env_vars
-// eg
-// . ../bin/activate;. ../bin/set_env_vars;python manage.py shell -c "from api.factories import build;build()"
-ssh("""
-touch ${VIRTUALENV_DIR}/bin/set_env_vars
-
-cat > ${VIRTUALENV_DIR}/bin/set_env_vars << EOM
-export DEPLOY_STATUS='${ENVIRONMENT_TYPE}'
-export DJANGO_STATIC_ROOT='/var/static'
-export ALLOWED_HOSTS='${TARGET_NODE_ADDRESS}'
-EOM
-
-chmod +x ${VIRTUALENV_DIR}/bin/set_env_vars
-""")
-
-} // sshagent
-
-echo 'Cleaning up workspace'
-sh 'rm -rf ./*'
+    echo 'Cleaning up job workspace'
+    sh 'rm -rf ./*'
+} // stage
 
 } // node
