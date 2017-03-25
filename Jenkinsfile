@@ -172,7 +172,7 @@ stage('Deploy')
            ssh("""
             source ${VIRTUALENV_DIR}/bin/activate
             source ${VIRTUALENV_DIR}/bin/set_env_vars
-            python ${VIRTUALENV_DIR}/app/manage.py shell -c 'from api.factories import build;build()'
+            python ${VIRTUALENV_DIR}/app/manage.py shell -c \"from api.factories import build;build()\"
             """)
         }
 
