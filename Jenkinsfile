@@ -192,7 +192,7 @@ stage('Deploy')
         def backup_path = "${backup_dir}/${backup_file}"
         ssh("""
         mkdir -p ${backup_dir}
-        sudo -u postgres -i pg_dump ${APP_NAME} | gzip > ${backup_file}
+        sudo -u postgres -i pg_dump ${APP_NAME} | gzip > ${backup_path}
         """)
 
         sftp_get(backup_path,backup_file)
