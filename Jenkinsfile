@@ -65,6 +65,8 @@ checkout([
     userRemoteConfigs: [[url: 'https://github.com/MattSegal/Link-Sharing-Site.git']]
 ])
 
+try 
+{
 stage('Build')
 {
     echo '===== Building ====='
@@ -176,11 +178,15 @@ stage('Deploy')
             """)
         }
 
-        if (env.ENVIRONMENT_TYPE == 'PROD')
-        {
-            // TODO: Create database backups
-        }
-
+        // Create local database backups
+        // restore with
+        // > echo "DROP SCHEMA public CASCADE;CREATE SCHEMA public;" | sudo -u postgres -i psql $APP_NAME
+        // > cat $BACKUP.gz | gunzip | sudo -u postgres -i psql $APP_NAME
+        ssh("""
+        mkdir -p /var/backups/${APP_NAME}/
+        sudo -u postgres -i pg_dump ${APP_NAME} | gzip > /var/backups/${APP_NAME}/postgres_${BUILD_ID}.gz 
+        """)
+        
         // Start gunicorn + Django
         ssh("${VIRTUALENV_DIR}/bin/gunicorn_start deploy", [
             ALLOWED_HOSTS: TARGET_NODE_ADDRESS,
@@ -192,11 +198,24 @@ stage('Deploy')
         ])
     } // sshagent
 } // stage
-
+} // try
+catch (caughtError) 
+{
+    err = caughtError
+    currentBuild.result = "FAILURE"
+}
+finally
+{
 stage('Cleanup')
 {
     echo 'Cleaning up job workspace'
     sh 'rm -rf ./*'
-} // stage
 
+    // Rethrow caught error
+    if (err)
+    {
+        throw err
+    }
+} // stage
+} // finally
 } // node
