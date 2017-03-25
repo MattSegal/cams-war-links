@@ -153,20 +153,7 @@ stage('Deploy')
         ssh("rm /tmp/${ZIP_FILE}")
         ssh("chown www-data: ${DEPLOY_DIR}")
 
-        // Start gunicorn + Django
-        ssh("${VIRTUALENV_DIR}/bin/gunicorn_start deploy", [
-            ALLOWED_HOSTS: TARGET_NODE_ADDRESS,
-            APP_NAME: APP_NAME,
-            DJANGODIR: DEPLOY_DIR,
-            LOGFILE: "${VIRTUALENV_DIR}/gunicorn.log",
-            DJANGO_STATIC_ROOT: '/var/static',
-            DEPLOY_STATUS: ENVIRONMENT_TYPE
-        ])
-
-        // use this to start gunicorn when ssh'd in
-        // use . ../bin/set_env_vars
-        // eg
-        // . ../bin/activate;. ../bin/set_env_vars;python manage.py shell -c "from api.factories import build;build()"
+        // Add helper script to set required env vars
         ssh("""
         |touch ${VIRTUALENV_DIR}/bin/set_env_vars
         |
@@ -178,6 +165,31 @@ stage('Deploy')
         |
         |chmod +x ${VIRTUALENV_DIR}/bin/set_env_vars
         """.stripMargin())
+
+        // Update data from prod
+        if (emv.ENVIRONMENT_TYPE == 'TEST')
+        {
+           ssh("""
+            source ${VIRTUALENV_DIR}/bin/activate
+            source ${VIRTUALENV_DIR}/bin/set_env_vars
+            python ${VIRTUALENV_DIR}/app/manage.py shell -c 'from api.factories import build;build()'
+            """)
+        }
+
+        if (emv.ENVIRONMENT_TYPE == 'PROD')
+        {
+            // TODO: Create database backups
+        }
+
+        // Start gunicorn + Django
+        ssh("${VIRTUALENV_DIR}/bin/gunicorn_start deploy", [
+            ALLOWED_HOSTS: TARGET_NODE_ADDRESS,
+            APP_NAME: APP_NAME,
+            DJANGODIR: DEPLOY_DIR,
+            LOGFILE: "${VIRTUALENV_DIR}/gunicorn.log",
+            DJANGO_STATIC_ROOT: '/var/static',
+            DEPLOY_STATUS: ENVIRONMENT_TYPE
+        ])
     } // sshagent
 } // stage
 
