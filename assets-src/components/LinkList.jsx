@@ -9,7 +9,9 @@ const LinkList = props =>
         link.user !== props.activeUserId &&
         props.activeUserId !== NO_USER_SELECTED 
 
-    const links = props.links.map( link => 
+    const links = props.links
+    .filter(link => !isHidden(link))
+    .map( link => 
         (<Link 
             key={link.id}
             isHidden={isHidden(link)}

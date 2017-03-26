@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import Actions from 'actions'
+import {NO_USER_SELECTED} from 'constants'
 import NewLinkButton from 'components/NewLinkButton'
 import RefreshButton from 'components/RefreshButton'
 
@@ -14,10 +15,11 @@ class Header extends Component
                     onRefreshClick={this.props.onRefreshClick}
                     isFetching={this.props.isFetching}
                 />
+                {this.props.currentUser.id !== NO_USER_SELECTED &&
                 <NewLinkButton 
                     addFormStatus={this.props.addFormStatus} 
                     {...this.props.addLink} 
-                />
+                />}
             </div>
         )
     }
@@ -26,6 +28,7 @@ class Header extends Component
 let mapStateToProps = (state) => ({
     isFetching: state.links.isFetching,
     addFormStatus: state.links.add,
+    currentUser: state.currentUser
 })
 
 let mapDispatchToProps = (dispatch) => ({

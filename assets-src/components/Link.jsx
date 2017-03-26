@@ -71,10 +71,8 @@ const Link = (props) =>
         </div>
     ) : null
 
-    const visibilityStyle = props.isHidden ? 'hidden' : ''
-
     return (
-        <li className={`${style.link} ${visibilityStyle}`}>
+        <li className={style.link}>
             <a className={style.hyperlink} href={props.url} target="_blank" rel="noopener noreferrer">
                 {props.title}
             </a>
