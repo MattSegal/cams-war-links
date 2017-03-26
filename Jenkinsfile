@@ -63,7 +63,7 @@ stage 'Checkout'
 echo '===== Git Checkout ====='
 checkout([
     $class: 'GitSCM', 
-    branches: [[name: '*/master']], 
+    branches: [[name: '*/dev']], 
     doGenerateSubmoduleConfigurations: false, 
     extensions: [], 
     submoduleCfg: [], 
