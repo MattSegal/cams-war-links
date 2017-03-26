@@ -1,3 +1,4 @@
+
 const path              = require("path")
 const webpack           = require('webpack')
 const BundleTracker     = require('webpack-bundle-tracker')
@@ -6,10 +7,8 @@ const autoprefixer      = require('autoprefixer');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 // Settings
-const IS_PROD =  process.env.DEPLOY_STATUS === 'PROD'
-const IS_TEST = process.env.DEPLOY_STATUS === 'TEST'
-console.log('Webpack running with PROD settings: '+IS_PROD)
-console.log('Webpack running with TEST settings '+IS_TEST)
+const IS_PROD =  process.env.ENVIRONMENT_TYPE === 'PROD'
+const IS_TEST = process.env.ENVIRONMENT_TYPE === 'TEST'
 
 // Dev config
 let config = {
@@ -69,14 +68,43 @@ let config = {
     },
 }
 
+
 if (IS_TEST || IS_PROD)
 {
-    console.log('======= APPLYING PROD WEBPACK SETTINGS =======')
+    console.log('Webpack - applying TEST settings')
     config.output.filename = "[name]-[hash].js"
     config.plugins[0] = new ExtractTextPlugin(
         '[name]-[hash].css',
         {allChunks: true}
     )
+}
+
+
+if (IS_PROD)
+{
+    console.log('Webpack - applying PROD settings')
+    const uglifyConfig = {
+      compress: {
+        booleans: true,
+        conditionals: true,
+        dead_code: true,
+        drop_console: true,
+        evaluate: true,
+        if_return: true,
+        join_vars: true,
+        loops: true,
+        sequences: true,
+        unused: true,
+        warnings: false
+      },
+      sourceMap: false,
+      mangle: true
+    }
+    const uglifyPlugins = [
+        new webpack.optimize.DedupePlugin(),
+        new webpack.optimize.UglifyJsPlugin(uglifyConfig)
+    ]
+    config.plugins = config.plugins.concat(uglifyPlugins)
 }
 
 

@@ -88,7 +88,7 @@ stage('Build')
     sh 'npm install'
 
     // Build javascript 
-    sh 'export DEPLOY_STATUS="TEST";webpack --config ./webpack.config.js'
+    sh "export ENVIRONMENT_TYPE='${ENVIRONMENT_TYPE}';webpack --config ./webpack.config.js"
 
     // Fix webpack-stats.json
     def process_webpack_stats = """
