@@ -71,7 +71,7 @@ const Link = (props) =>
         </div>
     ) : null
 
-    const visibilityStyle = props.isHidden ? 'hidden' : 'flip-in-hor-bottom'
+    const visibilityStyle = props.isHidden ? 'hidden' : ''
 
     return (
         <li className={`${style.link} ${visibilityStyle}`}>
