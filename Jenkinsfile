@@ -63,7 +63,7 @@ stage 'Checkout'
 echo '===== Git Checkout ====='
 checkout([
     $class: 'GitSCM', 
-    branches: [[name: '*/django_links']], 
+    branches: [[name: '*/master']], 
     doGenerateSubmoduleConfigurations: false, 
     extensions: [], 
     submoduleCfg: [], 
