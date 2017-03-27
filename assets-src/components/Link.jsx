@@ -94,7 +94,6 @@ Link.propTypes = {
     user: PropTypes.number,
     username: PropTypes.string,
     description: PropTypes.string,
-    isHidden: PropTypes.bool,
     status: PropTypes.object,
     bookmark: PropTypes.string,
     deleteLink: PropTypes.object,

@@ -44,6 +44,18 @@ const getTimeSince = (date) =>
     return Math.floor(seconds) + " seconds";
 }
 
+const TODAY = new Date()
+const YESTERDAY = new Date(
+    TODAY.getFullYear(),
+    TODAY.getMonth(), 
+    TODAY.getDate() - 1
+)
+const LAST_WEEK = new Date(
+    TODAY.getFullYear(),
+    TODAY.getMonth(), 
+    TODAY.getDate() - 7
+)
+
 const closeAll = (status) => {
     let newStatus = status 
         ? {...status}
@@ -68,6 +80,7 @@ module.exports = {
     pipe,
     setupState,
     getTimeSince,
+    LAST_WEEK,
     closeAll,
     closeAllExcept,
 }

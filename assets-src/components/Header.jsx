@@ -1,28 +1,30 @@
-import React, {Component} from 'react'
+import React from 'react'
 import {connect} from 'react-redux'
 import Actions from 'actions'
 import {NO_USER_SELECTED} from 'constants'
 import NewLinkButton from 'components/NewLinkButton'
 import RefreshButton from 'components/RefreshButton'
 
-class Header extends Component 
+const Header = props => 
 {
-    render() 
-    {
-        return (
-            <div>
-                <RefreshButton 
-                    onRefreshClick={this.props.onRefreshClick}
-                    isFetching={this.props.isFetching}
-                />
-                {this.props.currentUser.id !== NO_USER_SELECTED &&
-                <NewLinkButton 
-                    addFormStatus={this.props.addFormStatus} 
-                    {...this.props.addLink} 
-                />}
-            </div>
-        )
-    }
+    return (
+        <div>
+            <RefreshButton 
+                onRefreshClick={props.onRefreshClick}
+                isFetching={props.isFetching}
+            />
+            {props.currentUser.id !== NO_USER_SELECTED && 
+            <NewLinkButton 
+                addFormStatus={props.addFormStatus} 
+                {...props.addLink} 
+            />}
+            {props.currentUser.id !== NO_USER_SELECTED && 
+            <NewLinkButton 
+                addFormStatus={props.addFormStatus} 
+                {...props.addLink} 
+            />}
+        </div>
+    )
 }
 
 let mapStateToProps = (state) => ({

@@ -2,48 +2,49 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux'
 import LinkList from 'components/LinkList'
 import NewLinkForm from 'components/NewLinkForm'
+import {NO_USER_SELECTED} from 'constants'
 import Actions from 'actions'
 
-class LinkListContainer extends Component 
+const LinkListContainer = props =>
 {
+    const usernames = props.users.reduce( (obj, user) => 
+        ({...obj, [`${user.id}`]: user.username}), {}
+    )
 
-    getUsernames(users)
-    {
-        let usernames = {}
-        for (let user of users)
-        {
-            usernames[user.id] = user.username
-        }
-        return usernames
-    }
+    const sortByDate = (link1, link2) => 
+        new Date(link2.created) - new Date(link1.created)
+    
+    const isVisible = link => 
+        link.user === props.activeUserId ||
+        props.activeUserId === NO_USER_SELECTED 
 
-    render() 
-    {
-        let usernames = this.getUsernames(this.props.users)
+    let links = props.links
+        .filter(isVisible)
+        .sort(sortByDate)
+        .map(link => ({
+            ...link,
+            username: usernames[link.user]
+        }))
 
-        let links = this.props.links
-            .sort( (l1, l2) => new Date(l2.created) - new Date(l1.created) )
-            .map(link => ({
-                ...link,
-                username: usernames[link.user]
-            }))
+    // Only grab 50 most recent links
+    links = props.activeUserId === NO_USER_SELECTED
+        ? links.slice(0, 50)
+        : links
 
-        return (
-            <div>
-                 <NewLinkForm
-                    addFormStatus={this.props.addFormStatus} 
-                    addLink={this.props.addLink} 
-                />
-                <LinkList 
-                    activeUserId={this.props.activeUserId} 
-                    links={links} 
-                    deleteLink={this.props.deleteLink} 
-                    editLink={this.props.editLink}
-                    linkDetails={this.props.linkDetails}
-                />
-            </div>
-        )
-    }
+    return (
+        <div>
+             <NewLinkForm
+                addFormStatus={props.addFormStatus} 
+                addLink={props.addLink} 
+            />
+            <LinkList 
+                links={links} 
+                deleteLink={props.deleteLink} 
+                editLink={props.editLink}
+                linkDetails={props.linkDetails}
+            />
+        </div>
+    )
 }
 
 let mapStateToProps = (state) => ({
