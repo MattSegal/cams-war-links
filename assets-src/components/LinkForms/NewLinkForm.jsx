@@ -1,7 +1,7 @@
 import React, {PropTypes, Component} from 'react';
 import {OPEN, WAITING, CLOSED} from 'constants'
 import {connect} from 'react-redux'
-import LinkForm from 'components/LinkForm'
+import LinkForm from 'components/LinkForms/LinkForm'
 
 
 class NewLinkForm extends Component

@@ -8,8 +8,8 @@ import {Provider} from 'react-redux'
 import thunkMiddleware from 'redux-thunk'
 import createLogger  from 'redux-logger'
 
-import Content from 'components/Content'
-import Header from 'components/Header'
+import ContentApp from 'components/Apps/ContentApp'
+import HeaderApp from 'components/Apps/HeaderApp'
 
 import reducer from 'reducers'
 import {setupState} from 'utilities'
@@ -32,7 +32,7 @@ const store  = createStore(reducer, initialState, middleware)
 // Initial render.
 ReactDOM.render(
     <Provider store={store}>
-        <Header/>
+        <HeaderApp/>
     </Provider>, 
     document.getElementById('react-app-header')
 )
@@ -40,7 +40,7 @@ ReactDOM.render(
 // Initial render.
 ReactDOM.render(
     <Provider store={store}>
-        <Content/>
+        <ContentApp/>
     </Provider>, 
     document.getElementById('react-app-content')
 )

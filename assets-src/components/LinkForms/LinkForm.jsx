@@ -1,11 +1,9 @@
 import React, {PropTypes, Component} from 'react';
 import {OPEN, WAITING, CLOSED} from 'constants'
 import {connect} from 'react-redux'
-import style from 'components/LinkForm.scss'
+import style from 'components/LinkForms/LinkForm.scss'
 import FaClose from 'react-icons/lib/fa/close'
 import FaCheck from 'react-icons/lib/fa/check'
-
-
 
 
 class LinkForm extends Component

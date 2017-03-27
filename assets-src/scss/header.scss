@@ -25,7 +25,7 @@ header {
         align-items: center;
     }
     
-    span, a
+    .headerItem
     {
         font-weight: bold;
         color: $text-color;
@@ -34,7 +34,7 @@ header {
         {
             color: $text-color;
         }
-        &+a
+        &+.headerItem
         {
             margin-left: 2em;
         }
