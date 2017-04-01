@@ -27,7 +27,7 @@ class MoreInfoButton extends Component
             : null
 
         return (
-            <span className={style.button}>
+            <span title="Description" className={style.button}>
                 {seeMoreInfoButton}
                 {closeMoreInfoButton}
             </span>

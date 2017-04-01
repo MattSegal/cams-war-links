@@ -28,7 +28,7 @@ class BookmarkButton extends Component
             : null
 
         return (
-            <span className={style.button}>
+            <span title="Bookmark" className={style.button}>
                 {toRead}
                 {notToRead}
             </span>

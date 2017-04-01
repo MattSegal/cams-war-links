@@ -6,28 +6,17 @@
     <link rel="icon" href="/static/favicon.ico">
     {% render_bundle 'main' 'css' %}
     {% block head %}{% endblock head %}
-
 </head>
 <body>
-<header>
-    <h1><a class="headerItem" href="/">LINKS</a></h1>
-    <div class="headerOptionWrapper">
-        {% block header %}{% endblock header %}
+    <div id='react-app-root'>
+        <header>
+            <h1><a class="headerItem" href="/">LINKS</a></h1>
+        </header>
+        <div class="headerSpacer"></div>
+        <div class="contentWrapper">
+            {% block content %}{% endblock content %}
+        </div>
     </div>
-    <div class="headerOptionWrapper">
-        {% if user.is_authenticated %}
-        <span class="headerItem">{{ user.username.title }}</span>
-        <a class="headerItem" href="/logout/">Log Out</a>
-        <a class="headerItem" href="/change/">Change Password</a></p>
-        {% else %}
-        <a class="headerItem" href="/login/">Log In</a>
-        <a class="headerItem" href="/signup/">Sign Up</a>
-        {% endif %}
-    </div>
-</header>
-<div class="headerSpacer"></div>
-<div class="contentWrapper">
-    {% block content %}{% endblock content %}
-</div>
+    {% block scripts %}{% endblock scripts %}
 </body>
 </html>

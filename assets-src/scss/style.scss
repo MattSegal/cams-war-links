@@ -2,6 +2,9 @@
 @import 'constants';
 @import 'header';
 
+// Hide scrollbars in Webkit browsers (Chrome + Safari)
+html::-webkit-scrollbar { width: 0 !important }
+
 .contentWrapper
 {
     max-width: 900px;

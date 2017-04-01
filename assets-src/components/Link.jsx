@@ -1,4 +1,4 @@
-import React, {PropTypes, Component} from 'react';
+import React, {PropTypes, PureComponent} from 'react';
 import {connect} from 'react-redux'
 import MoreInfoButton from 'components/LinkButtons/MoreInfoButton'
 import DeleteButton from 'components/LinkButtons/DeleteButton'
@@ -11,83 +11,8 @@ import {OPEN, WAITING, CLOSED, NO_USER_SELECTED} from 'constants'
 import {getTimeSince} from 'utilities'
 
 
-const Link = (props) =>
-{
-    const ownerOnly = (jsx) => props.user === props.currentUser.id && jsx
-    const loggedInOnly = (jsx) => props.currentUser.id !== NO_USER_SELECTED && jsx
-
-    const moreInfoButton = props.description
-    && <MoreInfoButton
-        linkId={props.id}
-        status={props.status.details}
-        {...props.linkDetails} />
-
-    const bookmarkButton = loggedInOnly(
-        <BookmarkButton 
-            linkId={props.id} 
-            status={props.bookmark} 
-            {...props.bookmarkLink} />)
-
-    const moreInfoDisplay = props.status.details === OPEN 
-        && <p>{props.description}</p>
-
-    const deleteButton = ownerOnly(
-        <DeleteButton 
-            linkId={props.id} 
-            status={props.status} 
-            {...props.deleteLink} />)
-
-    const deleteLinkForm =  ownerOnly(
-        <DeleteLinkForm 
-            linkId={props.id} 
-            status={props.status} 
-            {...props.deleteLink} />)
-
-
-    const editButton = ownerOnly(
-        <EditButton 
-            linkId={props.id} 
-            status={props.status} 
-            {...props.editLink} />)
-
-    const editLinkForm = ownerOnly(
-        <LinkForm 
-            linkId={props.id} 
-            description={props.description} 
-            title={props.title} 
-            url={props.url} 
-            formStatus={props.status.edit} 
-            {...props.editLink} />)
-
-    let displayContainer = props.status.edit === OPEN ||
-        props.status.delete === OPEN ||
-        props.status.details === OPEN 
-
-    const linkFormContainer = displayContainer ? (
-        <div className={style.linkFormContainer}>
-            {deleteLinkForm}
-            {editLinkForm}
-            {moreInfoDisplay}
-        </div>
-    ) : null
-
-    return (
-        <li className={style.link}>
-            <a className={style.hyperlink} href={props.url} target="_blank" rel="noopener noreferrer">
-                {props.title}
-            </a>
-            {deleteButton}
-            {editButton}
-            {moreInfoButton}
-            <p className={style.details} >
-                {props.username} - {getTimeSince(props.created)} ago
-            </p>
-            {linkFormContainer}
-        </li>
-    )
-}
-
-Link.propTypes = {
+class Link extends PureComponent {
+  static propTypes = {
     id: PropTypes.number,
     title: PropTypes.string,
     url: PropTypes.string,
@@ -99,6 +24,83 @@ Link.propTypes = {
     deleteLink: PropTypes.object,
     editLink: PropTypes.object,
     linkDetails: PropTypes.object,
+  }
+
+  render()
+  {
+    const ownerOnly = (jsx) => this.props.user === this.props.currentUser.id && jsx
+    const loggedInOnly = (jsx) => this.props.currentUser.id !== NO_USER_SELECTED && jsx
+
+    const moreInfoButton = this.props.description
+    && <MoreInfoButton
+        linkId={this.props.id}
+        status={this.props.status.details}
+        {...this.props.linkDetails} />
+
+    const bookmarkButton = loggedInOnly(
+        <BookmarkButton 
+            linkId={this.props.id} 
+            status={this.props.bookmark} 
+            {...this.props.bookmarkLink} />)
+
+    const moreInfoDisplay = this.props.status.details === OPEN 
+        && <p>{this.props.description}</p>
+
+    const deleteButton = ownerOnly(
+      <DeleteButton 
+        linkId={this.props.id} 
+        status={this.props.status} 
+        {...this.props.deleteLink} />)
+
+    const deleteLinkForm =  ownerOnly(
+      <DeleteLinkForm 
+        linkId={this.props.id} 
+        status={this.props.status} 
+        {...this.props.deleteLink} />)
+
+
+    const editButton = ownerOnly(
+      <EditButton 
+        linkId={this.props.id} 
+        status={this.props.status} 
+        {...this.props.editLink} />)
+
+    const editLinkForm = ownerOnly(
+      <LinkForm 
+        linkId={this.props.id} 
+        description={this.props.description} 
+        title={this.props.title} 
+        url={this.props.url} 
+        formStatus={this.props.status.edit} 
+        {...this.props.editLink} />)
+
+    let displayContainer = this.props.status.edit === OPEN ||
+      this.props.status.delete === OPEN ||
+      this.props.status.details === OPEN 
+
+    const linkFormContainer = displayContainer ? (
+      <div className={style.linkFormContainer}>
+        {deleteLinkForm}
+        {editLinkForm}
+        {moreInfoDisplay}
+      </div>
+    ) : null
+
+    return (
+      <li className={style.link}>
+        <a className={style.hyperlink} href={this.props.url} target="_blank" rel="noopener noreferrer">
+          {this.props.title}
+        </a>
+        {deleteButton}
+        {editButton}
+        {moreInfoButton}
+        <p className={style.details} >
+          {this.props.username} - {getTimeSince(this.props.created)} ago
+        </p>
+        {linkFormContainer}
+      </li>
+    )
+  }
 }
 
 let mapStateToProps = (state) => ({
