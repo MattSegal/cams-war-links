@@ -40,7 +40,7 @@ class LinkForm extends Component
             title: this.state.title,
             url: this.state.url,
             description: this.state.description,
-            user: this.props.currentUser.id,
+            user: this.props.loggedInUser.id,
         }
         console.log(link)
         if (this.props.linkId >= 0)
@@ -141,7 +141,7 @@ class LinkForm extends Component
 module.exports = LinkForm
 
 let mapStateToProps = (state) => ({
-    currentUser: state.currentUser,
+    loggedInUser: state.loggedInUser,
 })
 
 module.exports = connect(

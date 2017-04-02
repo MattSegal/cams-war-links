@@ -28,8 +28,8 @@ class Link extends PureComponent {
 
   render()
   {
-    const ownerOnly = (jsx) => this.props.user === this.props.currentUser.id && jsx
-    const loggedInOnly = (jsx) => this.props.currentUser.id !== NO_USER_SELECTED && jsx
+    const ownerOnly = (jsx) => this.props.user === this.props.loggedInUser.id && jsx
+    const loggedInOnly = (jsx) => this.props.loggedInUser.id !== NO_USER_SELECTED && jsx
 
     const moreInfoButton = this.props.description
     && <MoreInfoButton
@@ -104,7 +104,7 @@ class Link extends PureComponent {
 }
 
 let mapStateToProps = (state) => ({
-    currentUser: state.currentUser,
+    loggedInUser: state.loggedInUser,
 })
 
 module.exports = connect(

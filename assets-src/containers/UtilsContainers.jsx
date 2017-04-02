@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 
 class LoggedInContainer extends Component {
   render() {
-    return this.props.currentUser.id !== NO_USER_SELECTED
+    return this.props.loggedInUser.id !== NO_USER_SELECTED
       ? (this.props.children)
       : null
   }
@@ -12,14 +12,14 @@ class LoggedInContainer extends Component {
 
 class LoggedOutContainer extends Component {
   render() {
-    return this.props.currentUser.id === NO_USER_SELECTED
+    return this.props.loggedInUser.id === NO_USER_SELECTED
       ? (this.props.children)
       : null
   }
 }
 
 const mapStateToProps = (state) => ({
-  currentUser: state.currentUser
+  loggedInUser: state.loggedInUser
 })
 
 const LoggedIn = connect(mapStateToProps)(LoggedInContainer)

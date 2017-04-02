@@ -1,0 +1,38 @@
+@import '../../scss/constants';
+
+:local {
+    .header {
+        position: fixed;
+        width: 100%;
+        box-sizing: border-box;
+        z-index: 1;
+        padding: 1em;
+        background-color: $light-grey;
+        display: flex;
+        justify-content: space-between;
+        h1
+        {
+            display: inline-block;
+            font-size: 2em;
+        }
+        button
+        {
+            font-size: 1.2em;
+            min-width: 2em;
+            cursor: pointer;
+            position: relative;
+            background-color: $light-grey;
+            border: none;
+            &:focus
+            {
+                outline: none;
+            }
+        }
+    }
+
+    .group
+    {
+        display: flex;
+        align-items: center;
+    }
+}
