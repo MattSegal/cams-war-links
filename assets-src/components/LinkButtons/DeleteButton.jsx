@@ -33,7 +33,7 @@ class DeleteButton extends Component
         }
 
         return (
-            <span className={style.button}>
+            <span title="Delete" className={style.button}>
                 {button}
             </span>
         )

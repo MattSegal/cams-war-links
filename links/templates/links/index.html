@@ -2,21 +2,14 @@
 {% load render_bundle from webpack_loader %}
 
 {% block head %}
-<title>Links</title>
-<script type="text/javascript">
-let bootstrapData = JSON.parse('{{bootstrap_data | escapejs }}')
-{% if user.is_authenticated %}
-bootstrapData['currentUser'] = {'id': {{ user.id }},'username': '{{ user.username }}',}
-{% endif %}
-</script>
+    <script type="text/javascript">
+    let bootstrapData = JSON.parse('{{bootstrap_data | escapejs }}')
+    {% if user.is_authenticated %}
+    bootstrapData['loggedInUser'] = {'id': {{ user.id }},'username': '{{ user.username }}',}
+    {% endif %}
+    </script>
 {% endblock head %}
 
-{% block header %}
-<div id="react-app-header"></div>
-{% endblock header %}
-
-
-{% block content %}
-<div id="react-app-content"></div>
-{% render_bundle 'main' 'js' %}
-{% endblock content %}
+{% block scripts %}
+    {% render_bundle 'main' 'js' %}
+{% endblock scripts %}

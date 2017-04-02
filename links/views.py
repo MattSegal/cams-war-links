@@ -47,7 +47,7 @@ def login(request):
             user = authenticate(username=username, password=password)
             if user is not None:
                 auth_login(request, user)
-                return HttpResponseRedirect('/')
+                return HttpResponseRedirect('/account')
             else:
                 form.add_error(
                     None,
@@ -62,7 +62,7 @@ def login(request):
 
 def logout(request):
     auth_logout(request)
-    return HttpResponseRedirect('/')
+    return HttpResponseRedirect('/account')
 
 def signup(request):
     if request.method == 'POST':
@@ -75,7 +75,7 @@ def signup(request):
                 password=password,
             )
             auth_login(request, user)
-            return HttpResponseRedirect('/')
+            return HttpResponseRedirect('/account')
     else:
         form = SignupForm()
 

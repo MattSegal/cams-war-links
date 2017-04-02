@@ -1,11 +1,9 @@
 import React, {PropTypes, Component} from 'react';
 import {OPEN, WAITING, CLOSED} from 'constants'
 import {connect} from 'react-redux'
-import style from 'components/LinkForm.scss'
+import style from 'components/LinkForms/LinkForm.scss'
 import FaClose from 'react-icons/lib/fa/close'
 import FaCheck from 'react-icons/lib/fa/check'
-
-
 
 
 class LinkForm extends Component
@@ -42,7 +40,7 @@ class LinkForm extends Component
             title: this.state.title,
             url: this.state.url,
             description: this.state.description,
-            user: this.props.currentUser.id,
+            user: this.props.loggedInUser.id,
         }
         console.log(link)
         if (this.props.linkId >= 0)
@@ -143,7 +141,7 @@ class LinkForm extends Component
 module.exports = LinkForm
 
 let mapStateToProps = (state) => ({
-    currentUser: state.currentUser,
+    loggedInUser: state.loggedInUser,
 })
 
 module.exports = connect(

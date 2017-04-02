@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux'
 import LinkList from 'components/LinkList'
-import NewLinkForm from 'components/NewLinkForm'
+import NewLinkForm from 'components/LinkForms/NewLinkForm'
 import {NO_USER_SELECTED} from 'constants'
 import Actions from 'actions'
 

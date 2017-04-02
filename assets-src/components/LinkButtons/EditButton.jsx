@@ -23,7 +23,7 @@ const EditButton = (props) => {
     }
 
     return (
-        <span className={style.button}>
+        <span title="Edit" className={style.button}>
             {button}
         </span>
     )

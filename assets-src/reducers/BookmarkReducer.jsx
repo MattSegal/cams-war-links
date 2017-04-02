@@ -19,7 +19,7 @@ const requestBookmarkLinkReducer = (action, state) => ({
     links: {
         ...state.links,
         items: state.links.items.map(link =>
-            state.currentUser.bookmarks.includes(action.link_id)
+            state.loggedInUser.bookmarks.includes(action.link_id)
                 ? {...link, bookmark: WAITING}
                 : {...link}
         ),
