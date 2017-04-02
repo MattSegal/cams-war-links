@@ -2,6 +2,7 @@
 {% load render_bundle from webpack_loader %}
 
 {% block head %}
+    <title>Links</title>
     <script type="text/javascript">
     let bootstrapData = JSON.parse('{{bootstrap_data | escapejs }}')
     {% if user.is_authenticated %}
