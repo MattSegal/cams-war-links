@@ -10,18 +10,22 @@ class AccountPage extends PureComponent {
 
   render() {
     const {loggedInUser} = this.props 
+    const username = loggedInUser.username 
+      ? loggedInUser.username.toUpperCase()
+      : 'ANON'
+
     return (
       <div className={style.wrapper}>
         <LoggedIn>
           <div>
-            <h2 className={style.title}>HI {loggedInUser.username.toUpperCase()}</h2>
+            <h2 className={style.title}>HI {username}</h2>
             <a className={style.item} href="/logout/">Log Out</a>
             <a className={style.item} href="/change/">Change Password</a>
           </div>
         </LoggedIn>
         <LoggedOut>
           <div>
-            <h2 className={style.title}>HI ANON</h2>
+            <h2 className={style.title}>HI {username}</h2>
             <a className={style.item} href="/login/">Log In</a>
             <a className={style.item} href="/signup/">Sign Up</a>
           </div>
