@@ -10,6 +10,11 @@
     </script>
 {% endblock head %}
 
+
+{% block content %}
+    <img style="display:block;width:70px;margin:70px auto;" src="/static/loading_spinner.gif">
+{% endblock content %}
+
 {% block scripts %}
     {% render_bundle 'main' 'js' %}
 {% endblock scripts %}
