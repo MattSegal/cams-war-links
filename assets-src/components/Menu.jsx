@@ -1,7 +1,8 @@
 import React, {PureComponent, PropTypes} from 'react'
 import {connect} from 'react-redux'
+import {Link} from 'react-router-dom'
 import {LoggedIn, LoggedOut} from 'containers/UtilsContainers'
-import style from 'components/Pages/AccountPage.scss'
+import style from 'components/Menu.scss'
 
 class AccountPage extends PureComponent {
   static proptypes = {
@@ -16,16 +17,17 @@ class AccountPage extends PureComponent {
 
     return (
       <div className={style.wrapper}>
+        <h2 className={style.title}>HI {username}</h2>
+        <Link className={style.item} to="/" title="Links Page">Links</Link>
         <LoggedIn>
           <div>
-            <h2 className={style.title}>HI {username}</h2>
-            <a className={style.item} href="/logout/">Log Out</a>
+            <Link className={style.item} to="/bookmarks">Bookmarks</Link>
             <a className={style.item} href="/change/">Change Password</a>
+            <a className={style.item} href="/logout/">Log Out</a>
           </div>
         </LoggedIn>
         <LoggedOut>
           <div>
-            <h2 className={style.title}>HI {username}</h2>
             <a className={style.item} href="/login/">Log In</a>
             <a className={style.item} href="/signup/">Sign Up</a>
           </div>

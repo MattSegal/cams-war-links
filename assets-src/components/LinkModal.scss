@@ -1,0 +1,42 @@
+@import '../scss/constants';
+
+:local
+{
+    .field
+    {  
+        margin-bottom: 2em; 
+        font-size: $font-size;
+        font-family: $font-family;
+        text-align: center;
+    }
+
+    .hyperlink
+    {
+        text-decoration: none;
+        font-weight: bold;
+        color: $link-color;
+        &:visited
+        {
+            color: $link-color;
+        }
+    }
+
+    .description
+    {
+        max-width: 350px;
+        margin: 0 auto 2em auto;
+        font-style: italic;
+    }
+
+    .btnWrapper {
+        display: flex;
+        justify-content: space-around;
+    }
+
+    .btn {
+        width: 80px;
+        margin-right: 1em;
+        border: none;
+        background: none;
+    }
+}

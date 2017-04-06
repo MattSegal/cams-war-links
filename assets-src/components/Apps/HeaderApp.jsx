@@ -5,9 +5,7 @@ import Actions from 'actions'
 import {LoggedIn, LoggedOut} from 'containers/UtilsContainers'
 import NewLinkButton from 'components/HeaderButtons/NewLinkButton'
 import RefreshButton from 'components/HeaderButtons/RefreshButton'
-import FaUser from 'react-icons/lib/fa/user'
-import FaChain from 'react-icons/lib/fa/chain'
-import FaBook from 'react-icons/lib/fa/book'
+import FaBars from 'react-icons/lib/fa/bars'
 import style from 'components/Apps/Header.scss'
 
 
@@ -22,10 +20,7 @@ class HeaderToolbar extends Component {
     return (
       <header className={style.header}>
         <Switch>
-          <Route path="/account">
-            <Link to="/"><h1>ACCOUNT</h1></Link>
-          </Route>
-          <Route path="/bookmarks">
+        <Route path="/bookmarks">
            <Link to="/"><h1>BOOKMARKS</h1></Link>
           </Route>
           <Route path="/">
@@ -49,17 +44,14 @@ class HeaderToolbar extends Component {
           </LoggedIn>
         </div>
         <div className={style.group}>
-          <Link to="/" title="Links Page">
-            <button onClick={addLink.cancel}><FaChain /></button>
-          </Link>
-          <LoggedIn>
-            <Link to="/bookmarks" title="Bookmarks Page">
-              <button onClick={addLink.cancel}><FaBook /></button>
-            </Link>
-          </LoggedIn>
-          <Link to="/account" title="Account Page">
-            <button onClick={addLink.cancel}><FaUser /></button>
-          </Link>
+          <Switch>
+            <Route path="/menu">
+              <Link to="/" title="Menu"><button><FaBars /></button></Link>
+            </Route>
+            <Route path="/">
+              <Link to="/menu" title="Menu"><button><FaBars /></button></Link>
+            </Route>
+          </Switch>
         </div>
       </header>
     )

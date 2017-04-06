@@ -6,8 +6,13 @@
     .link
     {
         font-family: sans-serif;
-        margin-bottom: 1em;
+        margin-bottom: 1.5em;
         text-decoration: none;
+    }
+
+    .left {
+        display: inline-block;
+        max-width: 95%;
     }
 
     .hyperlink
@@ -37,7 +42,7 @@
         }
     }
     
-    .button
+    .button, a.button
     {
         font-size: 1.1em;
         cursor: pointer;

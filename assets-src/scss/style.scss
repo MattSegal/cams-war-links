@@ -14,14 +14,17 @@ a {
 
 .headerSpacer
 {
-    height: 5em;
+    height: $header-height + 10px;
 }
 
 .contentWrapper
 {
     max-width: 900px;
     margin: 0 auto;
-    padding: 1em 2em;
+    padding: 1em 1.25em;
+    @media (min-width: 500px) {
+        padding: 1em 2em;
+    }
 }
 
 .form

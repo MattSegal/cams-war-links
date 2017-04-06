@@ -5,8 +5,11 @@ from . import views
 
 urlpatterns = [
     url(r'^$',views.index),
+    # React Router
     url(r'^bookmarks/$',views.index),
-    url(r'^account/$',views.index),
+    url(r'^menu/$',views.index),
+    url(r'^link/',views.index),
+    # Django
     url(r'^login/$', views.login), 
     url(r'^logout/$', views.logout), 
     url(r'^signup/$', views.signup),
