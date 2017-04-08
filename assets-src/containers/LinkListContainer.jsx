@@ -1,9 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux'
 import LinkList from 'components/LinkList'
-import NewLinkForm from 'components/LinkForms/NewLinkForm'
 import {NO_USER_SELECTED} from 'constants'
-import Actions from 'actions'
 
 const LinkListContainer = props =>
 {
@@ -31,49 +29,17 @@ const LinkListContainer = props =>
         ? links.slice(0, 50)
         : links
 
-    return (
-        <div>
-             <NewLinkForm
-                addFormStatus={props.addFormStatus} 
-                addLink={props.addLink} 
-            />
-            <LinkList 
-                links={links} 
-                deleteLink={props.deleteLink} 
-                editLink={props.editLink}
-                linkDetails={props.linkDetails}
-            />
-        </div>
-    )
+    return <LinkList links={links} />
 }
 
-let mapStateToProps = (state) => ({
+const mapStateToProps = (state) => ({
     links: state.links.items,
     users: state.users.items,
     activeUserId: state.users.activeUserId,
     addFormStatus: state.links.add,
 })
 
-let mapDispatchToProps = (dispatch) => ({
-    linkDetails: {
-        show: (link_id) => dispatch(Actions.showLinkDetails(link_id)),
-        hide: (link_id) => dispatch(Actions.hideLinkDetails(link_id)),
-    },
-    addLink: {
-        confirm: (link) => dispatch(Actions.confirmAddLink(link)),
-        cancel:() => dispatch(Actions.cancelAddLink()),
-    },
-    deleteLink: {
-        select: (link_id) => dispatch(Actions.tryDeleteLink(link_id)),
-        confirm: (link_id) => dispatch(Actions.confirmDeleteLink(link_id)),
-        cancel:(link_id) => dispatch(Actions.cancelDeleteLink(link_id)),
-    },
-    editLink: {
-        select: (link_id) => dispatch(Actions.tryEditLink(link_id)),
-        confirm: (link) => dispatch(Actions.confirmEditLink(link)),
-        cancel:(link_id) => dispatch(Actions.cancelEditLink(link_id)),
-    },
-})
+const mapDispatchToProps = (dispatch) => ({})
 
 module.exports = connect(
     mapStateToProps,

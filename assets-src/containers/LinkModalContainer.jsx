@@ -1,6 +1,7 @@
 import React, {PropTypes, Component} from 'react'
 import {connect} from 'react-redux'
 import LinkModal from 'components/LinkModal'
+import Actions from 'actions'
 
 class LinkModalContainer extends Component 
 {
@@ -9,6 +10,8 @@ class LinkModalContainer extends Component
     links: PropTypes.array,
     loggedInUser: PropTypes.object,
     users: PropTypes.array,
+    deleteLink: PropTypes.func,
+    editLink: PropTypes.func,
   }
   render() 
   {
@@ -22,6 +25,8 @@ class LinkModalContainer extends Component
         link={link} 
         username={username}
         isLinkOwner={isLinkOwner}
+        deleteLink={this.props.deleteLink}
+        editLink={this.props.editLink}
       />
     )
   }
@@ -34,24 +39,8 @@ let mapStateToProps = (state) => ({
 })
 
 let mapDispatchToProps = (dispatch) => ({
-    linkDetails: {
-        show: (link_id) => dispatch(Actions.showLinkDetails(link_id)),
-        hide: (link_id) => dispatch(Actions.hideLinkDetails(link_id)),
-    },
-    addLink: {
-        confirm: (link) => dispatch(Actions.confirmAddLink(link)),
-        cancel:() => dispatch(Actions.cancelAddLink()),
-    },
-    deleteLink: {
-        select: (link_id) => dispatch(Actions.tryDeleteLink(link_id)),
-        confirm: (link_id) => dispatch(Actions.confirmDeleteLink(link_id)),
-        cancel:(link_id) => dispatch(Actions.cancelDeleteLink(link_id)),
-    },
-    editLink: {
-        select: (link_id) => dispatch(Actions.tryEditLink(link_id)),
-        confirm: (link) => dispatch(Actions.confirmEditLink(link)),
-        cancel:(link_id) => dispatch(Actions.cancelEditLink(link_id)),
-    },
+    deleteLink: (link_id) => dispatch(Actions.deleteLink(link_id)),
+    editLink: (link) => dispatch(Actions.editLink(link)),
 })
 
 module.exports = connect(

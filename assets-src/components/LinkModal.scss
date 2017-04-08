@@ -39,4 +39,24 @@
         border: none;
         background: none;
     }
+
+    .form
+    {
+        margin: 2em auto 0 auto;
+        max-width: 800px;
+    }
+
+    .input
+    {  
+        margin-bottom: 1em;
+        input, textarea
+        {
+            box-sizing: border-box;
+            font-size: $font-size;
+            font-family: $font-family;
+            padding: 0.5em;
+            width: 100%;
+            resize: none;
+        }
+    }
 }

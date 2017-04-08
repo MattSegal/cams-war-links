@@ -1,30 +1,19 @@
-import React, {PropTypes} from 'react'
+import React, {PropTypes, PureComponent} from 'react'
 import Link from './Link'
 import style from 'components/LinkList.scss'
 
-const LinkList = props => 
-{
-    const links = props.links
-    .map( link => 
-        (<Link 
-            key={link.id}
-            deleteLink={props.deleteLink} 
-            editLink={props.editLink}
-            linkDetails={props.linkDetails}
-            {...link} 
-        />))
-
-    return (
-        <ul className={style.list}>
-            {links}
-        </ul>
-    )
-}
-LinkList.propTypes = {
+export default class LinkList extends PureComponent {
+  static propTypes = {
     links: PropTypes.array,
-    deleteLink: React.PropTypes.object,
-    editLink: React.PropTypes.object,
-    linkDetails: React.PropTypes.object,
-}
+  }
 
-module.exports = LinkList
+  render() 
+  {
+    const {links} = this.props
+    return (
+      <ul className={style.list}>
+        {links.map(link => <Link key={link.id} {...link} />)}
+      </ul>
+    )
+  }
+}

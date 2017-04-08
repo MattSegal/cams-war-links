@@ -4,16 +4,16 @@ import {NO_USER_SELECTED, OPEN, CLOSED, INACTIVE} from 'constants'
 const _pipe = (f, g) => (...args) => g(f(...args))
 const pipe = (...fns) => fns.reduce(_pipe)
 
-const setupLinkState = (links) => ({
+const setupLinksState = (links) => ({
     ...links,
-    add: CLOSED,
-    items: links.items.map(link =>
-        ({
-            ...link, 
-            status: {edit: CLOSED, delete: CLOSED, details: CLOSED},
-            bookmark: INACTIVE
-        })
-    ),
+    updating: false,
+    items: links.items.map(setupLinkState),
+})
+
+const setupLinkState = (link) => ({
+    ...link, 
+    updating: false,
+    bookmark: INACTIVE,
 })
 
 const setupUserState = (users) => ({
@@ -24,7 +24,7 @@ const setupUserState = (users) => ({
 const setupState = (state) => ({
     ...state,
     loggedInUser: state.loggedInUser ? state.loggedInUser : {id: NO_USER_SELECTED},
-    links: setupLinkState(state.links),
+    links: setupLinksState(state.links),
     users: setupUserState(state.users),
 })
 
@@ -56,31 +56,10 @@ const LAST_WEEK = new Date(
     TODAY.getDate() - 7
 )
 
-const closeAll = (status) => {
-    let newStatus = status 
-        ? {...status}
-        : {edit: CLOSED, delete: CLOSED, details: CLOSED}
-    Object.keys(newStatus).forEach(k => newStatus[k] = CLOSED)
-    return newStatus
-}
-
-const closeAllExcept = (status, exceptKey, exceptStatus) => {
-    var newStatus = status 
-        ? {...status}
-        : {edit: CLOSED, delete: CLOSED, details: CLOSED}
-    Object.keys(newStatus).forEach(k => 
-        k === exceptKey
-        ? newStatus[k] = exceptStatus
-        : newStatus[k] = CLOSED
-    )
-    return newStatus
-}
-
 module.exports = {
     pipe,
     setupState,
+    setupLinkState,
     getTimeSince,
     LAST_WEEK,
-    closeAll,
-    closeAllExcept,
 }

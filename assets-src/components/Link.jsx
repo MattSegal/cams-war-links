@@ -19,8 +19,7 @@ class Link extends PureComponent {
     created: PropTypes.string,
   }
 
-  // TODO: Bold link that you own
-  // TOOD: Indicate that a link has a description
+  // TODO render link loading / updatin state in icon
   render()
   {
     const userIsOwner = this.props.user === this.props.loggedInUser.id

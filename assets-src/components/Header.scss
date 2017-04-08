@@ -1,4 +1,4 @@
-@import '../../scss/constants';
+@import '../scss/constants';
 
 :local {
     .header {
@@ -14,19 +14,22 @@
         {
             display: inline-block;
             font-size: 2em;
+        
         }
-        button
+        
+        .btn
         {
             font-size: 1.2em;
-            min-width: 2em;
+            min-width: 2.2em;
             cursor: pointer;
             position: relative;
-            background-color: $light-grey;
-            border: none;
-            &:focus
-            {
-                outline: none;
-            }
+        }
+
+        span.btn 
+        {
+            display: inline-block;
+            vertical-align: middle;
+            min-height: 30px;
         }
     }
 

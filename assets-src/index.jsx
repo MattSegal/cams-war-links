@@ -11,8 +11,8 @@ import {BrowserRouter, Link} from 'react-router-dom'
 
 import reducer from 'reducers'
 import {setupState} from 'utilities'
-import Content from 'components/Apps/ContentApp'
-import Header from 'components/Apps/HeaderApp'
+import Content from 'components/Content'
+import HeaderContainer from 'containers/HeaderContainer'
 
 
 // Middleware
@@ -34,7 +34,7 @@ ReactDOM.render(
   <Provider store={store}>
     <BrowserRouter>
       <div>
-        <Header/>
+        <HeaderContainer/>
         <div className="headerSpacer" />
         <div className="contentWrapper">
           <Content/>
