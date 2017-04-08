@@ -5,6 +5,7 @@ import {getTimeSince} from 'utilities'
 import FaCommentO from 'react-icons/lib/fa/comment-o'
 import FaCog from 'react-icons/lib/fa/cog'
 import {Link as RouterLink} from 'react-router-dom'
+import Spinner from 'components/Spinner'
 
 // TODO: Rename to HyperLink
 class Link extends PureComponent {
@@ -17,6 +18,7 @@ class Link extends PureComponent {
     description: PropTypes.string,
     loggedInUser: PropTypes.object,
     created: PropTypes.string,
+    updating: React.PropTypes.bool,
   }
 
   // TODO render link loading / updatin state in icon
@@ -37,11 +39,15 @@ class Link extends PureComponent {
           <a className={style.hyperlink} href={this.props.url} target="_blank" rel="noopener noreferrer">
             {this.props.title}
           </a>
+          <p className={style.details} >
+            {this.props.username} - {getTimeSince(this.props.created)} ago
+          </p>
         </div>
-        {moreButton}
-        <p className={style.details} >
-          {this.props.username} - {getTimeSince(this.props.created)} ago
-        </p>
+        {this.props.updating 
+          ? <span className={style.button}><Spinner className={style.spinner} /></span>
+          : moreButton
+        }
+       
       </li>
     )
   }

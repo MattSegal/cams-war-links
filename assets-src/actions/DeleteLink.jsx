@@ -1,7 +1,7 @@
 import axios from 'axios'
 import Cookies from 'js-cookie'
 import {types} from './types'
-import handleHttpError from './utils'
+import {handleHttpError} from './utils'
 
 export const deleteLink = (link_id) => (dispatch) => {
     dispatch(requestDeleteLink(link_id))

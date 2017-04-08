@@ -8,6 +8,7 @@ import FaTrashO from 'react-icons/lib/fa/trash-o'
 import FaPencil from 'react-icons/lib/fa/pencil'
 import FaClose from 'react-icons/lib/fa/close'
 import LinkForm from 'components/LinkForm'
+import Spinner from 'components/Spinner'
 
 class LinkModal extends Component 
 {
@@ -98,13 +99,22 @@ class LinkModal extends Component
               </div>
             </Route>
             <Route path={`/link/${link.id}`} >
-              <div className={style.btnWrapper}>
-                <Link to={`/link/${link.id}/edit`}>
-                  <button className={style.btn}><FaPencil />&nbsp;Edit</button>
-                </Link>
-                <Link to={`/link/${link.id}/delete`}>
-                  <button className={style.btn}><FaTrashO />&nbsp;Delete</button>
-                </Link>
+              <div>
+                {!link.updating && (
+                  <div className={style.btnWrapper}>
+                    <Link to={`/link/${link.id}/edit`}>
+                      <button className={style.btn}><FaPencil />&nbsp;Edit</button>
+                    </Link>
+                    <Link to={`/link/${link.id}/delete`}>
+                      <button className={style.btn}><FaTrashO />&nbsp;Delete</button>
+                    </Link>
+                  </div>
+                )}
+                {link.updating && 
+                  <div className={style.spinnerWrapper}>
+                    <Spinner className={style.spinner}/>
+                  </div>
+                }
               </div>
             </Route>
           </Switch>
