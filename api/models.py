@@ -8,7 +8,8 @@ class Link(models.Model):
     """ A hyperlink belonging to a user
     """
     id              = models.AutoField(primary_key=True)
-    user            = models.ForeignKey(User, related_name='links')  
+    user            = models.ForeignKey(User, related_name='links')
+    bookmarkers     = models.ManyToManyField(User, related_name='bookmarks')
     title           = models.CharField(max_length=250) # Unsure of max_length
     url             = models.CharField(max_length=250) # Unsure of max_length
     description     = models.TextField(default='', blank=True)

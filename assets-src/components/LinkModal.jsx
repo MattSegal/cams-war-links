@@ -7,6 +7,8 @@ import linkStyle from 'components/Link.scss'
 import FaTrashO from 'react-icons/lib/fa/trash-o'
 import FaPencil from 'react-icons/lib/fa/pencil'
 import FaClose from 'react-icons/lib/fa/close'
+import FaBookmarkO from 'react-icons/lib/fa/bookmark-o'
+import FaBookmark from 'react-icons/lib/fa/bookmark'
 import LinkForm from 'components/LinkForm'
 import Spinner from 'components/Spinner'
 
@@ -15,9 +17,10 @@ class LinkModal extends Component
   static propTypes = {
     link: PropTypes.object,
     username: PropTypes.string,
-    isLinkOwner: PropTypes.bool,
+    loggedInUser: PropTypes.object,
     deleteLink: PropTypes.func,
     editLink: PropTypes.func,
+    bookmarkLink: PropTypes.func,
   }
 
   constructor(props) 
@@ -51,11 +54,11 @@ class LinkModal extends Component
       })
   }
 
-  // TODO 'bookmarked'
-  // TODO render link 'loading/requesting' state
   render() 
   {
-    const {link, username, isLinkOwner, deleteLink} = this.props
+    const {link, username, loggedInUser, deleteLink, bookmarkLink} = this.props
+    const isLinkOwner = link && loggedInUser && link.user === loggedInUser.id
+    const isLinkBookmarked = loggedInUser && loggedInUser.bookmarks.includes(link.id)
 
     if (!link) {
       return (
@@ -64,6 +67,17 @@ class LinkModal extends Component
       </Modal>
       )
     }
+
+    const bookmarkButton = isLinkBookmarked
+      ? (
+        <button className={style.btn} onClick={() => bookmarkLink(link, loggedInUser, false)}>
+          <FaBookmark />&nbsp;Forget
+        </button>
+      ) : (
+        <button className={style.btn} onClick={() => bookmarkLink(link, loggedInUser, true)}>
+          <FaBookmarkO />&nbsp;Bookmark
+        </button>
+      )
 
     return (
       <Modal closeRoute="/">
@@ -108,6 +122,7 @@ class LinkModal extends Component
                     <Link to={`/link/${link.id}/delete`}>
                       <button className={style.btn}><FaTrashO />&nbsp;Delete</button>
                     </Link>
+                    {bookmarkButton}
                   </div>
                 )}
                 {link.updating && 
@@ -118,6 +133,16 @@ class LinkModal extends Component
               </div>
             </Route>
           </Switch>
+        )}
+        {!isLinkOwner && !link.updating && (
+          <div className={style.btnWrapper}>
+            {bookmarkButton}
+          </div>
+        )}
+        {!isLinkOwner && link.updating && (
+          <div className={style.spinnerWrapper}>
+            <Spinner className={style.spinner}/>
+          </div>
         )}
       </Modal>
     )

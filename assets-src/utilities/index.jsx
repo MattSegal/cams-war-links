@@ -1,4 +1,4 @@
-import {NO_USER_SELECTED, OPEN, CLOSED, INACTIVE} from 'constants'
+import {NO_USER_SELECTED} from 'constants'
 
 // Lets us use pipe syntax eg. pipe(f,g,h)(x)
 const _pipe = (f, g) => (...args) => g(f(...args))
@@ -13,13 +13,13 @@ const setupLinksState = (links) => ({
 const setupLinkState = (link) => ({
     ...link, 
     updating: false,
-    bookmark: INACTIVE,
 })
 
 const setupUserState = (users) => ({
     ...users,
     activeUserId: NO_USER_SELECTED,
 })
+
 
 const setupState = (state) => ({
     ...state,

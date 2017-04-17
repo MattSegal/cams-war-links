@@ -12,19 +12,20 @@ class LinkModalContainer extends Component
     users: PropTypes.array,
     deleteLink: PropTypes.func,
     editLink: PropTypes.func,
+    bookmarkLink: PropTypes.func,
   }
   render() 
   {
     const {linkId, links, loggedInUser, users} = this.props
     const link = links.find(l => l.id === linkId)
     const username = link && users.find(u => u.id === link.user).username
-    const isLinkOwner = link && link.user === loggedInUser.id
-
+    
     return (
       <LinkModal 
         link={link} 
         username={username}
-        isLinkOwner={isLinkOwner}
+        loggedInUser={loggedInUser}
+        bookmarkLink={this.props.bookmarkLink}
         deleteLink={this.props.deleteLink}
         editLink={this.props.editLink}
       />
@@ -39,6 +40,7 @@ let mapStateToProps = (state) => ({
 })
 
 let mapDispatchToProps = (dispatch) => ({
+    bookmarkLink: (link, user, value) => dispatch(Actions.bookmarkLink(link, user, value)),
     deleteLink: (link_id) => dispatch(Actions.deleteLink(link_id)),
     editLink: (link) => dispatch(Actions.editLink(link)),
 })

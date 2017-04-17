@@ -5,9 +5,6 @@
     <title>Links</title>
     <script type="text/javascript">
     let bootstrapData = JSON.parse('{{bootstrap_data | escapejs }}')
-    {% if user.is_authenticated %}
-    bootstrapData['loggedInUser'] = {'id': {{ user.id }},'username': '{{ user.username }}',}
-    {% endif %}
     </script>
 {% endblock head %}
 

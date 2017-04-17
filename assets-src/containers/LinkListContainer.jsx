@@ -1,42 +1,67 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux'
-import LinkList from 'components/LinkList'
 import {NO_USER_SELECTED} from 'constants'
+import HyperLink from 'components/HyperLink'
 
-const LinkListContainer = props =>
-{
-    const usernames = props.users.reduce( (obj, user) => 
-        ({...obj, [`${user.id}`]: user.username}), {}
+import {Link} from 'react-router-dom'
+import style from 'components/LinkList.scss'
+import linkStyle from 'components/Link.scss'
+
+import FaCommentO from 'react-icons/lib/fa/comment-o'
+import MdEdit from 'react-icons/lib/md/edit'
+import FaEllipsisH from 'react-icons/lib/fa/ellipsis-h'
+
+class LinkListContainer extends Component {
+  render()
+  {
+    const {users, links, activeUserId, loggedInUser} = this.props
+    const usernames = users.reduce( (obj, user) => 
+      ({...obj, [`${user.id}`]: user.username}), {}
     )
 
     const sortByDate = (link1, link2) => 
-        new Date(link2.created) - new Date(link1.created)
+      new Date(link2.created) - new Date(link1.created)
     
     const isVisible = link => 
-        link.user === props.activeUserId ||
-        props.activeUserId === NO_USER_SELECTED 
+      link.user === activeUserId ||
+      activeUserId === NO_USER_SELECTED 
 
-    let links = props.links
-        .filter(isVisible)
-        .sort(sortByDate)
-        .map(link => ({
-            ...link,
-            username: usernames[link.user]
-        }))
+    let filteredLinks = links
+      .filter(isVisible)
+      .sort(sortByDate)
+      .map(link => ({
+          ...link,
+          username: usernames[link.user]
+      }))
 
     // Only grab 50 most recent links
-    links = props.activeUserId === NO_USER_SELECTED
-        ? links.slice(0, 50)
-        : links
+    filteredLinks = activeUserId === NO_USER_SELECTED
+      ? filteredLinks.slice(0, 50)
+      : filteredLinks
 
-    return <LinkList links={links} />
+    return (
+      <ul className={style.list}>
+        {filteredLinks.map(link => 
+          <HyperLink key={link.id} link={link}>
+            <Link to={`/link/${link.id}`} title="More" className={linkStyle.button}>
+              {
+                link.user === loggedInUser.id 
+                ? <MdEdit />
+                : (link.description ? <FaCommentO /> : <FaEllipsisH />)
+              }
+            </Link>
+          </HyperLink>
+        )}
+      </ul>
+    )
+  }
 }
 
 const mapStateToProps = (state) => ({
     links: state.links.items,
     users: state.users.items,
     activeUserId: state.users.activeUserId,
-    addFormStatus: state.links.add,
+    loggedInUser: state.loggedInUser,
 })
 
 const mapDispatchToProps = (dispatch) => ({})

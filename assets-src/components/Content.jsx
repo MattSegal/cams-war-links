@@ -3,6 +3,7 @@ import {Route, Switch} from 'react-router-dom'
 
 import LinkListContainer from 'containers/LinkListContainer'
 import UserListContainer from 'containers/UserListContainer'
+import BookmarkListContainer from 'containers/BookmarkListContainer'
 import Menu from 'components/Menu'
 import LinkModalContainer from 'containers/LinkModalContainer'
 import AddLinkModalContainer from 'containers/AddLinkModalContainer'
@@ -17,9 +18,8 @@ export default class Content extends Component
   {
     return (
       <Switch>
-      
         <Route path="/bookmarks">
-          <p>Coming soon...</p>
+          <BookmarkListContainer />
         </Route>
         <Route path="/menu">
           <Menu/>
