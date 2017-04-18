@@ -27,19 +27,17 @@ export default class Header extends Component {
           </Route>
         </Switch>
         <div className={style.group}>
-          <LoggedIn>
-            <span>
-              {!updating && <Route exact path="/" component={() =>
+            {!updating && <Route exact path="/" component={() =>
                 <FaRefresh title="Reload Links" onClick={fetchLinks} className={style.btn} />
-              }/>}
-              {!updating && <Route exact path="/" component={() =>
-                <Link title="Add New Link" to="/add">
-                  <FaPlus className={style.btn}/>
-                </Link>
-              }/>}
-              {updating && <span className={style.btn}><Spinner /></span>}
-            </span>
+            }/>}
+          <LoggedIn>
+            {!updating && <Route exact path="/" component={() =>
+              <Link title="Add New Link" to="/add">
+                <FaPlus className={style.btn}/>
+              </Link>
+            }/>}
           </LoggedIn>
+          {updating && <span className={style.btn}><Spinner /></span>}
         </div>
         <div className={style.group}>
           <Switch>
