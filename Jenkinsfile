@@ -4,6 +4,7 @@ def jenkinsEnvVars = Jenkins.instance.getGlobalNodeProperties()[0].getEnvVars()
 
 env.ENVIRONMENT_TYPE = jenkinsEnvVars.ENVIRONMENT_TYPE ?: 'TEST' // TEST or PROD
 env.TARGET_NODE_ADDRESS = jenkinsEnvVars.TARGET_NODE_ADDRESS ?: '45.55.161.12'
+env.DNS_NAME = 'mattslinks.xyz'
 env.APP_NAME = 'links'
 
 def unwanted_files = [
@@ -203,7 +204,7 @@ stage('Deploy')
         
         // Start gunicorn + Django
         ssh("${VIRTUALENV_DIR}/bin/gunicorn_start deploy", [
-            ALLOWED_HOSTS: TARGET_NODE_ADDRESS,
+            ALLOWED_HOSTS: "${TARGET_NODE_ADDRESS},${DNS_NAME},www.${DNS_NAME}",
             APP_NAME: APP_NAME,
             DJANGODIR: DEPLOY_DIR,
             LOGFILE: "${VIRTUALENV_DIR}/gunicorn.log",

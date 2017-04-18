@@ -62,7 +62,6 @@ class LinkModal extends Component
   {
     const {link, username, loggedInUser, deleteLink, bookmarkLink} = this.props
     const isLinkOwner = link && loggedInUser && link.user === loggedInUser.id
-    const isLinkBookmarked = loggedInUser && loggedInUser.bookmarks.includes(link.id)
 
     if (!link) {
       return (
@@ -72,7 +71,8 @@ class LinkModal extends Component
       )
     }
 
-    const bookmarkButton = isLinkBookmarked
+    const bookmarkButton = loggedInUser && (
+      loggedInUser.bookmarks.includes(link.id)
       ? (
         <button className={style.btn} onClick={() => bookmarkLink(link, loggedInUser, false)}>
           <FaBookmark />&nbsp;Forget
@@ -82,6 +82,7 @@ class LinkModal extends Component
           <FaBookmarkO />&nbsp;Bookmark
         </button>
       )
+    )
 
     const isEditMode = this.context.router.route.location.pathname.includes('edit')
 
