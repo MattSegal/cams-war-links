@@ -23,6 +23,10 @@ class LinkModal extends Component
     bookmarkLink: PropTypes.func,
   }
 
+  static contextTypes = {
+    router: PropTypes.object,
+  }
+
   constructor(props) 
   {
     super(props)
@@ -79,17 +83,21 @@ class LinkModal extends Component
         </button>
       )
 
+    const isEditMode = this.context.router.route.location.pathname.includes('edit')
+
     return (
       <Modal closeRoute="/">
-        <div className={style.field}>
-          <a className={style.hyperlink} href={this.state.url} target="_blank" rel="noopener noreferrer">
-            <strong>{this.state.title}</strong>
-          </a>
-          <p className={linkStyle.details}>
-            {username} - {getTimeSince(link.created)} ago
-          </p>
+        <div className={isEditMode && style.hiddenOnPhone}>
+          <div className={style.field}>
+            <a className={style.hyperlink} href={this.state.url} target="_blank" rel="noopener noreferrer">
+              <strong>{this.state.title}</strong>
+            </a>
+            <p className={linkStyle.details}>
+              {username} - {getTimeSince(link.created)} ago
+            </p>
+          </div>
+          <div className={style.description}>{this.state.description}</div>
         </div>
-        <div className={style.description}>{this.state.description}</div>
         {isLinkOwner && (
           <Switch>
             <Route path={`/link/${link.id}/edit`}>

@@ -13,6 +13,12 @@
         height: 100%;
         background-color: rgba(0,0,0,0.6);
         padding: 30px 20px 0 20px;
+
+        @media #{$phone} {
+            top: 0;
+            background-color: $white;
+            padding: 10px;
+        }
     }
 
     .contentWrapper {
@@ -27,6 +33,9 @@
         padding: 40px 20px;
         background-color: $white;
         box-shadow: 4px 4px #444;
+        @media #{$phone} {
+         box-shadow: none;
+        }
     }
 
     .close {
