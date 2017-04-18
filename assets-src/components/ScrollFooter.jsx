@@ -1,6 +1,7 @@
 import React, {PropTypes, PureComponent} from 'react';
 import style from 'components/ScrollFooter.scss'
 import FaChevronUp from 'react-icons/lib/fa/chevron-up'
+require('smoothscroll-polyfill').polyfill(); // global side effect on window
 
 export default class ScrollFooter extends PureComponent {
   constructor(props) {
@@ -21,7 +22,11 @@ export default class ScrollFooter extends PureComponent {
   }
 
   handleClick = () => {
-    window.scrollTo(0,0)
+    window.scroll({
+      top: 0,
+      left: 0,
+      behavior: 'smooth',
+    })
   }
 
   render()
