@@ -14,9 +14,9 @@ class LoggedInContainer extends Component {
 class LoggedOutContainer extends Component {
   render() {
     const {loggedInUser} = this.props
-    return loggedInUser && loggedInUser.id === NO_USER_SELECTED
-      ? (this.props.children)
-      : null
+    return loggedInUser
+      ? null
+      : (this.props.children)
   }
 }
 

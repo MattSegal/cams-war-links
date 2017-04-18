@@ -11,7 +11,7 @@ class AccountPage extends PureComponent {
 
   render() {
     const {loggedInUser} = this.props 
-    const username = loggedInUser.username 
+    const username = loggedInUser && loggedInUser.username 
       ? loggedInUser.username.toUpperCase()
       : 'ANON'
 
