@@ -23,7 +23,6 @@ const setupUserState = (users) => ({
 
 const setupState = (state) => ({
     ...state,
-    loggedInUser: state.loggedInUser ? state.loggedInUser : {id: NO_USER_SELECTED},
     links: setupLinksState(state.links),
     users: setupUserState(state.users),
 })

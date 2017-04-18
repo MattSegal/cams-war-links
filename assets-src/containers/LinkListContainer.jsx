@@ -45,7 +45,7 @@ class LinkListContainer extends Component {
           <HyperLink key={link.id} link={link}>
             <Link to={`/link/${link.id}`} title="More" className={linkStyle.button}>
               {
-                link.user === loggedInUser.id 
+                loggedInUser && link.user === loggedInUser.id 
                 ? <MdEdit />
                 : (link.description ? <FaCommentO /> : <FaEllipsisH />)
               }
