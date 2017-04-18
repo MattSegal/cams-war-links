@@ -13,6 +13,7 @@ import reducer from 'reducers'
 import {setupState} from 'utilities'
 import Content from 'components/Content'
 import HeaderContainer from 'containers/HeaderContainer'
+import ScrollFooter from 'components/ScrollFooter'
 
 
 // Middleware
@@ -39,6 +40,7 @@ ReactDOM.render(
         <div className="contentWrapper">
           <Content/>
         </div>
+        <ScrollFooter />
       </div>
     </BrowserRouter>
   </Provider>, 

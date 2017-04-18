@@ -7,7 +7,6 @@ import {Link} from 'react-router-dom'
 import style from 'components/LinkList.scss'
 import linkStyle from 'components/Link.scss'
 
-import FaCommentO from 'react-icons/lib/fa/comment-o'
 import MdEdit from 'react-icons/lib/md/edit'
 import FaEllipsisH from 'react-icons/lib/fa/ellipsis-h'
 
@@ -47,7 +46,7 @@ class LinkListContainer extends Component {
               {
                 loggedInUser && link.user === loggedInUser.id 
                 ? <MdEdit />
-                : (link.description ? <FaCommentO /> : <FaEllipsisH />)
+                : <FaEllipsisH />
               }
             </Link>
           </HyperLink>

@@ -29,7 +29,7 @@ export default class HyperLink extends PureComponent {
             {link.title}
           </a>
           <p className={style.details} >
-            {link.username} - {getTimeSince(link.created)} ago
+            {link.username} - {getTimeSince(link.created)} ago {link.description ? '- description' : ''}
           </p>
         </div>
         {link.updating 
