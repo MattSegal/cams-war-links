@@ -45,6 +45,9 @@ export default class SideNav extends PureComponent {
       document.removeEventListener('keydown',this.handleEscKeypress)
     }
 
+    const navigateLatest = () => {setActiveUser(NO_USER_SELECTED); toggleSidebar()}
+    const navigateUser = (user_id) => {setActiveUser(user_id); toggleSidebar()}
+
     return (
       <div>
         <div onClick={toggleSidebar} className={`${style.sideNavBackground} ${active && style.active}`} />
@@ -52,32 +55,26 @@ export default class SideNav extends PureComponent {
           <div className={style.header}>
             Links - {loggedInName}<FaClose onClick={toggleSidebar} className={style.rightIcon}/>
           </div>
-          <Link to="/" onClick={toggleSidebar}>
-            <div 
-              onClick={() => setActiveUser(NO_USER_SELECTED)}
-              className={`${style.row} ${isNoActiveUser && style.active}`}
-            >
-              <FaChain className={style.leftIcon}/>Latest
-            </div>
+          <Link to="/"
+            onClick={navigateLatest}
+            className={`${style.row} ${isNoActiveUser && style.active}`}
+          >
+            <FaChain className={style.leftIcon}/>Latest
           </Link>
           <div className={style.parentRow}>
             <FaUser className={style.leftIcon}/>Users
           </div>
           {users.map(user => (
-            <Link key={user.id} to="/" onClick={toggleSidebar}>
-              <div 
-                onClick={() => setActiveUser(user.id)}
-                className={`${style.subRow} ${user.isActive && style.active}`}
-              >
-                {user.username}
-              </div>
+            <Link key={user.id} to="/" 
+              onClick={() => navigateUser(user.id)}
+              className={`${style.subRow} ${user.isActive && style.active}`}
+            >
+              {user.username}
             </Link>
           ))}
           {isUserLoggedIn &&   
-            <Link to="/bookmarks" onClick={toggleSidebar}>
-              <div className={style.row}>
-                <FaBook className={style.leftIcon}/>Bookmarks
-              </div>
+            <Link to="/bookmarks" onClick={toggleSidebar} className={style.row}>
+              <FaBook className={style.leftIcon}/>Bookmarks
             </Link>
           }
           {
@@ -89,31 +86,23 @@ export default class SideNav extends PureComponent {
             <FaCog className={style.leftIcon}/>Account
           </div>
           {isUserLoggedIn &&
-            <a href="/change/">
-              <div className={style.subRow}>
-                Change Password
-              </div>
+            <a href="/change/" className={style.subRow}>
+              Change Password
             </a>
           }
           {isUserLoggedIn &&
-            <a href="/logout/">
-              <div className={style.subRow}>
-                Log Out
-              </div>
+            <a href="/logout/" className={style.subRow}>
+              Log Out
             </a>
           }
           {!isUserLoggedIn &&
-            <a href="/signup/">
-              <div className={style.subRow}>
-                Sign Up
-              </div>
+            <a href="/signup/" className={style.subRow}>
+              Sign Up
             </a>
           }
           {!isUserLoggedIn &&
-            <a href="/login/">
-              <div className={style.subRow}>
-                Log In
-              </div>
+            <a href="/login/" className={style.subRow}>
+              Log In
             </a>
           }
         </div>      

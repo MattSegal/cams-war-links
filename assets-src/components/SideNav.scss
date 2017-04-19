@@ -37,6 +37,7 @@
     }
 
     ._row {
+        display: block;
         line-height: 2;
         padding: 0.4em 0 0.4em 3em;
         border-bottom: solid 1px #ddd;
@@ -80,7 +81,7 @@
         border-top: solid 1px #ddd;
     }
 
-    .subRow + .row {
+    .subRow + .row, .subRow + .parentRow {
         border-top: solid 1px #ddd;
     }
 
