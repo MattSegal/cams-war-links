@@ -25,7 +25,12 @@ const setupState = (state) => ({
     ...state,
     links: setupLinksState(state.links),
     users: setupUserState(state.users),
+    nav: {
+        sidebar: false,
+    }
 })
+
+const titleCase = (str) => str.charAt(0).toUpperCase() + str.slice(1)
 
 const getTimeSince = (date) => 
 {
@@ -60,5 +65,6 @@ module.exports = {
     setupState,
     setupLinkState,
     getTimeSince,
+    titleCase,
     LAST_WEEK,
 }

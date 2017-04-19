@@ -20,7 +20,7 @@ a {
 
 .contentWrapper
 {
-    max-width: 900px;
+    max-width: $content-max-width;
     margin: 0 auto;
     padding: 1em 2em;
     @media #{$phone} {

@@ -5,6 +5,7 @@ import {deleteLinkReducer} from './DeleteLink'
 import {editLinkReducer} from './EditLink'
 import {addLinkReducer} from './AddLink'
 import {bookmarkLinkReducer} from './BookmarkLink'
+import {toggleSidebarReducer} from './ToggleSidebar'
 
 
 const reducer = (state,action) =>
@@ -15,6 +16,7 @@ const reducer = (state,action) =>
         getLinksReducer(action),
         activeUserReducer(action),
         bookmarkLinkReducer(action),
+        toggleSidebarReducer(action),
     )(state)
 
 

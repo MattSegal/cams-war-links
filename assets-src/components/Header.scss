@@ -8,12 +8,19 @@
         z-index: 1;
         padding: 1em;
         background-color: $light-grey;
-        display: flex;
-        justify-content: space-between;
+        
+        .headerContent {
+            width: 100%;
+            max-width: $content-max-width;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+        }
+
         h1
         {
             display: inline-block;
-            font-size: 2em;
+            font-size: 1.5em;
         
         }
         
@@ -29,7 +36,7 @@
         {
             display: inline-block;
             vertical-align: middle;
-            min-height: 30px;
+            height: 20px;
         }
     }
 

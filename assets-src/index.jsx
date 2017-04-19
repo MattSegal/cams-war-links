@@ -14,6 +14,7 @@ import {setupState} from 'utilities'
 import Content from 'components/Content'
 import HeaderContainer from 'containers/HeaderContainer'
 import ScrollFooter from 'components/ScrollFooter'
+import SideNavContainer from 'containers/SideNavContainer'
 
 
 // Middleware
@@ -40,6 +41,7 @@ ReactDOM.render(
         <div className="contentWrapper">
           <Content/>
         </div>
+        <SideNavContainer />
         <ScrollFooter />
       </div>
     </BrowserRouter>

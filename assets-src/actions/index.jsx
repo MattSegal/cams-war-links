@@ -9,6 +9,8 @@ import {deleteLink} from './DeleteLink'
 import {editLink} from './EditLink'
 import {fetchLinks} from './FetchLinks'
 import {bookmarkLink} from './BookmarkLink'
+import {toggleSidebar} from './ToggleSidebar'
+
 
 const setActiveUser = (user_id) => ({
     type: types.SET_ACTIVE_USER,
@@ -23,4 +25,5 @@ module.exports = {
     editLink,
     fetchLinks,
     bookmarkLink,
+    toggleSidebar,
 }
