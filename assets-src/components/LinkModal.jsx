@@ -9,6 +9,7 @@ import FaPencil from 'react-icons/lib/fa/pencil'
 import FaClose from 'react-icons/lib/fa/close'
 import FaBookmarkO from 'react-icons/lib/fa/bookmark-o'
 import FaBookmark from 'react-icons/lib/fa/bookmark'
+import FaTag from 'react-icons/lib/fa/tag'
 import LinkForm from 'components/LinkForm'
 import Spinner from 'components/Spinner'
 
@@ -135,6 +136,11 @@ class LinkModal extends Component
                     <Link to={`/link/${link.id}/delete`}>
                       <button className={style.btn}><FaTrashO />&nbsp;Delete</button>
                     </Link>
+                    {
+                    // <Link to={`/link/${link.id}/tags`}>
+                    //   <button className={style.btn}><FaTag />&nbsp;Tags</button>
+                    // </Link>
+                    }
                     {bookmarkButton}
                   </div>
                 )}
