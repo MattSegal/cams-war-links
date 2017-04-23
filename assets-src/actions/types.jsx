@@ -28,4 +28,7 @@ export const types = {
 
     // Toggle sidebar
     TOGGLE_SIDEBAR: 'TOGGLE_SIDEBAR', 
+
+    // Scrolling links
+    SCROLL_LINKS_BOTTOM: 'SCROLL_LINKS_BOTTOM',
 }

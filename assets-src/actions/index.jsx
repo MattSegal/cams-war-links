@@ -10,6 +10,7 @@ import {editLink} from './EditLink'
 import {fetchLinks} from './FetchLinks'
 import {bookmarkLink} from './BookmarkLink'
 import {toggleSidebar} from './ToggleSidebar'
+import {scrollLinksBottom} from './ScrollLinks'
 
 
 const setActiveUser = (user_id) => ({
@@ -26,4 +27,5 @@ module.exports = {
     fetchLinks,
     bookmarkLink,
     toggleSidebar,
+    scrollLinksBottom,
 }

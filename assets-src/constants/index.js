@@ -2,4 +2,6 @@ module.exports = {
     NO_USER_SELECTED: -1,
     ACTIVE: 'ACTIVE',
     INACTIVE: 'INACTIVE',
+    SCROLL_JUMP: 10,
+    SCROLL_COUNT_INITIAL: 25,
 }

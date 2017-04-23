@@ -8,6 +8,7 @@ import {Provider} from 'react-redux'
 import thunkMiddleware from 'redux-thunk'
 import createLogger  from 'redux-logger'
 import {BrowserRouter, Link} from 'react-router-dom'
+import initialiseState from 'init'
 
 import reducer from 'reducers'
 import {setupState} from 'utilities'
@@ -27,7 +28,7 @@ const middleware = applyMiddleware(
 
 // Store - assume we have bootstrapData available
 console.log('Loading bootstrap data', bootstrapData)
-let initialState = setupState(bootstrapData)
+let initialState = initialiseState(bootstrapData)
 console.log('Set up bootstrap data', bootstrapData)
 const store  = createStore(reducer, initialState, middleware)
 

@@ -6,6 +6,7 @@ import {editLinkReducer} from './EditLink'
 import {addLinkReducer} from './AddLink'
 import {bookmarkLinkReducer} from './BookmarkLink'
 import {toggleSidebarReducer} from './ToggleSidebar'
+import {scrollLinksReducer} from './ScrollLinks'
 
 
 const reducer = (state,action) =>
@@ -17,6 +18,7 @@ const reducer = (state,action) =>
         activeUserReducer(action),
         bookmarkLinkReducer(action),
         toggleSidebarReducer(action),
+        scrollLinksReducer(action),
     )(state)
 
 

@@ -1,5 +1,4 @@
 import {types} from 'actions'
-import {setupLinkState} from 'utilities'
 
 export const getLinksReducer = (action) => (state) =>
 {
@@ -28,8 +27,8 @@ const receiveLinksReducer = (action, state) => ({
     updating: false,
     items: (
       action.links 
-        ? action.links.map(setupLinkState)
-        : [...state.links.items]
+        ? action.links
+        : state.links.items
     ),
   }
 })

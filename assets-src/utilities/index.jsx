@@ -4,31 +4,6 @@ import {NO_USER_SELECTED} from 'constants'
 const _pipe = (f, g) => (...args) => g(f(...args))
 const pipe = (...fns) => fns.reduce(_pipe)
 
-const setupLinksState = (links) => ({
-    ...links,
-    updating: false,
-    items: links.items.map(setupLinkState),
-})
-
-const setupLinkState = (link) => ({
-    ...link, 
-    updating: false,
-})
-
-const setupUserState = (users) => ({
-    ...users,
-    activeUserId: NO_USER_SELECTED,
-})
-
-
-const setupState = (state) => ({
-    ...state,
-    links: setupLinksState(state.links),
-    users: setupUserState(state.users),
-    nav: {
-        sidebar: false,
-    }
-})
 
 const titleCase = (str) => str.charAt(0).toUpperCase() + str.slice(1)
 
@@ -62,8 +37,6 @@ const LAST_WEEK = new Date(
 
 module.exports = {
     pipe,
-    setupState,
-    setupLinkState,
     getTimeSince,
     titleCase,
     LAST_WEEK,

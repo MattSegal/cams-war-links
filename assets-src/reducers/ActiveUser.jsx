@@ -1,5 +1,5 @@
 import {types} from 'actions'
-import {NO_USER_SELECTED, CLOSED} from 'constants'
+import {NO_USER_SELECTED, CLOSED, SCROLL_COUNT_INITIAL} from 'constants'
 
 
 export const activeUserReducer = (action) => (state) =>
@@ -19,8 +19,8 @@ const setActiveUserReducer = (action, state) => ({
       ? NO_USER_SELECTED
       : action.user_id
   },
-  links: {
-    ...state.links,
-    add: CLOSED,
+  nav: {
+    ...state.nav,
+    scrollCount: SCROLL_COUNT_INITIAL,
   }
 })
