@@ -27,21 +27,16 @@ export default class LinkForm extends Component
   constructor(props) 
   {
     super(props)
-    this.cancelDialogue = this.cancelDialogue.bind(this)
-    this.submitAction = this.submitAction.bind(this)
-    this.handleTitleChange = this.handleTitleChange.bind(this)
-    this.handleUrlChange = this.handleUrlChange.bind(this)
-    this.handleDescriptionChange = this.handleDescriptionChange.bind(this)
   }
 
-  submitAction() {
+  submitAction = ()  =>{
     const { history } = this.context.router
     this.props.action()
     // TODO: dispatch this in react-redux-router
     history.push(this.props.backToURL)
   }
 
-  cancelDialogue(event) {
+  cancelDialogue = (event) => {
     const { history } = this.context.router
     if (event.key === 'Escape' || event.keyCode === 27) {
       event.stopPropagation()
@@ -50,7 +45,7 @@ export default class LinkForm extends Component
     }
   }
 
-  handleTitleChange(event) 
+  handleTitleChange = (event) => 
   {
     this.props.setState({
         ...this.props.state,
@@ -58,7 +53,7 @@ export default class LinkForm extends Component
     })
   }
 
-  handleUrlChange(event) 
+  handleUrlChange = (event) => 
   {
     this.props.setState({
         ...this.props.state,
@@ -66,7 +61,7 @@ export default class LinkForm extends Component
     })
   }
 
-  handleDescriptionChange(event) 
+  handleDescriptionChange = (event) => 
   {
     this.props.setState({
         ...this.props.state,
@@ -74,9 +69,14 @@ export default class LinkForm extends Component
     })
   }
 
+  confirmWithEnter = (event) => {
+    if (event.key === 'Enter'&& !event.shiftKey) {
+     this.submitAction()
+    }
+  }
+
   render() {
     const {backToURL} = this.props
-    const confirmWithEnter = e => e.key === 'Enter' && this.submitAction()
     return (
       <div>
         <div className={style.btnWrapper}>
@@ -93,7 +93,7 @@ export default class LinkForm extends Component
                   placeholder="Title"
                   value={this.props.state.title} 
                   onChange={this.handleTitleChange}
-                  onKeyPress={confirmWithEnter}
+                  onKeyPress={this.confirmWithEnter}
                   onKeyDown={this.cancelDialogue}
               />
           </div>
@@ -103,7 +103,7 @@ export default class LinkForm extends Component
                   placeholder="URL"
                   value={this.props.state.url} 
                   onChange={this.handleUrlChange} 
-                  onKeyPress={confirmWithEnter}
+                  onKeyPress={this.confirmWithEnter}
                   onKeyDown={this.cancelDialogue}
               />
           </div>
@@ -114,7 +114,7 @@ export default class LinkForm extends Component
                   placeholder="Description (Optional)"
                   value={this.props.state.description} 
                   onChange={this.handleDescriptionChange} 
-                  onKeyPress={confirmWithEnter}
+                  onKeyPress={this.confirmWithEnter}
                   onKeyDown={this.cancelDialogue}
               />
           </div>

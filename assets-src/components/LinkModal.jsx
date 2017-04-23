@@ -97,7 +97,11 @@ class LinkModal extends Component
               {username} - {getTimeSince(link.created)} ago
             </p>
           </div>
-          <div className={style.description}>{this.state.description}</div>
+          <div className={style.description}>
+            {
+              this.state.description.split('\n').map((str, idx) => <span key={idx}>{str}<br/></span>)
+            }
+          </div>
         </div>
         {isLinkOwner && (
           <Switch>
