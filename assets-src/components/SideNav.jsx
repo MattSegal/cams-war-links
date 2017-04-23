@@ -61,6 +61,11 @@ export default class SideNav extends PureComponent {
           >
             <FaChain className={style.leftIcon}/>Latest
           </Link>
+          {isUserLoggedIn &&   
+            <Link to="/bookmarks" onClick={toggleSidebar} className={style.row}>
+              <FaBook className={style.leftIcon}/>Bookmarks
+            </Link>
+          }
           <div className={style.parentRow}>
             <FaUser className={style.leftIcon}/>Users
           </div>
@@ -72,11 +77,6 @@ export default class SideNav extends PureComponent {
               {user.username}
             </Link>
           ))}
-          {isUserLoggedIn &&   
-            <Link to="/bookmarks" onClick={toggleSidebar} className={style.row}>
-              <FaBook className={style.leftIcon}/>Bookmarks
-            </Link>
-          }
           {
           // <div className={style.row}>
           //   <FaTag className={style.leftIcon}/>Tags
