@@ -30,6 +30,8 @@
     .description
     {
         max-width: 350px;
+        max-height: 180px;
+        overflow-y: auto;
         margin: 0 auto 2em auto;
         font-style: italic;
     }
