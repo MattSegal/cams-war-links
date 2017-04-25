@@ -32,18 +32,20 @@ export default class Modal extends Component
 
   componentDidMount() {
     document.addEventListener('keydown',this.handleEscKeypress)
+    this.background.classList.add('Modal__active')
   }
 
   componentWillUnmount() {
     document.removeEventListener('keydown',this.handleEscKeypress)
+    this.background.classList.remove('Modal__active')
   }
 
   render() 
   {
     const {children, closeRoute} = this.props
     return (
-      <div className={style.modal}>
-        <div className={style.contentWrapper}>
+      <div ref={c => this.background = c} className={style.background}>
+        <div className={style.content}>
           <Link to={closeRoute} className={style.close}><FaClose /></Link>
           {children}
         </div>

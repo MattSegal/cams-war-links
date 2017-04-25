@@ -4,6 +4,9 @@
 // Hide scrollbars in Webkit browsers (Chrome + Safari)
 html::-webkit-scrollbar { width: 0 !important }
 
+body {
+    z-index: 0;
+}
 
 a {
     text-decoration: none;
