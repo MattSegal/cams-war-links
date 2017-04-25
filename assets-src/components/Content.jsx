@@ -1,18 +1,41 @@
-import React, {Component} from 'react'
+import React, {PropTypes, Component} from 'react'
+import {Route, Switch} from 'react-router-dom'
+
 import LinkListContainer from 'containers/LinkListContainer'
-import UserListContainer from 'containers/UserListContainer'
+import BookmarkListContainer from 'containers/BookmarkListContainer'
+import LinkModalContainer from 'containers/LinkModalContainer'
+import AddLinkModalContainer from 'containers/AddLinkModalContainer'
 
-class Content extends Component 
+export default class Content extends Component 
 {
-    render() 
-    {
-        return (
-            <div>
-                <UserListContainer />
-                <LinkListContainer />
-            </div>
-        )
-    }
+  static contextTypes = {
+    router: PropTypes.object
+  }
+  
+  render() 
+  {
+    return (
+      <Switch>
+        <Route path="/bookmarks">
+          <BookmarkListContainer />
+        </Route>
+        <Route path="/">
+          <div>
+            <Route path="/add" component={({match}) =>
+              <AddLinkModalContainer 
+                router={this.context.router} 
+              />
+            }/>
+            <Route path="/link/:linkId" component={({match}) =>
+              <LinkModalContainer 
+                router={this.context.router} 
+                linkId={Number(match.params.linkId)}
+              />
+            }/>
+            <LinkListContainer />
+          </div>
+        </Route>
+      </Switch>
+    )
+  }
 }
-
-module.exports = Content

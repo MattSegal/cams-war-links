@@ -8,7 +8,8 @@ node_modules
 *.prod2
 Thumbs.db
 .cache/
-assets/
+assets/*.js
+assets/*.css
 sql/
 *.sqlite3
 webpack-stats.json

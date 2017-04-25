@@ -1,0 +1,7 @@
+z-index values
+
+4 - side nav
+3 - side nav wrapper
+2 - modal
+1 - modal wrapper
+0 - everything else

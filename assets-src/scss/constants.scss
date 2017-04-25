@@ -1,12 +1,18 @@
 $font-family: sans-serif;
 $font-size: 14px;
 
+$white: #fff;
 $link-color: #38C;
 $text-color: #333;
 $light-grey: #eee;
 $text-grey: #888;
 $red: #EB6464;
 $blue: #647EEB;
+
+$header-height: 52px;
+$content-max-width: 800px;
+
+$phone: "(max-width: 500px)";
 
 html, body
 {   

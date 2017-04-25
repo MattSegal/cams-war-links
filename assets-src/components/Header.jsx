@@ -1,42 +1,55 @@
-import React, {Component} from 'react'
-import {connect} from 'react-redux'
-import Actions from 'actions'
-import NewLinkButton from 'components/NewLinkButton'
-import RefreshButton from 'components/RefreshButton'
+import React, {Component, PropTypes} from 'react'
+import {Switch, Route, Link} from 'react-router-dom'
+import {LoggedIn, LoggedOut} from 'containers/UtilsContainers'
+import FaBars from 'react-icons/lib/fa/bars'
+import FaPlus from 'react-icons/lib/fa/plus'
+import FaRefresh from 'react-icons/lib/fa/refresh'
+import Spinner from 'components/Spinner'
+import style from 'components/Header.scss'
 
-class Header extends Component 
-{
-    render() 
-    {
-        return (
-            <div>
-                <RefreshButton 
-                    onRefreshClick={this.props.onRefreshClick}
-                    isFetching={this.props.isFetching}
-                />
-                <NewLinkButton 
-                    addFormStatus={this.props.addFormStatus} 
-                    {...this.props.addLink} 
-                />
-            </div>
-        )
-    }
+export default class Header extends Component {
+  static propTypes ={
+    username: PropTypes.string,
+    updating: PropTypes.bool,
+    fetchLinks: PropTypes.func,
+    toggleSidebar: PropTypes.func,
+  }
+
+  render() 
+  {
+    const {updating, fetchLinks, toggleSidebar, username} = this.props
+    return (
+      <header className={style.header}>
+        <div className={style.headerContent}>
+          <div className={style.group}>
+            <FaBars 
+              onClick={toggleSidebar}
+              className={style.btn}
+            />
+            <Switch>
+            <Route path="/bookmarks">
+              <Link to="/"><h1>Bookmarks</h1></Link>
+              </Route>
+              <Route path="/">
+                <Link to="/"><h1>{username ? username : 'Links'}</h1></Link>
+              </Route>
+            </Switch>
+          </div>
+          <div className={style.group}>
+            <LoggedIn>
+              {!updating && <Route exact path="/" component={() =>
+                <Link title="Add New Link" to="/add">
+                  <FaPlus className={style.btn}/>
+                </Link>
+              }/>}
+            </LoggedIn>
+            {!updating && <Route exact path="/" component={() =>
+              <FaRefresh title="Reload Links" onClick={fetchLinks} className={style.btn} />
+            }/>}
+            {updating && <span className={style.btn}><Spinner /></span>}
+          </div>
+        </div>
+      </header>
+    )
+  }
 }
-
-let mapStateToProps = (state) => ({
-    isFetching: state.links.isFetching,
-    addFormStatus: state.links.add,
-})
-
-let mapDispatchToProps = (dispatch) => ({
-    onRefreshClick: () => dispatch(Actions.fetchLinks()),
-    addLink: {
-        select: () => dispatch(Actions.tryAddLink()),
-        cancel: () => dispatch(Actions.cancelAddLink()),
-    },
-})
-
-module.exports = connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(Header)

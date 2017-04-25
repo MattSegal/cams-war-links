@@ -23,7 +23,7 @@ def index(request):
     NO_ACTIVE_USER = -1
 
     context = {
-        'bootstrap_data': json.dumps({
+        'bootstrap_data': {
                 'users': {
                     'isFetching': False,
                     'activeUserId': NO_ACTIVE_USER,
@@ -33,8 +33,15 @@ def index(request):
                     'isFetching': False,
                     'items': LinkSerializer(links, many=True).data
                 }
-        })
+        }
     }
+
+    if request.user.is_authenticated:
+        context['bootstrap_data'].update({
+            'loggedInUser': UserSerializer(request.user).data, 
+        })
+
+    context['bootstrap_data'] = json.dumps(context['bootstrap_data'])
     return HttpResponse(template.render(context,request))
 
 

@@ -30,8 +30,6 @@ class LinkFactory(factory.Factory):
     title = factory.Sequence(lambda n: 'Link Number {0}'.format(n))
     url = 'https:/www.google.com'
     description = ''
-    created = factory.LazyFunction(timezone.now)
-    modified = factory.LazyFunction(timezone.now)
 
 def build():
     """
@@ -39,12 +37,12 @@ def build():
     """
     from django.db import transaction
     import requests
+    from freezegun import freeze_time
 
-    r = requests.get('http://mattdsegal.com/links/api/user')
+    r = requests.get('http://mattslinks.xyz/api/user')
     user_data = r.json() 
-  
 
-    r = requests.get('http://mattdsegal.com/links/api/links')
+    r = requests.get('http://mattslinks.xyz/api/link')
     link_data = r.json()
    
     models.Link.objects.all().delete()
@@ -53,19 +51,21 @@ def build():
     with transaction.atomic():
         UserFactory(username='admin',is_staff=True,is_superuser=True)
         users = [
-            UserFactory(username=u_data['name'].lower())
+            UserFactory(id=u_data['id'], username=u_data['username'].lower())
             for u_data in user_data
         ]
         print 'Successfully created users: {}'.format(users)
         for link in link_data:
-            link_users = [u for u in users if u.username == link['user'].lower()]
+            link_users = [u for u in users if u.id == link['user']]
             if len(link_users) == 1:
-                link_obj = LinkFactory(
-                    user=link_users[0],
-                    title=link['title'],
-                    url=link['url']
-                )
-                link_obj.save()
+                with freeze_time(link['created']):
+                    link_obj = LinkFactory(
+                        user=link_users[0],
+                        title=link['title'],
+                        url=link['url'],
+                        description=link['description']
+                    )
+                    link_obj.save()
 
                 
 

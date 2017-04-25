@@ -5,7 +5,7 @@ from .models import Link
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id','username',)
+        fields = ('id','username','bookmarks',)
 
 class LinkSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)

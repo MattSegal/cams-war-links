@@ -1,77 +1,80 @@
-import React, {Component} from 'react';
+import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux'
-import LinkList from 'components/LinkList'
-import NewLinkForm from 'components/NewLinkForm'
+import {NO_USER_SELECTED} from 'constants'
+import HyperLink from 'components/HyperLink'
+import Waypoint from 'react-waypoint'
+import {Link} from 'react-router-dom'
 import Actions from 'actions'
+import style from 'components/LinkList.scss'
+import linkStyle from 'components/Link.scss'
+import MdEdit from 'react-icons/lib/md/edit'
+import FaEllipsisH from 'react-icons/lib/fa/ellipsis-h'
+import Spinner from 'components/Spinner'
 
-class LinkListContainer extends Component 
-{
+class LinkListContainer extends Component {
+  static propTypes = {
+    scrollCount: PropTypes.number,
+  }
 
-    getUsernames(users)
-    {
-        let usernames = {}
-        for (let user of users)
-        {
-            usernames[user.id] = user.username
+  render()
+  {
+    const {users, links, activeUserId, loggedInUser, scrollCount} = this.props
+    const usernames = users.reduce( (obj, user) => 
+      ({...obj, [`${user.id}`]: user.username}), {}
+    )
+
+    const sortByDate = (link1, link2) => 
+      new Date(link2.created) - new Date(link1.created)
+    
+    const isVisible = link => 
+      link.user === activeUserId ||
+      activeUserId === NO_USER_SELECTED 
+
+    const filteredLinks = links
+      .filter(isVisible)
+      .sort(sortByDate)
+      .map(link => ({
+          ...link,
+          username: usernames[link.user]
+      }))
+      
+    const scrolledLinks = filteredLinks.slice(0, scrollCount)
+
+    return (
+      <ul className={style.list}>
+        {scrolledLinks.map(link => 
+          <HyperLink key={link.id} link={link}>
+            <Link to={`/link/${link.id}`} title="More" className={linkStyle.button}>
+              {
+                loggedInUser && link.user === loggedInUser.id 
+                ? <MdEdit />
+                : <FaEllipsisH />
+              }
+            </Link>
+          </HyperLink>
+        )}
+        <Waypoint
+          onEnter={this.props.scrollBottom}
+          topOffset="100px"
+        />
+        {scrollCount < filteredLinks.length &&
+          <div className={style.spinnerWrapper}><Spinner /></div>
         }
-        return usernames
-    }
-
-    render() 
-    {
-        let usernames = this.getUsernames(this.props.users)
-
-        let links = this.props.links
-            .sort( (l1, l2) => new Date(l2.created) - new Date(l1.created) )
-            .map(link => ({
-                ...link,
-                username: usernames[link.user]
-            }))
-
-        return (
-            <div>
-                 <NewLinkForm
-                    addFormStatus={this.props.addFormStatus} 
-                    addLink={this.props.addLink} 
-                />
-                <LinkList 
-                    activeUserId={this.props.activeUserId} 
-                    links={links} 
-                    deleteLink={this.props.deleteLink} 
-                    editLink={this.props.editLink}
-                    linkDetails={this.props.linkDetails}
-                />
-            </div>
-        )
-    }
+      </ul>
+    )
+  }
 }
 
-let mapStateToProps = (state) => ({
+const mapStateToProps = (state) => ({
     links: state.links.items,
     users: state.users.items,
     activeUserId: state.users.activeUserId,
-    addFormStatus: state.links.add,
+    loggedInUser: state.loggedInUser,
+    scrollCount: state.nav.scrollCount,
 })
 
-let mapDispatchToProps = (dispatch) => ({
-    linkDetails: {
-        show: (link_id) => dispatch(Actions.showLinkDetails(link_id)),
-        hide: (link_id) => dispatch(Actions.hideLinkDetails(link_id)),
-    },
-    addLink: {
-        confirm: (link) => dispatch(Actions.confirmAddLink(link)),
-        cancel:() => dispatch(Actions.cancelAddLink()),
-    },
-    deleteLink: {
-        select: (link_id) => dispatch(Actions.tryDeleteLink(link_id)),
-        confirm: (link_id) => dispatch(Actions.confirmDeleteLink(link_id)),
-        cancel:(link_id) => dispatch(Actions.cancelDeleteLink(link_id)),
-    },
-    editLink: {
-        select: (link_id) => dispatch(Actions.tryEditLink(link_id)),
-        confirm: (link) => dispatch(Actions.confirmEditLink(link)),
-        cancel:(link_id) => dispatch(Actions.cancelEditLink(link_id)),
-    },
+const mapDispatchToProps = (dispatch) => ({
+  scrollBottom: () => dispatch(Actions.scrollLinksBottom()),
 })
 
 module.exports = connect(

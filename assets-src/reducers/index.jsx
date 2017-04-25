@@ -4,7 +4,10 @@ import {activeUserReducer} from './ActiveUser'
 import {deleteLinkReducer} from './DeleteLink'
 import {editLinkReducer} from './EditLink'
 import {addLinkReducer} from './AddLink'
-import {linkDetailsReducer} from './ShowDetails'
+import {bookmarkLinkReducer} from './BookmarkLink'
+import {toggleSidebarReducer} from './ToggleSidebar'
+import {scrollLinksReducer} from './ScrollLinks'
+
 
 const reducer = (state,action) =>
     pipe(
@@ -13,7 +16,9 @@ const reducer = (state,action) =>
         editLinkReducer(action),
         getLinksReducer(action),
         activeUserReducer(action),
-        linkDetailsReducer(action)
+        bookmarkLinkReducer(action),
+        toggleSidebarReducer(action),
+        scrollLinksReducer(action),
     )(state)
 
 

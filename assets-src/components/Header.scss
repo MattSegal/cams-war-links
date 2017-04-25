@@ -1,0 +1,48 @@
+@import '../scss/constants';
+
+:local {
+    .header {
+        position: fixed;
+        width: 100%;
+        box-sizing: border-box;
+        z-index: 1;
+        padding: 1em;
+        background-color: $light-grey;
+        
+        .headerContent {
+            width: 100%;
+            max-width: $content-max-width;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        h1
+        {
+            display: inline-block;
+            font-size: 1.5em;
+        
+        }
+        
+        .btn
+        {
+            font-size: 1.2em;
+            min-width: 2.2em;
+            cursor: pointer;
+            position: relative;
+        }
+
+        span.btn 
+        {
+            display: inline-block;
+            vertical-align: middle;
+            height: 20px;
+        }
+    }
+
+    .group
+    {
+        display: flex;
+        align-items: center;
+    }
+}

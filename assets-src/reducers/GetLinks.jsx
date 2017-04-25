@@ -1,40 +1,43 @@
 import {types} from 'actions'
-import {pipe, setupLinkState} from 'utilities'
-import {CLOSED, INACTIVE} from 'constants'
-import {closeAll} from 'utilities'
 
-
-const getLinksReducer = (action) => (state) =>
+export const getLinksReducer = (action) => (state) =>
 {
-    switch(action.type)
-    {
-        case types.REQUEST_LINKS:    return requestLinksReducer(action, state)
-        case types.RECEIVE_LINKS:    return receiveLinksReducer(action, state)
-        default:                     return {...state}
-    }
+  switch(action.type)
+  {
+    case types.REQUEST_LINKS:     return requestLinksReducer(action, state)
+    case types.RECEIVE_LINKS:     return receiveLinksReducer(action, state)
+    case types.ERROR_LINKS:       return errorLinksReducer(action, state)
+    default:                      return {...state}
+  }
 }
 
 const requestLinksReducer = (action, state) => ({
-    ...state,
-    links: {
-        ...state.links,
-        isFetching: true,
-    }
+  // Set link collection to 'updating' state
+  ...state,
+  links: {
+    ...state.links,
+    updating: true,
+  }
 })
 
 const receiveLinksReducer = (action, state) => ({
-    ...state,
-    links: {
-        ...state.links,
-        items: action.links ? action.links.map(link => ({
-            ...link, 
-            status: closeAll(link.status),
-            bookmark: INACTIVE // TODO: Fix this
-        })) : [...state.links.items],
-        isFetching: false,
-    }
+  ...state,
+  links: {
+    ...state.links,
+    updating: false,
+    items: (
+      action.links 
+        ? action.links
+        : state.links.items
+    ),
+  }
 })
 
-module.exports = {
-    getLinksReducer,
-}
+const errorLinksReducer = (action, state) => ({
+  // Set link collection to 'not-updating' state
+  ...state,
+  links: {
+    ...state.links,
+    updating: false,
+  }
+})

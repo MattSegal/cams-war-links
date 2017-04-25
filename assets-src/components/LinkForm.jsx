@@ -1,151 +1,126 @@
-import React, {PropTypes, Component} from 'react';
-import {OPEN, WAITING, CLOSED} from 'constants'
-import {connect} from 'react-redux'
-import style from 'components/LinkForm.scss'
+import React, {PropTypes, Component} from 'react'
+import {Link} from 'react-router-dom'
+import FaPencil from 'react-icons/lib/fa/pencil'
 import FaClose from 'react-icons/lib/fa/close'
-import FaCheck from 'react-icons/lib/fa/check'
+
+// Wrong style
+import style from 'components/LinkModal.scss'
 
 
-
-
-class LinkForm extends Component
+export default class LinkForm extends Component 
 {
-    constructor(props) 
-    {
-        super(props)
-        this.state = {title: this.props.title, url: this.props.url, description: this.props.description}
-        this.handleTitleChange = this.handleTitleChange.bind(this)
-        this.handleUrlChange = this.handleUrlChange.bind(this)
-        this.handleDescriptionChange = this.handleDescriptionChange.bind(this)
+  static propTypes = {
+    state: PropTypes.object,
+    backToURL: PropTypes.string,
+    setState: PropTypes.func,
+    action: PropTypes.func,
+  }
+
+  static contextTypes = {
+    router: PropTypes.shape({
+      history: PropTypes.shape({
+        push: PropTypes.func.isRequired,
+      }).isRequired
+    }).isRequired
+  }
+
+  constructor(props) 
+  {
+    super(props)
+  }
+
+  submitAction = ()  =>{
+    const { history } = this.context.router
+    this.props.action()
+    // TODO: dispatch this in react-redux-router
+    history.push(this.props.backToURL)
+  }
+
+  cancelDialogue = (event) => {
+    const { history } = this.context.router
+    if (event.key === 'Escape' || event.keyCode === 27) {
+      event.stopPropagation()
+      // TODO: dispatch this in react-redux-router
+      history.push(this.props.backToURL)
     }
+  }
 
-    static propTypes = {
-        linkId: PropTypes.number,
-        title: PropTypes.string,
-        url: PropTypes.string,
-        description: PropTypes.string,
-        formStatus: PropTypes.string,
-        cancel: PropTypes.func,
-        confirm: PropTypes.func,
+  handleTitleChange = (event) => 
+  {
+    this.props.setState({
+        ...this.props.state,
+        title: event.target.value
+    })
+  }
+
+  handleUrlChange = (event) => 
+  {
+    this.props.setState({
+        ...this.props.state,
+        url: event.target.value
+    })
+  }
+
+  handleDescriptionChange = (event) => 
+  {
+    this.props.setState({
+        ...this.props.state,
+        description: event.target.value
+    })
+  }
+
+  confirmWithEnter = (event) => {
+    if (event.key === 'Enter'&& !event.shiftKey) {
+     this.submitAction()
     }
+  }
 
-    static defaultProps = {
-        linkId: -1,
-        title: '',
-        url: '',
-        description: '',
-    }
-
-    confirm = () =>
-    {
-        let link = {
-            title: this.state.title,
-            url: this.state.url,
-            description: this.state.description,
-            user: this.props.currentUser.id,
-        }
-        console.log(link)
-        if (this.props.linkId >= 0)
-        {
-            link['id'] = this.props.linkId
-        }
-
-        this.props.confirm(link)
-    }
-
-    handleTitleChange(event) 
-    {
-        this.setState({
-            ...this.state,
-            title: event.target.value
-        })
-    }
-
-    handleUrlChange(event) 
-    {
-        this.setState({
-            ...this.state,
-            url: event.target.value
-        })
-    }
-
-    handleDescriptionChange(event) 
-    {
-        this.setState({
-            ...this.state,
-            description: event.target.value
-        })
-    }
-
-    render()
-    {
-        let isDialogueOpen = this.props.formStatus === OPEN
-        if (!isDialogueOpen) {return null}
-
-        const cancel = () => this.props.cancel(this.props.linkId) 
-        const confirmWithEnter = e => e.key === 'Enter' && this.confirm()
-        const cancelWithEnter = e => e.key === 'Enter' && this.props.cancel(this.props.linkId) 
-        const cancelwithEsc = e => e.keyCode === 27 && this.props.cancel(this.props.linkId) 
-
-        return (
-            <div className={style.form}>
-                <div className={style.input}>
-                    <input 
-                        autoFocus
-                        type="text" 
-                        placeholder="Title"
-                        value={this.state.title} 
-                        onChange={this.handleTitleChange}
-                        onKeyPress={confirmWithEnter}
-                        onKeyDown={cancelwithEsc}
-                    />
-                </div>
-
-                <div className={style.input}>
-                    <input 
-                        type="text"
-                        placeholder="URL"
-                        value={this.state.url} 
-                        onChange={this.handleUrlChange} 
-                        onKeyPress={confirmWithEnter}
-                        onKeyDown={cancelwithEsc}
-                    />
-                </div>
-                <div className={style.input}>
-                    <input 
-                        type="text"
-                        placeholder="Description (Optional)"
-                        value={this.state.description} 
-                        onChange={this.handleDescriptionChange} 
-                        onKeyPress={confirmWithEnter}
-                        onKeyDown={cancelwithEsc}
-                    />
-                </div>
-                <div>
-                    <div 
-                        tabIndex="0" 
-                        className={style.button} 
-                        onClick={this.confirm}
-                        onKeyPress={confirmWithEnter}
-                    ><FaCheck /></div>
-                    <div 
-                        tabIndex="0" 
-                        className={style.button} 
-                        onClick={cancel}
-                        onKeyPress={cancelWithEnter}
-                    ><FaClose /></div>
-                </div>
-            </div>
-        )
-    }
+  render() {
+    const {backToURL} = this.props
+    return (
+      <div>
+        <div className={style.btnWrapper}>
+          <button className={style.btn} onClick={this.submitAction}><FaPencil />&nbsp;Submit</button>
+          <Link to={backToURL}>
+            <button className={style.btn}><FaClose />&nbsp;Cancel</button>
+          </Link>
+        </div>
+        <div className={style.form}>
+          <div className={style.input}>
+              <input 
+                  autoFocus
+                  type="text" 
+                  placeholder="Title"
+                  value={this.props.state.title} 
+                  onChange={this.handleTitleChange}
+                  onKeyPress={this.confirmWithEnter}
+                  onKeyDown={this.cancelDialogue}
+              />
+          </div>
+          <div className={style.input}>
+              <input 
+                  type="text"
+                  placeholder="URL"
+                  value={this.props.state.url} 
+                  onChange={this.handleUrlChange} 
+                  onKeyPress={this.confirmWithEnter}
+                  onKeyDown={this.cancelDialogue}
+              />
+          </div>
+          <div className={style.input}>
+              <textarea 
+                  type="text"
+                  rows="3"
+                  placeholder="Description (Optional)"
+                  value={this.props.state.description} 
+                  onChange={this.handleDescriptionChange} 
+                  onKeyPress={this.confirmWithEnter}
+                  onKeyDown={this.cancelDialogue}
+              />
+          </div>
+        </div>   
+      </div> 
+    )
+  }
 }
 
-module.exports = LinkForm
-
-let mapStateToProps = (state) => ({
-    currentUser: state.currentUser,
-})
-
-module.exports = connect(
-    mapStateToProps
-)(LinkForm)
