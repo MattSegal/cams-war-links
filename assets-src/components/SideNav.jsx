@@ -68,15 +68,18 @@ export default class SideNav extends PureComponent {
           }
           <div className={style.parentRow}>
             <FaUser className={style.leftIcon}/>Users
+            <div className={`${style.childSideNav} ${active && style.active}`}>
+              {users.map(user => (
+                <Link key={user.id} to="/" 
+                  onClick={() => navigateUser(user.id)}
+                  className={`${style.childRow} ${user.isActive && style.active}`}
+                >
+                  {user.username}
+                </Link>
+              ))}
+            </div>
           </div>
-          {users.map(user => (
-            <Link key={user.id} to="/" 
-              onClick={() => navigateUser(user.id)}
-              className={`${style.subRow} ${user.isActive && style.active}`}
-            >
-              {user.username}
-            </Link>
-          ))}
+          
           {
           // <div className={style.row}>
           //   <FaTag className={style.leftIcon}/>Tags

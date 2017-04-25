@@ -3,6 +3,11 @@
 // TODO: See https://tympanus.net/Development/SidebarTransitions/#
 // TODO: Make not overlay on desktop
 :local {
+    $sideNavWidth: 260px;
+    $sideNavChildWidth: 160px;    
+    $sideNavWidthPhone: 180px;
+    $sideNavChildWidthPhone: 140px;    
+
     .sideNavBackground {
         z-index: -1;
         transition: 1s;
@@ -25,10 +30,14 @@
         overflow-x: hidden;
         z-index: 4;
         top: 0;
-        left: -260px;
-        width: 260px;
+        left: -$sideNavWidth;
+        width: $sideNavWidth;
+        @media #{$phone} {
+            left: -$sideNavWidthPhone;
+            width: $sideNavWidthPhone;
+        }
         background-color: #fff;
-        transition: 0.5s;
+        transition: left 0.5s linear 0.1s;
     }
 
     .sideNav.active {
@@ -61,8 +70,34 @@
         }
     }
 
+    .childRow {
+        @extend .row;
+        padding-left: 1em;
+        border: none;
+    }
+
+    .childSideNav {
+        position: fixed;
+        height: 120%;
+        width: 0%;
+        overflow-x: hidden;
+        width: $sideNavChildWidth;
+        top: -120%;
+        left: $sideNavWidth;
+        @media #{$phone} {
+            left: $sideNavWidthPhone;
+            width: $sideNavChildWidthPhone;
+        }
+        background-color: #fff;
+        transition: top 0.5s linear 0.1s;
+        border-left: solid 1px #ddd;
+    }
+
     .parentRow {
-        @extend ._row;
+        @extend .row;
+        &:hover > .childSideNav.active {
+            top: 0;
+        }
     }
 
     .subRow {
