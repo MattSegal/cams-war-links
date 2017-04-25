@@ -85,7 +85,7 @@ export default class SideNav extends PureComponent {
           //   <FaTag className={style.leftIcon}/>Tags
           // </div>
           }
-          <div className={style.parentRow}>
+          <div className={style.displayRow}>
             <FaCog className={style.leftIcon}/>Account
           </div>
           {isUserLoggedIn &&

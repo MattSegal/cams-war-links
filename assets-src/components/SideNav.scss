@@ -70,6 +70,10 @@
         }
     }
 
+    .displayRow {
+        @extend ._row;
+    }
+
     .childRow {
         @extend .row;
         padding-left: 1em;
