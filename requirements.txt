@@ -13,4 +13,4 @@ python-dateutil==2.6.0
 requests==2.13.0
 six==1.10.0
 freezegun==0.3.8
-
+django-cors-headers==2.0.2

@@ -48,8 +48,9 @@ INSTALLED_APPS = [
     # Links
     'api.apps.ApiConfig',
     # Third Party
-    'rest_framework',
-    'webpack_loader',
+    'rest_framework',   # REST API
+    'webpack_loader',   # Webpack bundling
+    'corsheaders',      # Cross Origin Request Sharing header settings
     # Default
     'django.contrib.admin',
     'django.contrib.auth',
@@ -60,6 +61,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -71,6 +73,8 @@ MIDDLEWARE = [
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 SESSION_COOKIE_AGE = 60*60*24*365*12 # seconds => 12 months
+
+CORS_ORIGIN_ALLOW_ALL = True  # Sketchy
 
 ROOT_URLCONF = 'links.urls'
 
