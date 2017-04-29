@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Getting Started Extension's Popup</title>
+    <style>
+      body {
+        font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
+        font-size: 100%;
+        width: 400px;
+        height: 180px;
+      }
+      h3 {
+        margin-bottom: 0.5em;
+      }
+      #loading {
+        /* 800 x 600 px*/
+            display: block;
+            width: 100px;
+            height: 75px;
+            position: absolute;
+            top: calc((100% - 30px)/2 + 30px);
+            left: 50%;
+            transform: translate(-50%,-50%);
+      }
+      #content {
+        
+      }
+      a {
+        text-decoration: none;
+      }
+      .link {
+        display: block;
+        max-width: 400px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        margin-bottom: 0.5em;
+      }
+    </style>
+    <script src="popup.js"></script>
+  </head>
+  <body>
+    <h3>
+      Latest Links (<a href="http://mattslinks.xyz" target="_blank">more</a>)</h3>
+    <div id="content">
+      <img id="loading" src="spinner.gif" alt="Loading..." />
+    </div>
+  </body>
+</html>
+

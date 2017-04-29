@@ -1,6 +1,7 @@
 # Link-Sharing-Website
 
-[View Live Website Here](http://www.mattslinks.xyz)
+[View the website here](http://www.mattslinks.xyz)
+[Chrome extension here](https://chrome.google.com/webstore/detail/links-extension/chmkjcclapmegbepeppolbplakjmjial)
 
 
 ### Overview
