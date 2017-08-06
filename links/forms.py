@@ -52,7 +52,7 @@ class LoginForm(FormBase):
         max_length=30, 
         required=True,
         widget=forms.PasswordInput(attrs={
-            'placeholder': 'Password (use a shitty one, this site only uses HTTP)',
+            'placeholder': 'Password',
         })
     )
 
@@ -73,6 +73,6 @@ class ChangePasswordForm(ConfirmBase):
         max_length=30, 
         required=True,
         widget=forms.PasswordInput(attrs={
-            'placeholder': 'New password (use a shitty one, this site only uses HTTP)',
+            'placeholder': 'New password',
         })
     )
