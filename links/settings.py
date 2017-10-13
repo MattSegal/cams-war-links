@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+
 IS_PROD = os.environ.get('DEPLOY_STATUS') == 'PROD'
 IS_TEST = os.environ.get('DEPLOY_STATUS') == 'TEST'
 

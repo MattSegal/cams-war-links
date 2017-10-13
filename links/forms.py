@@ -1,5 +1,7 @@
-from django import forms
 from collections import OrderedDict
+
+from django import forms
+
 
 class FormBase(forms.Form):
     def __init__(self, *args, **kwargs):

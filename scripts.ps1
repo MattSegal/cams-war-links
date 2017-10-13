@@ -34,13 +34,25 @@ function RunDevEnvironment
     ActivateEnv
 }
 
+function RunCodeLinting
+{
+    pushd links;isort -y;popd
+    pushd api;isort -y;popd
+    flake8 links
+    flake8 api
+}
+
 switch ($Option)
 {
     'dev' {
         RunDevEnvironment
     }
+    'lint' {
+        RunCodeLinting
+    }
     Default {
         Write-Host "`n===== Links Scripts ====="
         Write-Host "dev   Run dev environment"
+        Write-Host "lint  Run linter"
     }
 }

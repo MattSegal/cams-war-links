@@ -1,7 +1,9 @@
-from serializers import UserSerializer, LinkSerializer
-from rest_framework import viewsets, status
-from rest_framework.response  import Response 
 from django.contrib.auth.models import User
+from rest_framework import status, viewsets
+from rest_framework.response import Response
+
+from serializers import LinkSerializer, UserSerializer
+
 from .models import Link
 from .permissions import IsOwnerOrReadOnly
 

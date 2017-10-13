@@ -1,16 +1,19 @@
-from django.http import HttpResponse, HttpResponseRedirect
-from django.template import loader
-from api.serializers import UserSerializer, LinkSerializer
-from api.models import Link
-from forms import LoginForm, SignupForm, ChangePasswordForm
-from django.contrib.auth import authenticate
+import json
+
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
-from django.contrib.auth.models import User
+from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm, AuthenticationForm
+from django.contrib.auth.forms import (AuthenticationForm, PasswordChangeForm,
+                                       UserCreationForm)
+from django.contrib.auth.models import User
+from django.http import HttpResponse, HttpResponseRedirect
+from django.template import loader
 
-import json
+from api.models import Link
+from api.serializers import LinkSerializer, UserSerializer
+from forms import ChangePasswordForm, LoginForm, SignupForm
+
 
 def index(request):
     template = loader.get_template('links/index.html')
@@ -19,7 +22,7 @@ def index(request):
     users = User.objects.all().filter(is_superuser=False)
     links = Link.objects.all().filter(active=True)
 
-    # constant for JS - this sucks
+    # constant for client-side JS - this sucks
     NO_ACTIVE_USER = -1
 
     context = {
@@ -67,9 +70,11 @@ def login(request):
     context = {'form': form}
     return HttpResponse(template.render(context,request))
 
+
 def logout(request):
     auth_logout(request)
     return HttpResponseRedirect('/')
+
 
 def signup(request):
     if request.method == 'POST':
@@ -98,7 +103,7 @@ def change_password(request):
         if form.is_valid():
             new_password = form.cleaned_data['password']
             request.user.set_password(new_password)
-            request.user.save()  #Django auto logs you out
+            request.user.save()  # Django automatically logs you out
             return HttpResponseRedirect('/')
     else:
         form = ChangePasswordForm()

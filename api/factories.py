@@ -1,7 +1,9 @@
 import factory
-from django.utils import timezone
 from django.contrib.auth.models import User
+from django.utils import timezone
+
 from . import models
+
 
 class UserFactory(factory.Factory):
     class Meta:
@@ -66,6 +68,3 @@ def build():
                         description=link['description']
                     )
                     link_obj.save()
-
-                
-

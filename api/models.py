@@ -1,5 +1,6 @@
-from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
+
 
 # see https://docs.djangoproject.com/en/1.10/ref/contrib/auth/#django.contrib.auth.models.User
 # for user API
@@ -28,4 +29,3 @@ class Link(models.Model):
 
     def __unicode__(self):
         return u'{0} - {1}'.format(self.user,self.title)
-
