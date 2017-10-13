@@ -1,5 +1,9 @@
 #!/usr/bin/env groovy
 
+// WARNING
+// This file has been deprecated in favor of the deployment scripts in ./deploy
+// WARNING
+
 def jenkinsEnvVars = Jenkins.instance.getGlobalNodeProperties()[0].getEnvVars() 
 
 env.ENVIRONMENT_TYPE = jenkinsEnvVars.ENVIRONMENT_TYPE ?: 'TEST' // TEST or PROD

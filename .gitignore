@@ -16,4 +16,5 @@ webpack-stats.json
 env/
 npm-debug.log.*
 .tmp/
-
+*.tar.gz
+build/
