@@ -1,3 +1,19 @@
+<#
+Deployment for Links
+    - Build
+        + Checkout code
+        + Build JavaScript
+        + Prune build artifacts
+        + Create zip file 
+    - Deploy
+        + Copy zip to server
+        + Stop app server
+        + TODO: Run configration managment
+        + Create database backups
+        + Configure app server
+        + Start app server
+
+#>
 param([String]$Branch='dev')
 
 $userDir = pwd
@@ -97,13 +113,20 @@ if (Test-Path $BUILD_FOLDER) {
 Write-Host "`nCopying build to server"
 $tmpDir = "/tmp/${APP_NAME}"
 bash ./copy_build.sh $ZIP_FILE $tmpDir $SERVER
+Remove-Item $ZIP_FILE
 
 # Turn off server
 Write-Host "`nStopping app server"
 bash ./stop_app.sh $VIRTUALENV_DIR $APP_NAME $SERVER
 
-# Create and extract db backups
-# TODO
+# Create and extract DB backups, the store in S3
+Write-Host "`nFetching database backups"
+bash get_db_backups.sh $APP_NAME $SERVER
+$backup =  Get-ChildItem | Where {$_.Name -like "postgres_*"}
+./env/Scripts/activate
+python backup_file.py $backup
+deactivate
+Remove-Item $backup
 
 # Do setup on server
 Write-Host "`nConfiguring app server"
@@ -113,8 +136,4 @@ bash ./setup_app.sh $DEPLOY_DIR $tmpDir $BUILD_FOLDER $SERVER
 Write-Host "`nStarting app server"
 bash ./start_app.sh $VIRTUALENV_DIR $APP_NAME $DEPLOY_DIR $ENVIRONMENT_TYPE $SERVER
 
-# ========== CLEANUP STAGE ==========
-if (Test-Path $ZIP_FILE) {
-    Remove-Item $ZIP_FILE
-}
 cd $userDir
