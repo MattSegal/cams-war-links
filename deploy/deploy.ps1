@@ -102,8 +102,14 @@ bash ./copy_build.sh $ZIP_FILE $tmpDir $SERVER
 Write-Host "`nStopping app server"
 bash ./stop_app.sh $VIRTUALENV_DIR $APP_NAME $SERVER
 
-# Create and extract db backups
-# TODO
+# Create and extract DB backups, the store in S3
+Write-Host "`nFetching database backups"
+bash get_db_backups.sh $APP_NAME $SERVER
+$backup =  Get-ChildItem | Where {$_.Name -like "postgres_*"}
+./env/Scripts/activate
+python backup_file.py $backup
+deactivate
+Remove-Item $backup
 
 # Do setup on server
 Write-Host "`nConfiguring app server"
