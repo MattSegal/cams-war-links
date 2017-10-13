@@ -10,11 +10,12 @@ class FormBase(forms.Form):
             (k, self.fields[k]) for k in self.fields_key_order
         )
 
+
 class ConfirmBase(FormBase):
     password_confirm = forms.CharField(
         label="Confirm Password",
         label_suffix="",
-        max_length=30, 
+        max_length=30,
         required=True,
         widget=forms.PasswordInput(attrs={
             'placeholder': 'Confirm password',
@@ -22,8 +23,7 @@ class ConfirmBase(FormBase):
     )
 
     def clean(self):
-        cleaned_data = super(ConfirmBase, self).clean()
-
+        super(ConfirmBase, self).clean()
         password = self.cleaned_data.get('password')
         password_confirm = self.cleaned_data.get('password_confirm')
 
@@ -51,13 +51,12 @@ class LoginForm(FormBase):
     password = forms.CharField(
         label="Password",
         label_suffix="",
-        max_length=30, 
+        max_length=30,
         required=True,
         widget=forms.PasswordInput(attrs={
             'placeholder': 'Password',
         })
     )
-
 
 
 class SignupForm(LoginForm, ConfirmBase):
@@ -72,7 +71,7 @@ class ChangePasswordForm(ConfirmBase):
     password = forms.CharField(
         label="Password",
         label_suffix="",
-        max_length=30, 
+        max_length=30,
         required=True,
         widget=forms.PasswordInput(attrs={
             'placeholder': 'New password',

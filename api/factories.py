@@ -1,6 +1,5 @@
 import factory
 from django.contrib.auth.models import User
-from django.utils import timezone
 
 from . import models
 
@@ -24,6 +23,7 @@ class UserFactory(factory.Factory):
             user.save()
         return user
 
+
 class LinkFactory(factory.Factory):
     class Meta:
         model = models.Link
@@ -32,6 +32,7 @@ class LinkFactory(factory.Factory):
     title = factory.Sequence(lambda n: 'Link Number {0}'.format(n))
     url = 'https:/www.google.com'
     description = ''
+
 
 def build():
     """
@@ -42,16 +43,16 @@ def build():
     from freezegun import freeze_time
 
     r = requests.get('http://mattslinks.xyz/api/user')
-    user_data = r.json() 
+    user_data = r.json()
 
     r = requests.get('http://mattslinks.xyz/api/link')
     link_data = r.json()
-   
+
     models.Link.objects.all().delete()
     User.objects.all().delete()
 
     with transaction.atomic():
-        UserFactory(username='admin',is_staff=True,is_superuser=True)
+        UserFactory(username='admin', is_staff=True, is_superuser=True)
         users = [
             UserFactory(id=u_data['id'], username=u_data['username'].lower())
             for u_data in user_data

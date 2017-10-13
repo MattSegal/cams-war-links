@@ -24,7 +24,12 @@ class Migration(migrations.Migration):
                 ('url', models.URLField(max_length=250)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='links', to=settings.AUTH_USER_MODEL)),
+                ('user', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE,
+                    related_name='links',
+                    to=settings.AUTH_USER_MODEL
+                )),
+
             ],
         ),
     ]

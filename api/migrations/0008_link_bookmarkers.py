@@ -17,6 +17,9 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='link',
             name='bookmarkers',
-            field=models.ManyToManyField(related_name='bookmarks', to=settings.AUTH_USER_MODEL),
+            field=models.ManyToManyField(
+                related_name='bookmarks',
+                to=settings.AUTH_USER_MODEL
+            ),
         ),
     ]

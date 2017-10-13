@@ -4,8 +4,6 @@ from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import (AuthenticationForm, PasswordChangeForm,
-                                       UserCreationForm)
 from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
@@ -41,18 +39,18 @@ def index(request):
 
     if request.user.is_authenticated:
         context['bootstrap_data'].update({
-            'loggedInUser': UserSerializer(request.user).data, 
+            'loggedInUser': UserSerializer(request.user).data,
         })
 
     context['bootstrap_data'] = json.dumps(context['bootstrap_data'])
-    return HttpResponse(template.render(context,request))
+    return HttpResponse(template.render(context, request))
 
 
 def login(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
-            username = request.POST.get('username','').lower()
+            username = request.POST.get('username', '').lower()
             password = request.POST['password']
             user = authenticate(username=username, password=password)
             if user is not None:
@@ -68,7 +66,7 @@ def login(request):
 
     template = loader.get_template('links/login.html')
     context = {'form': form}
-    return HttpResponse(template.render(context,request))
+    return HttpResponse(template.render(context, request))
 
 
 def logout(request):
@@ -93,7 +91,7 @@ def signup(request):
 
     template = loader.get_template('links/signup.html')
     context = {'form': form}
-    return HttpResponse(template.render(context,request))
+    return HttpResponse(template.render(context, request))
 
 
 @login_required(login_url="/change/")
@@ -110,4 +108,4 @@ def change_password(request):
 
     template = loader.get_template('links/change_password.html')
     context = {'form': form}
-    return HttpResponse(template.render(context,request))
+    return HttpResponse(template.render(context, request))
