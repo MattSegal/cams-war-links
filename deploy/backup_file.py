@@ -1,3 +1,6 @@
+"""
+Upload a database backup file to AWS S3
+"""
 from __future__ import print_function
 import os
 import sys

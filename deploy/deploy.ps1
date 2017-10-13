@@ -1,3 +1,19 @@
+<#
+Deployment for Links
+    - Build
+        + Checkout code
+        + Build JavaScript
+        + Prune build artifacts
+        + Create zip file 
+    - Deploy
+        + Copy zip to server
+        + Stop app server
+        + TODO: Run configration managment
+        + Create database backups
+        + Configure app server
+        + Start app server
+
+#>
 param([String]$Branch='dev')
 
 $userDir = pwd
@@ -97,6 +113,7 @@ if (Test-Path $BUILD_FOLDER) {
 Write-Host "`nCopying build to server"
 $tmpDir = "/tmp/${APP_NAME}"
 bash ./copy_build.sh $ZIP_FILE $tmpDir $SERVER
+Remove-Item $ZIP_FILE
 
 # Turn off server
 Write-Host "`nStopping app server"
@@ -119,8 +136,4 @@ bash ./setup_app.sh $DEPLOY_DIR $tmpDir $BUILD_FOLDER $SERVER
 Write-Host "`nStarting app server"
 bash ./start_app.sh $VIRTUALENV_DIR $APP_NAME $DEPLOY_DIR $ENVIRONMENT_TYPE $SERVER
 
-# ========== CLEANUP STAGE ==========
-if (Test-Path $ZIP_FILE) {
-    Remove-Item $ZIP_FILE
-}
 cd $userDir
