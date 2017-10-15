@@ -36,8 +36,11 @@ function RunDevEnvironment
 
 function RunCodeLinting
 {
+    ActivateEnv
+    Write-Host "`nRunning isort`n"
     pushd links;isort -y;popd
     pushd api;isort -y;popd
+    Write-Host "`nRunning Flake8`n"
     flake8 links
     flake8 api
 }

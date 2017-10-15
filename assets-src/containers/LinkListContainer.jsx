@@ -16,23 +16,48 @@ class LinkListContainer extends Component {
     scrollCount: PropTypes.number,
   }
 
+  sortLinkByDate = (link1, link2) => 
+      new Date(link2.created) - new Date(link1.created)
+
+  isLinkVisible = link =>
+      this.props.activeUserId === link.user ||
+      this.props.activeUserId === NO_USER_SELECTED 
+
+  renderLinkOptions = link => {
+    const hasViewOption = this.props.loggedInUser || link.description
+    const hasEditOption = (
+      this.props.loggedInUser && 
+      link.user === this.props.loggedInUser.id
+    )
+    return ((hasViewOption || hasEditOption) &&
+      <Link to={`/link/${link.id}`} title="More"className={linkStyle.button}>
+        {hasEditOption 
+          ? <MdEdit />
+          : (hasViewOption && <FaEllipsisH  />)
+        }
+      </Link>
+    )
+  }
+
+  renderScrollBottom = links => {
+    const isScrollBottom = this.props.scrollCount < links.length
+    return isScrollBottom && (
+      <div className={style.spinnerWrapper}>
+        <Spinner />
+      </div>
+    )
+  }
+      
   render()
   {
-    const {users, links, activeUserId, loggedInUser, scrollCount} = this.props
+    const {users, links, scrollCount} = this.props
     const usernames = users.reduce( (obj, user) => 
       ({...obj, [`${user.id}`]: user.username}), {}
     )
 
-    const sortByDate = (link1, link2) => 
-      new Date(link2.created) - new Date(link1.created)
-    
-    const isVisible = link => 
-      link.user === activeUserId ||
-      activeUserId === NO_USER_SELECTED 
-
     const filteredLinks = links
-      .filter(isVisible)
-      .sort(sortByDate)
+      .filter(this.isLinkVisible)
+      .sort(this.sortLinkByDate)
       .map(link => ({
           ...link,
           username: usernames[link.user]
@@ -44,22 +69,11 @@ class LinkListContainer extends Component {
       <ul className={style.list}>
         {scrolledLinks.map(link => 
           <HyperLink key={link.id} link={link}>
-            <Link to={`/link/${link.id}`} title="More" className={linkStyle.button}>
-              {
-                loggedInUser && link.user === loggedInUser.id 
-                ? <MdEdit />
-                : <FaEllipsisH />
-              }
-            </Link>
+              {this.renderLinkOptions(link)}
           </HyperLink>
         )}
-        <Waypoint
-          onEnter={this.props.scrollBottom}
-          topOffset="100px"
-        />
-        {scrollCount < filteredLinks.length &&
-          <div className={style.spinnerWrapper}><Spinner /></div>
-        }
+        <Waypoint onEnter={this.props.scrollBottom} topOffset="100px" />
+        {this.renderScrollBottom(filteredLinks)}
       </ul>
     )
   }
