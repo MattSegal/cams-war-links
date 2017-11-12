@@ -14,15 +14,16 @@ Deployment for Links
         + Start app server
 
 #>
-param([String]$Branch='dev')
-
-$userDir = pwd
-cd $PSScriptRoot
+param(
+    [Parameter(Mandatory=$true)]
+    [String]$Server,
+    [String]$Branch='dev'
+)
 
 # ========== BUILD PARAMETERS ==========
 # Local parameters
 $GIT_REPOSITORY = 'https://github.com/MattSegal/Link-Sharing-Site.git'
-$SERVER = 'mattslinks.xyz'
+$SERVER = $Server
 $APP_NAME = 'links'
 $BUILD_FOLDER = 'build'
 $ENVIRONMENT_TYPE = 'PROD'  # TEST or PROD
@@ -73,7 +74,7 @@ pushd $BUILD_FOLDER
 popd
 
 Write-Host "`nPreparing build assets"
-python ./fix_webpack_stats.py "./${BUILD_FOLDER}/webpack-stats.json" $DEPLOY_DIR
+python ./scripts/fix_webpack_stats.py "./${BUILD_FOLDER}/webpack-stats.json" $DEPLOY_DIR
 
 # Delete stuff that we don't want to deploy
 ForEach ($folder in $UNWANTED_FOLDERS)
@@ -112,28 +113,29 @@ if (Test-Path $BUILD_FOLDER) {
 # Copy assets to server and extract
 Write-Host "`nCopying build to server"
 $tmpDir = "/tmp/${APP_NAME}"
-bash ./copy_build.sh $ZIP_FILE $tmpDir $SERVER
+bash ./scripts/copy_build.sh $ZIP_FILE $tmpDir $SERVER
 Remove-Item $ZIP_FILE
 
 # Turn off server
 Write-Host "`nStopping app server"
-bash ./stop_app.sh $VIRTUALENV_DIR $APP_NAME $SERVER
+bash ./scripts/stop_app.sh $VIRTUALENV_DIR $APP_NAME $SERVER
 
 # Create and extract DB backups, the store in S3
-Write-Host "`nFetching database backups"
-bash get_db_backups.sh $APP_NAME $SERVER
-$backup =  Get-ChildItem | Where {$_.Name -like "postgres_*"}
-./env/Scripts/activate
-python backup_file.py $backup
-deactivate
-Remove-Item $backup
+if ($SERVER -eq 'mattslinks.xyz') {
+    Write-Host "`nFetching database backups"
+    bash ./scripts/get_db_backups.sh $APP_NAME $SERVER
+    $backup =  Get-ChildItem | Where {$_.Name -like "postgres_*"}
+    ./env/Scripts/activate
+    python ./scripts/backup_file.py upload --filename $backup
+    deactivate
+    Remove-Item $backup
+}
 
 # Do setup on server
 Write-Host "`nConfiguring app server"
-bash ./setup_app.sh $DEPLOY_DIR $tmpDir $BUILD_FOLDER $SERVER
+bash ./scripts/setup_app.sh $DEPLOY_DIR $tmpDir $BUILD_FOLDER $SERVER
 
 # Start server
 Write-Host "`nStarting app server"
-bash ./start_app.sh $VIRTUALENV_DIR $APP_NAME $DEPLOY_DIR $ENVIRONMENT_TYPE $SERVER
+bash ./scripts/start_app.sh $VIRTUALENV_DIR $APP_NAME $DEPLOY_DIR $ENVIRONMENT_TYPE $SERVER
 
-cd $userDir

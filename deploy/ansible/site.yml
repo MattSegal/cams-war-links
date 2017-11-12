@@ -1,0 +1,130 @@
+---
+- hosts: webservers
+  remote_user: root
+  #gather_facts: no # ???
+  tasks:
+    - name: Test connection
+      ping:
+
+    - name: Update apt cache
+      apt: update_cache=yes
+
+    # Nginx
+    - name: Install nginx
+      apt:
+        name: nginx
+        state: present
+    - name: Web root folder
+      file:
+        state: directory
+        path: /var/www
+        owner: www-data
+        group: www-data
+    - name: Static files folder
+      file:
+        state: directory
+        path: /var/static
+        owner: www-data
+        group: www-data
+    - name: Copy nginx default page
+      copy:
+        src: ./nginx/index.html
+        dest: /var/www/index.html
+        owner: www-data
+        group: www-data
+        mode: 0644
+    - name: Copy nginx config
+      copy:
+        src: ./nginx/nginx.conf
+        dest: /etc/nginx/nginx.conf
+        owner: www-data
+        group: www-data
+        mode: 0644
+    - name: Copy website config
+      copy:
+        src: ./nginx/website
+        dest: /etc/nginx/sites-available/website
+        owner: www-data
+        group: www-data
+        mode: 0644
+    - name: Symlink website config
+      file:
+        src: /etc/nginx/sites-available/website
+        dest: /etc/nginx/sites-enabled/website
+        owner: www-data
+        group: www-data
+        state: link
+    - name: Remove default config
+      file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+    - name: Restart nginx
+      service: 
+        name: nginx
+        state: restarted
+
+    # Postgres
+    - name: Install PostgreSQL
+      apt: name={{ item }} state=installed
+      with_items:
+        - postgresql
+        - postgresql-contrib
+        - python3-psycopg2
+    - name: Setup app Postgres user
+      become: true
+      become_user: postgres
+      postgresql_user:
+        name: django
+        password: password
+    - name: Setup links database
+      become: true
+      become_user: postgres
+      postgresql_db: 
+        name: links
+        state: present
+        owner: django
+        port: 5432
+        lc_collate: en_US.UTF-8
+        lc_ctype: en_US.UTF-8
+
+    # Django app
+    - name: Install Django dependencies
+      apt: name={{ item }} state=installed
+      with_items:
+        - python-pip
+        - virtualenv
+        - gunicorn
+    - name: Create app root
+      file:
+        state: directory
+        path: /var/webapps/links/app
+        owner: www-data
+        group: www-data
+    - name: Create bin root
+      file:
+        state: directory
+        path: /var/webapps/links/bin
+        owner: www-data
+        group: www-data
+    - name: Create gunicorn logs
+      file:
+        state: touch
+        path: /var/webapps/links/gunicorn.log
+        owner: www-data
+        group: www-data
+    # TODO: move into deployment
+    - name: Copy gunicorn start script
+      copy:
+        src: ./gunicorn/gunicorn_start
+        dest: /var/webapps/links/bin/gunicorn_start
+        owner: www-data
+        group: www-data
+        mode: 7644
+    # TODO: move into deployment
+    - name: Copy gunicorn stop script
+      copy:
+        src: ./gunicorn/gunicorn_stop
+        dest: /var/webapps/links/bin/gunicorn_stop
+        owner: www-data
+        group: www-data
+        mode: 7644

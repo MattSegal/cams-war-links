@@ -1,10 +1,3 @@
-# Restore backups with
-#     echo "DROP SCHEMA public CASCADE;CREATE SCHEMA public;" | 
-#         sudo -u postgres -i psql $APP_NAME
-#     cat $BACKUP.gz |
-#         gunzip |
-#         sudo -u postgres -i psql $APP_NAME
-
 APP_NAME="$1"
 SERVER="$2"
 

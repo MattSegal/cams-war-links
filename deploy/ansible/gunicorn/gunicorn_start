@@ -1,0 +1,31 @@
+#!/bin/bash
+ARG1=${1:-start
+}
+
+NUM_WORKERS=3                                       # how many worker processes should Gunicorn spawn
+DJANGO_SETTINGS_MODULE="${APP_NAME}.settings"       # which settings file should Django use
+DJANGO_WSGI_MODULE="${APP_NAME}.wsgi"                # WSGI module name
+
+echo "Starting $APP_NAME as `whoami`"
+
+# Activate the virtual environment
+cd $DJANGODIR
+source ../bin/activate
+export DJANGO_SETTINGS_MODULE=$DJANGO_SETTINGS_MODULE
+export PYTHONPATH=$DJANGODIR:$PYTHONPATH
+
+# Do deployment actions
+if [ $1 == 'deploy' ]
+then 
+    pip install -r ./requirements.txt
+    python ./manage.py migrate
+    python ./manage.py collectstatic --noinput
+fi
+
+# Start your Django Unicorn
+exec gunicorn ${DJANGO_WSGI_MODULE}:application \
+  --daemon \
+  --name "$APP_NAME" \
+  --workers $NUM_WORKERS \
+  --log-level=debug \
+  --log-file="$LOGFILE"

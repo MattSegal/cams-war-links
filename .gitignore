@@ -18,3 +18,4 @@ npm-debug.log.*
 .tmp/
 *.tar.gz
 build/
+*.retry
