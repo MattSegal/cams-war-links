@@ -4,6 +4,7 @@ export const types = {
     // Load links
     REQUEST_LINKS: 'REQUEST_LINKS',
     RECEIVE_LINKS: 'RECEIVE_LINKS',
+    RESET_LINKS_PAGINATION: 'RESET_LINKS_PAGINATION',
     ERROR_LINKS: 'ERROR_LINKS',
 
     // Add a new link

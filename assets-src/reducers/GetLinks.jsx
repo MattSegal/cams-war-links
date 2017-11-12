@@ -4,10 +4,11 @@ export const getLinksReducer = (action) => (state) =>
 {
   switch(action.type)
   {
-    case types.REQUEST_LINKS:     return requestLinksReducer(action, state)
-    case types.RECEIVE_LINKS:     return receiveLinksReducer(action, state)
-    case types.ERROR_LINKS:       return errorLinksReducer(action, state)
-    default:                      return {...state}
+    case types.REQUEST_LINKS:           return requestLinksReducer(action, state)
+    case types.RECEIVE_LINKS:           return receiveLinksReducer(action, state)
+    case types.ERROR_LINKS:             return errorLinksReducer(action, state)
+    case types.RESET_LINKS_PAGINATION:  return resetLinksReducer(action, state)
+    default:                            return {...state}
   }
 }
 
@@ -25,11 +26,20 @@ const receiveLinksReducer = (action, state) => ({
   links: {
     ...state.links,
     updating: false,
-    items: (
-      action.links 
-        ? action.links
-        : state.links.items
-    ),
+    next: action.links.next,
+    items: (state.links.next === state.links.start) 
+      ? action.links.results
+      : state.links.items.concat(action.links.results)
+  }
+})
+
+resetLinksReducer
+
+const resetLinksReducer = (action, state) => ({
+  ...state,
+  links: {
+    ...state.links,
+    next: state.links.start,
   }
 })
 

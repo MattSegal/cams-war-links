@@ -12,27 +12,32 @@ from api.models import Link
 from api.serializers import LinkSerializer, UserSerializer
 from forms import ChangePasswordForm, LoginForm, SignupForm
 
+NO_ACTIVE_USER = -1   # constant for client-side JS - this sucks
+
 
 def index(request):
     template = loader.get_template('links/index.html')
 
     # TODO: Use view data to bootstrap data, as this is duplication
-    users = User.objects.all().filter(is_superuser=False)
-    links = Link.objects.all().filter(active=True)
-
-    # constant for client-side JS - this sucks
-    NO_ACTIVE_USER = -1
+    users = User.objects.filter(is_superuser=False)
+    links = (
+        Link.objects
+        .filter(active=True)
+        .order_by('-created')
+    )[:40]
 
     context = {
         'bootstrap_data': {
                 'users': {
                     'isFetching': False,
                     'activeUserId': NO_ACTIVE_USER,
-                    'items': UserSerializer(users, many=True).data
+                    'items': UserSerializer(users, many=True).data,
                 },
                 'links': {
                     'isFetching': False,
-                    'items': LinkSerializer(links, many=True).data
+                    'items': LinkSerializer(links, many=True).data,
+                    'next': '/api/link/?page=2',  # yucky hack
+                    'start': '/api/link/?page=1', # yucky hack
                 }
         }
     }

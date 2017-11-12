@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework import status, viewsets
 from rest_framework.response import Response
+from rest_framework.pagination import PageNumberPagination
 
 from serializers import LinkSerializer, UserSerializer
 
@@ -16,13 +17,20 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
 
 
+class LinksPagination(PageNumberPagination):
+    page_size_query_param = 'size'
+    page_size = 200
+    max_page_size = 100
+
+
 class LinkViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
     """
     permission_classes = (IsOwnerOrReadOnly,)
-    queryset = Link.objects.all().filter(active=True)
+    queryset = Link.objects.filter(active=True).order_by('-created')
     serializer_class = LinkSerializer
+    pagination_class  = LinksPagination
 
     def destroy(self, request, *args, **kwargs):
         """
