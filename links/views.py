@@ -36,8 +36,8 @@ def index(request):
                 'links': {
                     'isFetching': False,
                     'items': LinkSerializer(links, many=True).data,
-                    'next': '/api/link/?page=2',  # yucky hack
-                    'start': '/api/link/?page=1', # yucky hack
+                    'next': request.build_absolute_uri('/api/link/?page=2'),  # yucky hack
+                    'start': request.build_absolute_uri('/api/link/?page=1'), # yucky hack
                 }
         }
     }

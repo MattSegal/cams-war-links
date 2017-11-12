@@ -163,3 +163,5 @@ STATIC_URL = '/static/'
 
 if IS_PROD or IS_TEST:
     STATIC_ROOT = os.environ.get('DJANGO_STATIC_ROOT')
+
+USE_HTTPS = IS_PROD
