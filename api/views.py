@@ -27,6 +27,8 @@ class LinksPagination(PageNumberPagination):
         # This is nasty but DRF isn't making it easy to 
         # use HTTPS so I just hacked it in rather than override wsgi.url_scheme
         next_link = super(LinksPagination, self).get_next_link()
+        if not next_link:
+            return None
         if settings.USE_HTTPS:
             next_link = next_link.replace('http://', 'https://')
         return next_link
