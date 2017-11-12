@@ -9,12 +9,10 @@ SERVER="$5"
 # * NEW_RELIC_APP_NAME
 # * NEW_RELIC_LOG
 # * NEW_RELIC_LOG_LEVEL
-secrent_env_vars="$(cat environment.txt)"
 
 ENV_VAR_SCRIPT="${VIRTUALENV_DIR}/bin/set_env_vars"
 
 ENV_VAR_SCRIPT_TEXT=$(cat  << EOM
-    $secrent_env_vars
     export ALLOWED_HOSTS="${SERVER},www.${SERVER}"
     export APP_NAME="$APP_NAME"
     export DJANGODIR="$DEPLOY_DIR"
