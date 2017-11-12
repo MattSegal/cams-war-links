@@ -19,3 +19,4 @@ npm-debug.log.*
 *.tar.gz
 build/
 *.retry
+environment.txt

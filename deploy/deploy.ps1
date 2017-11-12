@@ -17,7 +17,7 @@ Deployment for Links
 param(
     [Parameter(Mandatory=$true)]
     [String]$Server,
-    [String]$Branch='dev'
+    [String]$Branch='master'
 )
 
 # ========== BUILD PARAMETERS ==========
