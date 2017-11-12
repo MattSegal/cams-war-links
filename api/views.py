@@ -23,6 +23,15 @@ class LinksPagination(PageNumberPagination):
     page_size = 200
     max_page_size = 100
 
+    def get_next_link(self):
+        # This is nasty but DRF isn't making it easy to 
+        # use HTTPS so I just hacked it in rather than override wsgi.url_scheme
+        next_link = super(LinksPagination, self).get_next_link()
+        import pdb;pdb.set_trace()
+        if settings.USE_HTTPS:
+            next_link = next_link.replace('http://', 'https://')
+        return next_link
+
 
 class LinkViewSet(viewsets.ModelViewSet):
     """
@@ -42,10 +51,3 @@ class LinkViewSet(viewsets.ModelViewSet):
         link.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    def get_next_link(self):
-        # This is nasty but DRF isn't making it easy to 
-        # use HTTPS so I just hacked it in rather than override wsgi.url_scheme
-        next_link = super(LinkViewSet, self).get_next_link()
-        if USE_HTTPS:
-            next_link = next_link.replace('http://', 'https://')
-        return next_link
