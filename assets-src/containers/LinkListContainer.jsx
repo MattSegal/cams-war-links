@@ -47,11 +47,6 @@ class LinkListContainer extends Component {
       </div>
     )
   }
-
-  componentDidMount() {
-    // Kick off request for the rest of the links pages
-    this.props.fetchLinks()
-  }
       
   render()
   {

@@ -26,7 +26,7 @@ const receiveAddLinkReducer = (action, state) => ({
   ...state,
   links: {
     ...state.links,
-    items: [...state.links.items, action.link],
+    items: [...state.links.items, ensureScheme(action.link)],
     updating: false,
   }
 })
@@ -39,3 +39,15 @@ const errorAddLinkReducer = (action, state) => ({
     updating: false,
   }
 })
+
+const HTTP = 'http://'
+const HTTPS = 'https://'
+
+const ensureScheme = link => {
+  let url = link.url.trim()
+  if (!url.startsWith(HTTP) || !url.startsWith(HTTPS)) {
+    url = HTTP + url
+  }
+  link.url = url
+  return link
+} 

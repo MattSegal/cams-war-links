@@ -1,14 +1,15 @@
 export const handleHttpError = (actionName, error,) => {
-    console.log(`#{actionName} Error`)
+    console.warn(`${actionName} Error: `)
     if (error.response) 
     {
-        console.log(error.response.data)
-        console.log(error.response.status)
-        console.log(error.response.headers)
+        console.warn('HTTP Error')
+        console.warn('Data: ', error.response.data)
+        console.warn('Status: ', error.response.status)
+        console.warn('Headers: ', error.response.headers)
+        console.warn('Config: ', error.config)
     } 
     else 
     {
-        console.log(error.message)
+        throw error;
     }
-    console.log(error.config)
 }
