@@ -30,3 +30,13 @@ class Link(models.Model):
 
     def __unicode__(self):
         return u'{0} - {1}'.format(self.user, self.title)
+
+    def save(self, *args, **kwargs):
+        link_has_scheme = (
+            self.url.startswith('http://') or
+            self.url.startswith('https://')
+        )
+        if not link_has_scheme:
+            self.url = 'http://' + self.url
+
+        super(Link, self).save(*args, **kwargs)
