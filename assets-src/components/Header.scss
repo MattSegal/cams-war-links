@@ -8,7 +8,8 @@
         z-index: 1;
         padding: 1em;
         background-color: $light-grey;
-        
+        user-select: none;
+
         .headerContent {
             width: 100%;
             max-width: $content-max-width;
