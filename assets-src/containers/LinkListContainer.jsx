@@ -16,22 +16,22 @@ class LinkListContainer extends Component {
     scrollCount: PropTypes.number,
   }
 
-  sortLinkByDate = (link1, link2) => 
+  sortLinkByDate = (link1, link2) =>
       new Date(link2.created) - new Date(link1.created)
 
   isLinkVisible = link =>
       this.props.activeUserId === link.user ||
-      this.props.activeUserId === NO_USER_SELECTED 
+      this.props.activeUserId === NO_USER_SELECTED
 
   renderLinkOptions = link => {
     const hasViewOption = this.props.loggedInUser || link.description
     const hasEditOption = (
-      this.props.loggedInUser && 
+      this.props.loggedInUser &&
       link.user === this.props.loggedInUser.id
     )
     return ((hasViewOption || hasEditOption) &&
       <Link to={`/link/${link.id}`} title="More"className={linkStyle.button}>
-        {hasEditOption 
+        {hasEditOption
           ? <MdEdit />
           : (hasViewOption && <FaEllipsisH  />)
         }
@@ -47,27 +47,27 @@ class LinkListContainer extends Component {
       </div>
     )
   }
-      
+
   render()
   {
     const {users, links, scrollCount} = this.props
-    const usernames = users.reduce( (obj, user) => 
+    const usernames = users.reduce( (obj, user) =>
       ({...obj, [`${user.id}`]: user.username}), {}
     )
 
     const filteredLinks = links
       .filter(this.isLinkVisible)
-      .sort(this.sortLinkByDate)
+      // .sort(this.sortLinkByDate)
       .map(link => ({
           ...link,
           username: usernames[link.user]
       }))
-      
+
     const scrolledLinks = filteredLinks.slice(0, scrollCount)
 
     return (
       <ul className={style.list}>
-        {scrolledLinks.map(link => 
+        {scrolledLinks.map(link =>
           <HyperLink key={link.id} link={link}>
               {this.renderLinkOptions(link)}
           </HyperLink>

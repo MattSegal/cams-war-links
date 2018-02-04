@@ -7,10 +7,10 @@ const pipe = (...fns) => fns.reduce(_pipe)
 
 const titleCase = (str) => str.charAt(0).toUpperCase() + str.slice(1)
 
-const getTimeSince = (date) => 
+const getTimeSince = (date) =>
 {
-    var seconds = Math.floor((new Date() - new Date(date)) / 1000);
-    var interval = Math.floor(seconds / 31536000);
+    let seconds = Math.floor((new Date() - new Date(date)) / 1000);
+    let interval = Math.floor(seconds / 31536000);
     if (interval > 1) { return interval + " years" }
     interval = Math.floor(seconds / 2592000);
     if (interval > 1) { return interval + " months" }
@@ -26,12 +26,12 @@ const getTimeSince = (date) =>
 const TODAY = new Date()
 const YESTERDAY = new Date(
     TODAY.getFullYear(),
-    TODAY.getMonth(), 
+    TODAY.getMonth(),
     TODAY.getDate() - 1
 )
 const LAST_WEEK = new Date(
     TODAY.getFullYear(),
-    TODAY.getMonth(), 
+    TODAY.getMonth(),
     TODAY.getDate() - 7
 )
 

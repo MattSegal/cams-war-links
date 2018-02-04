@@ -42,11 +42,19 @@ def build():
     import requests
     from freezegun import freeze_time
 
-    r = requests.get('http://mattslinks.xyz/api/user')
+    url = 'https://mattslinks.xyz/api/user'
+    print url
+    r = requests.get(url)
     user_data = r.json()
 
-    r = requests.get('http://mattslinks.xyz/api/link')
-    link_data = r.json()
+    link_data = []
+    next_page = 'https://mattslinks.xyz/api/link'
+    while next_page:
+        print next_page
+        r = requests.get(next_page)
+        link_results = r.json()
+        next_page = link_results.get('next', None)
+        link_data += link_results['results']
 
     models.Link.objects.all().delete()
     User.objects.all().delete()

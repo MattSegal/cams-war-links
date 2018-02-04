@@ -1,8 +1,8 @@
 from django.conf import settings
 from django.contrib.auth.models import User
 from rest_framework import status, viewsets
-from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.response import Response
 
 from serializers import LinkSerializer, UserSerializer
 
@@ -20,11 +20,11 @@ class UserViewSet(viewsets.ModelViewSet):
 
 class LinksPagination(PageNumberPagination):
     page_size_query_param = 'size'
-    page_size = 200
-    max_page_size = 100
+    page_size = 40
+    max_page_size = 40
 
     def get_next_link(self):
-        # This is nasty but DRF isn't making it easy to 
+        # This is nasty but DRF isn't making it easy to
         # use HTTPS so I just hacked it in rather than override wsgi.url_scheme
         next_link = super(LinksPagination, self).get_next_link()
         if not next_link:
@@ -41,7 +41,7 @@ class LinkViewSet(viewsets.ModelViewSet):
     permission_classes = (IsOwnerOrReadOnly,)
     queryset = Link.objects.filter(active=True).order_by('-created')
     serializer_class = LinkSerializer
-    pagination_class  = LinksPagination
+    pagination_class = LinksPagination
 
     def destroy(self, request, *args, **kwargs):
         """
@@ -51,4 +51,3 @@ class LinkViewSet(viewsets.ModelViewSet):
         link.active = False
         link.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
-

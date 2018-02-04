@@ -20,10 +20,10 @@ export default class HyperLink extends PureComponent {
     return (
       <li className={style.link}>
         <div className={style.left}>
-          <a 
-            className={style.hyperlink} 
-            href={link.url} 
-            target="_blank" 
+          <a
+            className={style.hyperlink}
+            href={link.url}
+            target="_blank"
             rel="noopener noreferrer"
           >
             {link.title}
@@ -32,10 +32,10 @@ export default class HyperLink extends PureComponent {
             {link.username} - {getTimeSince(link.created)} ago {link.description ? '- description' : ''}
           </p>
         </div>
-        {link.updating 
+        {link.updating
           ? <span className={style.button}><Spinner className={style.spinner} /></span>
           : children
-        }  
+        }
       </li>
     )
   }
