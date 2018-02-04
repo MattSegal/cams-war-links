@@ -13,7 +13,7 @@ import FaTag from 'react-icons/lib/fa/tag'
 import LinkForm from 'components/LinkForm'
 import Spinner from 'components/Spinner'
 
-class LinkModal extends Component 
+class LinkModal extends Component
 {
   static propTypes = {
     link: PropTypes.object,
@@ -28,13 +28,13 @@ class LinkModal extends Component
     router: PropTypes.object,
   }
 
-  constructor(props) 
+  constructor(props)
   {
     super(props)
     const {link} = this.props
     this.state =  link ? {
-      title: link.title, 
-      url: link.url, 
+      title: link.title,
+      url: link.url,
       description: link.description
     } : {}
     this.submitEditLink = this.submitEditLink.bind(this)
@@ -42,8 +42,8 @@ class LinkModal extends Component
 
   componentWillReceiveProps(nextProps) {
     this.setState({
-      title: nextProps.link.title, 
-      url: nextProps.link.url, 
+      title: nextProps.link.title,
+      url: nextProps.link.url,
       description: nextProps.link.description
     })
   }
@@ -59,7 +59,30 @@ class LinkModal extends Component
       })
   }
 
-  render() 
+  addAnchorLinks(str, idx) {
+    if (s.match(new RegExp('https?://'))) {
+      return <strong>{s}</strong>
+    }
+    console.log(s)
+    return s
+  }
+
+  parseDescription(desc) {
+    return desc.split('\n').map((str, idx) =>
+        <span key={idx}>
+          {str.split(' ').map((s, i) => {
+            if (s.match(new RegExp('https?://'))) {
+              return <a href={s} key={i} target="_blank" rel="noopener noreferrer">{s} </a>
+            } else {
+              return `${s} `
+            }
+          })}
+          <br/>
+        </span>
+      )
+  }
+
+  render()
   {
     const {link, username, loggedInUser, deleteLink, bookmarkLink} = this.props
     const isLinkOwner = link && loggedInUser && link.user === loggedInUser.id
@@ -99,15 +122,13 @@ class LinkModal extends Component
             </p>
           </div>
           <div className={style.description}>
-            {
-              this.state.description.split('\n').map((str, idx) => <span key={idx}>{str}<br/></span>)
-            }
+            {this.parseDescription(this.state.description)}
           </div>
         </div>
         {isLinkOwner && (
           <Switch>
             <Route path={`/link/${link.id}/edit`}>
-              <LinkForm 
+              <LinkForm
                 action={this.submitEditLink}
                 state={this.state}
                 setState={(obj) => this.setState(obj)}
@@ -117,7 +138,7 @@ class LinkModal extends Component
             <Route path={`/link/${link.id}/delete`}>
               <div className={style.btnWrapper}>
                 <Link to="/">
-                  <button className={style.btn} onClick={()=>deleteLink(link.id)}>
+                  <button className={style.btn} onClick={() => deleteLink(link.id)}>
                     <FaTrashO />&nbsp;Delete
                   </button>
                 </Link>
@@ -144,7 +165,7 @@ class LinkModal extends Component
                     {bookmarkButton}
                   </div>
                 )}
-                {link.updating && 
+                {link.updating &&
                   <div className={style.spinnerWrapper}>
                     <Spinner className={style.spinner}/>
                   </div>
