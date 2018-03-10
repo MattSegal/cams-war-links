@@ -9,6 +9,7 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'username',)
 
+
 class LoggedInUserSerializer(serializers.ModelSerializer):
     bookmarks = serializers.SerializerMethodField()
 
@@ -18,8 +19,6 @@ class LoggedInUserSerializer(serializers.ModelSerializer):
 
     def get_bookmarks(self, obj):
         return list(LinkSerializer(obj.bookmarks, many=True).data)
-
-
 
 
 class LinkSerializer(serializers.ModelSerializer):

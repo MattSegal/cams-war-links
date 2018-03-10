@@ -1,13 +1,11 @@
 from django.conf import settings
-from django.contrib.auth.models import User
-from rest_framework import status, viewsets, exceptions
-from rest_framework.permissions import IsAuthenticated
+from rest_framework import exceptions, status, viewsets
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-
-from serializers import LinkSerializer, UserSerializer, LoggedInUserSerializer
+from serializers import LinkSerializer, LoggedInUserSerializer
 
 from .models import Link
 from .permissions import IsOwnerOrReadOnly
@@ -18,6 +16,7 @@ class BookmarkAPIView(APIView):
     Create or remove a bookmark
     """
     permission_classes = (IsAuthenticated,)
+
     def post(self, request, link_pk):
         try:
             link = Link.objects.get(pk=link_pk)

@@ -19,7 +19,6 @@ function RunWebpack
     npm run dev
 }
 
-
 function RunRedis
 {
     redis-server
@@ -39,7 +38,9 @@ function RunCodeLinting
     ActivateEnv
     Write-Host "`nRunning isort`n"
     pushd links;isort -y;popd
+    bash -c 'find links | grep .py$ | xargs dos2unix'
     pushd api;isort -y;popd
+    bash -c 'find api | grep .py$ | xargs dos2unix'
     Write-Host "`nRunning Flake8`n"
     flake8 links --max-line-length=120
     flake8 api --max-line-length=120
