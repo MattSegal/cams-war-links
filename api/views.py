@@ -20,8 +20,8 @@ class UserViewSet(viewsets.ModelViewSet):
 
 class LinksPagination(PageNumberPagination):
     page_size_query_param = 'size'
-    page_size = 40
-    max_page_size = 40
+    page_size = settings.LINK_PAGE_SIZE
+    max_page_size = settings.LINK_PAGE_SIZE
 
     def get_next_link(self):
         # This is nasty but DRF isn't making it easy to

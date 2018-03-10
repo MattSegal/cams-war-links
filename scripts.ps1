@@ -6,13 +6,13 @@ function ActivateEnv
     .\env\Scripts\activate
 }
 
-function RunDjango 
+function RunDjango
 {
     ActivateEnv
     py .\manage.py runserver 0.0.0.0:80
 }
 
-function RunWebpack 
+function RunWebpack
 {
     Get-Item .\assets\*.css | % {Remove-Item $_.FullName}
     Get-Item .\assets\*.js  | % {Remove-Item $_.FullName}
@@ -20,7 +20,7 @@ function RunWebpack
 }
 
 
-function RunRedis 
+function RunRedis
 {
     redis-server
 }
@@ -29,8 +29,8 @@ function RunDevEnvironment
 {
     $dir = pwd
     powershell -NoExit -new_console:f:n:s75V:t:"Webpack" "cd $dir;. ./scripts.ps1;RunWebpack"
-    powershell -NoExit -new_console:f:n:s66V:t:"Django" "cd $dir;. ./scripts.ps1;RunDjango" 
-    # powershell -NoExit -new_console:f:n:s33V:t:"Redis" "cd $dir;. ./scripts.ps1;RunRedis"  
+    powershell -NoExit -new_console:f:n:s66V:t:"Django" "cd $dir;. ./scripts.ps1;RunDjango"
+    # powershell -NoExit -new_console:f:n:s33V:t:"Redis" "cd $dir;. ./scripts.ps1;RunRedis"
     ActivateEnv
 }
 
@@ -41,8 +41,8 @@ function RunCodeLinting
     pushd links;isort -y;popd
     pushd api;isort -y;popd
     Write-Host "`nRunning Flake8`n"
-    flake8 links
-    flake8 api
+    flake8 links --max-line-length=120
+    flake8 api --max-line-length=120
 }
 
 switch ($Option)

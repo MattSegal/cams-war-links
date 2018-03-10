@@ -10,7 +10,7 @@ export const addLinkReducer = (action) => (state) =>
     default: return {...state}
   }
 }
-    
+
 const requestAddLinkReducer = (action, state) =>  ({
   // Set link collection to 'updating' state
   ...state,
@@ -26,7 +26,7 @@ const receiveAddLinkReducer = (action, state) => ({
   ...state,
   links: {
     ...state.links,
-    items: [...state.links.items, action.link],
+    items: [action.link, ...state.links.items],
     updating: false,
   }
 })

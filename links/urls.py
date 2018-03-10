@@ -13,10 +13,10 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^api/', include('api.urls')),
     # React Router
-    url(r'^$', views.index),
-    url(r'^bookmarks/$', views.index),
-    url(r'^menu/$', views.index),
-    url(r'^link/', views.index),
-    url(r'^add/$', views.index),
+    url(r'^$', views.IndexView.as_view()),
+    url(r'^bookmarks/$', views.IndexView.as_view()),
+    url(r'^menu/$', views.IndexView.as_view()),
+    url(r'^link/', views.IndexView.as_view()),
+    url(r'^add/$', views.IndexView.as_view()),
 
 ]
