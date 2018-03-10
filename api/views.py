@@ -1,21 +1,42 @@
 from django.conf import settings
 from django.contrib.auth.models import User
-from rest_framework import status, viewsets
+from rest_framework import status, viewsets, exceptions
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
-from serializers import LinkSerializer, UserSerializer
+
+from serializers import LinkSerializer, UserSerializer, LoggedInUserSerializer
 
 from .models import Link
 from .permissions import IsOwnerOrReadOnly
 
 
-class UserViewSet(viewsets.ModelViewSet):
+class BookmarkAPIView(APIView):
     """
-    API endpoint that allows users to be viewed or edited.
+    Create or remove a bookmark
     """
-    queryset = User.objects.all().filter(is_superuser=False)
-    serializer_class = UserSerializer
+    permission_classes = (IsAuthenticated,)
+    def post(self, request, link_pk):
+        try:
+            link = Link.objects.get(pk=link_pk)
+        except Link.DoesNotExist:
+            raise exceptions.NotFound
+
+        link.bookmarkers.add(request.user)
+        serializer = LoggedInUserSerializer(request.user)
+        return Response(serializer.data)
+
+    def delete(self, request, link_pk):
+        try:
+            link = Link.objects.get(pk=link_pk)
+        except Link.DoesNotExist:
+            raise exceptions.NotFound
+
+        link.bookmarkers.remove(request.user)
+        serializer = LoggedInUserSerializer(request.user)
+        return Response(serializer.data)
 
 
 class LinksPagination(PageNumberPagination):

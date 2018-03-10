@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import LinkModal from 'components/LinkModal'
 import Actions from 'actions'
 
-class LinkModalContainer extends Component 
+class LinkModalContainer extends Component
 {
   static propTypes = {
     linkId: PropTypes.number,
@@ -12,20 +12,22 @@ class LinkModalContainer extends Component
     users: PropTypes.array,
     deleteLink: PropTypes.func,
     editLink: PropTypes.func,
-    bookmarkLink: PropTypes.func,
+    addBookmark: PropTypes.func,
+    removeBookmark: PropTypes.func,
   }
-  render() 
+  render()
   {
     const {linkId, links, loggedInUser, users} = this.props
     const link = links.find(l => l.id === linkId)
     const username = link && users.find(u => u.id === link.user).username
-    
+
     return (
-      <LinkModal 
-        link={link} 
+      <LinkModal
+        link={link}
         username={username}
         loggedInUser={loggedInUser}
-        bookmarkLink={this.props.bookmarkLink}
+        addBookmark={this.props.addBookmark}
+        removeBookmark={this.props.removeBookmark}
         deleteLink={this.props.deleteLink}
         editLink={this.props.editLink}
       />
@@ -40,7 +42,8 @@ let mapStateToProps = (state) => ({
 })
 
 let mapDispatchToProps = (dispatch) => ({
-    bookmarkLink: (link, user, value) => dispatch(Actions.bookmarkLink(link, user, value)),
+    addBookmark: link => dispatch(Actions.addBookmark(link)),
+    removeBookmark: link => dispatch(Actions.removeBookmark(link)),
     deleteLink: (link_id) => dispatch(Actions.deleteLink(link_id)),
     editLink: (link) => dispatch(Actions.editLink(link)),
 })

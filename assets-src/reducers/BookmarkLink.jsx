@@ -11,54 +11,43 @@ export const bookmarkLinkReducer = (action) => (state) =>
   }
 }
 
+const setLinkUpdating = (links, link_id, is_updating) => links.map(link =>
+    link.id === link_id ? {...link, updating: is_updating} : {...link}
+  )
+
 const requestBookmarkLinkReducer = (action, state) => ({
   // Set bookmarked link to 'updating'
   ...state,
+  loggedInUser: {
+    ...state.loggedInUser,
+    bookmarks: setLinkUpdating(state.loggedInUser.bookmarks, action.link_id, true),
+  },
   links: {
     ...state.links,
-    items: state.links.items.map(link =>
-      link.id === action.link_id
-        ? {...link, updating: true}
-        : {...link}
-    ),
+    items: setLinkUpdating(state.links.items, action.link_id, true),
   }
 })
 
 const receiveBookmarkLinkReducer = (action, state) => ({
   // Set bookmarked link to 'not-updating'
-  // Update user + loggedInUs
+  // Update loggedInUser's bookmarks
   ...state,
-  users: {
-    ...(state.users),
-    items: state.users.items.map(user =>
-      user.id === action.user.id
-        ? {...user, bookmarks: action.user.bookmarks}
-        : {...user}
-    ),
-  },
-  loggedInUser: {
-    ...(state.loggedInUser),
-    bookmarks: action.user.bookmarks,
-  },
+  loggedInUser: action.user,
   links: {
     ...state.links,
-    items: state.links.items.map(link =>
-      link.id === action.link.id
-        ? {...link, updating: false}
-        : {...link}
-    ),
+    items: setLinkUpdating(state.links.items, action.link_id, false),
   }
 })
 
 const errorBookmarkLinkReducer = (action, state) => ({
   // Set bookmarked link to 'not-updating'
   ...state,
+  loggedInUser: {
+    ...state.loggedInUser,
+    bookmarks: setLinkUpdating(state.loggedInUser.bookmarks, action.link_id, false),
+  },
   links: {
     ...state.links,
-    items: state.links.items.map(link =>
-      link.id === action.link_id
-        ? {...link, updating: false}
-        : {...link}
-    ),
+    items: setLinkUpdating(state.links.items, action.link_id, false),
   }
 })

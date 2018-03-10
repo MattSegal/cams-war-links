@@ -1,32 +1,34 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from .models import Link, Tag
+from .models import Link
 
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
+        fields = ('id', 'username',)
+
+class LoggedInUserSerializer(serializers.ModelSerializer):
+    bookmarks = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
         fields = ('id', 'username', 'bookmarks',)
 
+    def get_bookmarks(self, obj):
+        return list(LinkSerializer(obj.bookmarks, many=True).data)
 
-class TagSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Tag
-        fields = ('name',)
+
 
 
 class LinkSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
     created = serializers.DateTimeField(read_only=True)
-    tags = serializers.SerializerMethodField()
 
     class Meta:
         model = Link
         fields = (
             'id', 'user', 'title', 'url',
-            'created', 'description', 'tags',
+            'created', 'description'
         )
-
-    def get_tags(self, obj):
-        return [tag for tag in TagSerializer(obj.tags).data]

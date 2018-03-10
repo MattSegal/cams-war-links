@@ -21,7 +21,8 @@ class LinkModal extends Component
     loggedInUser: PropTypes.object,
     deleteLink: PropTypes.func,
     editLink: PropTypes.func,
-    bookmarkLink: PropTypes.func,
+    addBookmark: PropTypes.func,
+    removeBookmark: PropTypes.func,
   }
 
   static contextTypes = {
@@ -84,7 +85,14 @@ class LinkModal extends Component
 
   render()
   {
-    const {link, username, loggedInUser, deleteLink, bookmarkLink} = this.props
+    const {
+      link,
+      username,
+      loggedInUser,
+      deleteLink,
+      addBookmark,
+      removeBookmark
+    } = this.props
     const isLinkOwner = link && loggedInUser && link.user === loggedInUser.id
 
     if (!link) {
@@ -96,13 +104,13 @@ class LinkModal extends Component
     }
 
     const bookmarkButton = loggedInUser && (
-      loggedInUser.bookmarks.includes(link.id)
+      loggedInUser.bookmarks.map(l => l.id).includes(link.id)
       ? (
-        <button className={style.btn} onClick={() => bookmarkLink(link, loggedInUser, false)}>
+        <button className={style.btn} onClick={() => removeBookmark(link)}>
           <FaBookmark />&nbsp;Forget
         </button>
       ) : (
-        <button className={style.btn} onClick={() => bookmarkLink(link, loggedInUser, true)}>
+        <button className={style.btn} onClick={() => addBookmark(link)}>
           <FaBookmarkO />&nbsp;Bookmark
         </button>
       )

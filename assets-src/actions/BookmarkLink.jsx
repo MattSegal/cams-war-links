@@ -3,21 +3,18 @@ import Cookies from 'js-cookie'
 import {types} from './types'
 import {handleHttpError} from './utils'
 
-export const bookmarkLink = (link, user, value) => (dispatch) => {
-  const updatedUser = {
-    ...user,
-    bookmarks: value
-      ? [...(user.bookmarks), link.id]
-      : user.bookmarks.filter(id => id !== link.id)
-  }
+export const addBookmark = link => callBookmarkAPI('post', link)
+export const removeBookmark = link => callBookmarkAPI('delete', link)
 
+const callBookmarkAPI = (method, link) => dispatch => {
   dispatch(requestBookmarkLink(link.id))
-  let csrftoken = Cookies.get('csrftoken')
-  return axios
-  .put(`/api/user/${user.id}/`, updatedUser, {headers:{'X-CSRFToken': csrftoken}})
-  .then( response => {
-    dispatch(receiveBookmarkLink(link, updatedUser))
+  return axios({
+    url: `/api/bookmark/${link.id}/`,
+    method: method,
+    data: {},
+    headers: {'X-CSRFToken': Cookies.get('csrftoken')},
   })
+  .then( response => dispatch(receiveBookmarkLink(link.id, response.data)))
   .catch( error => {
     handleHttpError('Bookmark Link', error)
     dispatch(errorBookmarkLink(link.id))
@@ -30,13 +27,14 @@ export const requestBookmarkLink = (link_id) => ({
 })
 
 
-export const receiveBookmarkLink = (link, user) => ({
+export const receiveBookmarkLink = (link_id, user) => ({
   type: types.RECEIVE_BOOKMARK_LINK,
-  link,
+  link_id,
   user,
 })
 
 
 export const errorBookmarkLink = (link_id) => ({
   type: types.ERROR_BOOKMARK_LINK,
+  link_id,
 })

@@ -11,7 +11,7 @@ from django.template import loader
 from django.views.generic import TemplateView
 
 from api.models import Link
-from api.serializers import LinkSerializer, UserSerializer
+from api.serializers import LinkSerializer, UserSerializer, LoggedInUserSerializer
 from forms import ChangePasswordForm, LoginForm, SignupForm
 
 NO_ACTIVE_USER = -1   # constant for client-side JS - this sucks
@@ -38,7 +38,7 @@ class IndexView(TemplateView):
         }
 
         if self.request.user.is_authenticated:
-            bootstrap_data['loggedInUser'] = UserSerializer(self.request.user).data
+            bootstrap_data['loggedInUser'] = LoggedInUserSerializer(self.request.user).data
 
         context['bootstrap_data'] = json.dumps(bootstrap_data)
         return context

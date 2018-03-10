@@ -8,7 +8,7 @@ import {addLink} from './AddLink'
 import {deleteLink} from './DeleteLink'
 import {editLink} from './EditLink'
 import {fetchLinks} from './FetchLinks'
-import {bookmarkLink} from './BookmarkLink'
+import {addBookmark, removeBookmark} from './BookmarkLink'
 import {toggleSidebar} from './ToggleSidebar'
 import {scrollLinksBottom} from './ScrollLinks'
 
@@ -25,7 +25,8 @@ module.exports = {
     deleteLink,
     editLink,
     fetchLinks,
-    bookmarkLink,
+    addBookmark,
+    removeBookmark,
     toggleSidebar,
     scrollLinksBottom,
 }
