@@ -72,7 +72,7 @@ class LinkListContainer extends Component {
               {this.renderLinkOptions(link)}
           </HyperLink>
         )}
-        <Waypoint onEnter={this.props.scrollBottom} topOffset="100px" />
+        <Waypoint onEnter={this.props.scrollBottom} topOffset="300px" />
         {this.renderScrollBottom(filteredLinks)}
       </ul>
     )
