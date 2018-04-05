@@ -13,7 +13,7 @@ from django.views.generic import TemplateView
 from api.models import Link
 from api.serializers import (LinkSerializer, LoggedInUserSerializer,
                              UserSerializer)
-from forms import ChangePasswordForm, LoginForm, SignupForm
+from .forms import ChangePasswordForm, LoginForm, SignupForm
 
 NO_ACTIVE_USER = -1   # constant for client-side JS - this sucks
 

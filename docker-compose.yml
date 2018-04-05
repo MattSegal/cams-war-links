@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+    database:
+        image: postgres
+        volumes:
+            - ./postgres-data:/var/lib/postgresql/data
+    web:
+        image: localhost:5000/links
+        command: ./manage.py runserver 0.0.0.0:8000
+        build:
+            context: .
+            dockerfile: Dockerfile
+        ports:
+            - 8000:8000
+        volumes:
+          - ./app:/app
+          - webpack-build:/app/static/
+        links:
+            - database
+        environment:
+            PGDATABASE: postgres
+            PGUSER: postgres
+            PGPASSWORD: password
+            PGHOST: database
+            PGPORT: 5432
+            DJANGO_SETTINGS_MODULE: links.settings.dev
+            # Read from .env
+            AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+            AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+
+volumes:
+     webpack-build:

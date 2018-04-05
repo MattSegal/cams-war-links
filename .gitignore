@@ -19,3 +19,5 @@ npm-debug.log.*
 *.tar.gz
 build/
 *.retry
+.env
+postgres-data/

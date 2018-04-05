@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+    web:
+        image: localhost:5000/links
+        entrypoint: /app/start-web.sh
+        ports:
+            - 8001:8001
+        environment:
+            - DJANGO_SETTINGS_MODULE=links.settings.prod
+            # Postgres
+            - PGHOST=$DOCKERHOST
+            - PGPORT=5432
+            - PGDATABASE=links
+            - PGUSER=$LINKS_DB_USER
+            - PGPASSWORD=$LINKS_DB_PASSWORD
+            # Pass-through
+            - DJANGO_SECRET_KEY
+            - AWS_ACCESS_KEY_ID
+            - AWS_SECRET_ACCESS_KEY
