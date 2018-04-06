@@ -10,3 +10,14 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
     'localhost',
 ]
+
+# Logging
+LOGGING['root']['handlers'] = ['console', 'sentry']
+LOGGING['handlers']['sentry'] = {
+    'level': 'ERROR',
+    'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
+}
+
+RAVEN_CONFIG = {
+    'dsn': os.environ.get('LINKS_RAVEN_DSN')
+}
