@@ -17,3 +17,4 @@ django-cors-headers==2.0.2
 flake8
 isort
 boto3
+whitenoise

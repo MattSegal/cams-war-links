@@ -1,15 +1,9 @@
 #!/bin/bash
-echo "Starting links app as `whoami`"
-
-echo "Running migrations"
-./manage.py migrate
-
-echo "Collecting static files (background job)"
-./manage.py collectstatic --noinput &
-
-mkdir -p /var/log/gunicorn
-
-echo "Starting gunicorn"
+echo "Starting links app as `whoami`" && \
+echo "Running migrations" && \
+./manage.py migrate && \
+mkdir -p /var/log/gunicorn && \
+echo "Starting gunicorn" && \
 gunicorn links.wsgi:application \
   --name links \
   --workers 3 \

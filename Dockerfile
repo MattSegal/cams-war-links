@@ -35,9 +35,14 @@ RUN \
   apt-get -qq install nodejs
 
 # Instal NPM packages
-ADD app/package.json /tmp/package.json
-RUN cd /tmp && npm install
-RUN mkdir -p /opt/app && cp -a /tmp/node_modules /app/
+COPY app/package.json .
+RUN npm install && npm cache --force clean
 
 # Mount the codebase
 ADD app /app
+
+RUN npm run prod
+
+ARG DJANGO_SETTINGS_MODULE=links.settings.prod
+ARG DJANGO_SECRET_KEY=not-a-secret
+RUN mkdir -p /static/ && ./manage.py collectstatic --noinput

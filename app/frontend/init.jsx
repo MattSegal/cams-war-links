@@ -11,7 +11,7 @@
             items: [user]
             activeUserId: int
         }
-        
+
         nav {
             scrollCount: int
             sidebar: bool

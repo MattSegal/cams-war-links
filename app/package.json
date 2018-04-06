@@ -4,8 +4,9 @@
   "description": "Build chain for links web app",
   "main": "index.js",
   "scripts": {
-    "dev": "webpack --watch --progress",
-    "test": "mocha-webpack --webpack-config webpack.config.js \"assets-src/test/**/*.jsx\""
+    "dev": "webpack  --config webpack.dev.js --watch --progress",
+    "prod": "webpack --config webpack.prod.js",
+    "test": "mocha-webpack --webpack-config webpack.config.js \"frontend/test/**/*.jsx\""
   },
   "author": "Matthew Segal",
   "license": "ISC",

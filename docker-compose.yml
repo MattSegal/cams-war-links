@@ -4,7 +4,7 @@ services:
     database:
         image: postgres
         volumes:
-            - ./postgres-data:/var/lib/postgresql/data
+            - postgres-data:/var/lib/postgresql/data
     web:
         image: localhost:5000/links
         command: ./manage.py runserver 0.0.0.0:8000
@@ -14,10 +14,12 @@ services:
         ports:
             - 8000:8000
         volumes:
-          - ./app:/app
-          - webpack-build:/app/static/
+            - ./app:/app
+            - node_modules:/app/node_modules
+            - static:/app/static
         links:
             - database
+            - webpack
         environment:
             PGDATABASE: postgres
             PGUSER: postgres
@@ -28,6 +30,17 @@ services:
             # Read from .env
             AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
             AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+    webpack:
+        command: npm run dev
+        build:
+            context: .
+            dockerfile: Dockerfile
+        volumes:
+            - ./app:/app
+            - node_modules:/app/node_modules
+            - static:/app/static
 
 volumes:
-     webpack-build:
+    postgres-data:
+    node_modules:
+    static:
