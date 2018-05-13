@@ -5,6 +5,9 @@ services:
         image: postgres
         volumes:
             - postgres-data:/var/lib/postgresql/data
+        ports:
+            - 25432:5432
+
     web:
         image: localhost:5000/links
         command: ./manage.py runserver 0.0.0.0:8000

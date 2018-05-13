@@ -34,7 +34,7 @@ RUN \
   apt-get -qq update && \
   apt-get -qq install nodejs
 
-# Instal NPM packages
+# Install NPM packages
 COPY app/package.json .
 RUN npm install && npm cache --force clean
 
