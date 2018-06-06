@@ -51,36 +51,22 @@ export default class Header extends Component {
               <FaRefresh title="Reload Links" onClick={fetchLinks} className={style.btn} />
             }/>}
             {updating && <span className={style.btn}><Spinner /></span>}
-            <Route exact path="/" component={() =>
-              <Link title="Search" to="/search">
-                <FaSearch className={style.btn}/>
-              </Link>
-            }/>
-            <Route exact path="/" component={() =>
-              <Link title="Account" to="/account">
-                <FaCog className={style.btn}/>
-              </Link>
-            }/>
-            <Route exact path="/search" component={() =>
+            <Route path="/(account|bookmarks|search)" component={() =>
               <Link title="Links" to="/">
                 <FaChain className={style.btn}/>
               </Link>
             }/>
-            <Route exact path="/bookmarks" component={() =>
-              <Link title="Links" to="/">
-                <FaChain className={style.btn}/>
-              </Link>
-            }/>
-            <Route exact path="/account" component={() =>
-              <Link title="Links" to="/">
-                <FaChain className={style.btn}/>
-              </Link>
-            }/>
-            <Route exact path="/" component={() =>
+            <Link title="Search" to="/search">
+              <FaSearch className={style.btn}/>
+            </Link>
+            <LoggedIn>
               <Link title="Bookmarks" to="/bookmarks">
                 <FaBook className={style.btn}/>
               </Link>
-            }/>
+            </LoggedIn>
+            <Link title="Account" to="/account">
+              <FaCog className={style.btn}/>
+            </Link>
           </div>
         </div>
       </header>
