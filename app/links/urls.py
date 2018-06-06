@@ -18,5 +18,6 @@ urlpatterns = [
     url(r'^menu/$', views.IndexView.as_view()),
     url(r'^link/', views.IndexView.as_view()),
     url(r'^add/$', views.IndexView.as_view()),
-
+    url(r'^account/$', views.IndexView.as_view()),
+    url(r'^search/$', views.IndexView.as_view()),
 ]

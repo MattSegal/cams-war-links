@@ -1,22 +1,23 @@
 import React, {PropTypes, Component} from 'react'
 import {connect} from 'react-redux'
+
+import { actions } from 'state'
 import Modal from 'components/Modal'
-import Actions from 'actions'
 import LinkForm from 'components/LinkForm'
 
-class LinkModalContainer extends Component 
+class LinkModalContainer extends Component
 {
   static propTypes = {
     loggedInUser: PropTypes.object,
     addLink: PropTypes.func,
   }
 
-  constructor(props) 
+  constructor(props)
   {
     super(props)
     this.state = {
-      title: '', 
-      url: '', 
+      title: '',
+      url: '',
       description: ''
     }
     this.submitAddLink = this.submitAddLink.bind(this)
@@ -33,11 +34,11 @@ class LinkModalContainer extends Component
     })
   }
 
-  render() 
+  render()
   {
     return (
       <Modal closeRoute="/">
-        <LinkForm 
+        <LinkForm
           action={this.submitAddLink}
           state={this.state}
           setState={(obj) => this.setState(obj)}
@@ -53,7 +54,7 @@ let mapStateToProps = (state) => ({
 })
 
 let mapDispatchToProps = (dispatch) => ({
-    addLink: (link) => dispatch(Actions.addLink(link))
+    addLink: (link) => dispatch(actions.addLink(link))
 })
 
 module.exports = connect(

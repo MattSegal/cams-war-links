@@ -4,10 +4,10 @@ import FaPencil from 'react-icons/lib/fa/pencil'
 import FaClose from 'react-icons/lib/fa/close'
 
 // Wrong style
-import style from 'components/LinkModal.scss'
+import style from 'scss/LinkModal.scss'
 
 
-export default class LinkForm extends Component 
+export default class LinkForm extends Component
 {
   static propTypes = {
     state: PropTypes.object,
@@ -24,7 +24,7 @@ export default class LinkForm extends Component
     }).isRequired
   }
 
-  constructor(props) 
+  constructor(props)
   {
     super(props)
   }
@@ -45,7 +45,7 @@ export default class LinkForm extends Component
     }
   }
 
-  handleTitleChange = (event) => 
+  handleTitleChange = (event) =>
   {
     this.props.setState({
         ...this.props.state,
@@ -53,7 +53,7 @@ export default class LinkForm extends Component
     })
   }
 
-  handleUrlChange = (event) => 
+  handleUrlChange = (event) =>
   {
     this.props.setState({
         ...this.props.state,
@@ -61,7 +61,7 @@ export default class LinkForm extends Component
     })
   }
 
-  handleDescriptionChange = (event) => 
+  handleDescriptionChange = (event) =>
   {
     this.props.setState({
         ...this.props.state,
@@ -87,39 +87,39 @@ export default class LinkForm extends Component
         </div>
         <div className={style.form}>
           <div className={style.input}>
-              <input 
+              <input
                   autoFocus
-                  type="text" 
+                  type="text"
                   placeholder="Title"
-                  value={this.props.state.title} 
+                  value={this.props.state.title}
                   onChange={this.handleTitleChange}
                   onKeyPress={this.confirmWithEnter}
                   onKeyDown={this.cancelDialogue}
               />
           </div>
           <div className={style.input}>
-              <input 
+              <input
                   type="text"
                   placeholder="URL"
-                  value={this.props.state.url} 
-                  onChange={this.handleUrlChange} 
+                  value={this.props.state.url}
+                  onChange={this.handleUrlChange}
                   onKeyPress={this.confirmWithEnter}
                   onKeyDown={this.cancelDialogue}
               />
           </div>
           <div className={style.input}>
-              <textarea 
+              <textarea
                   type="text"
                   rows="3"
                   placeholder="Description (Optional)"
-                  value={this.props.state.description} 
-                  onChange={this.handleDescriptionChange} 
+                  value={this.props.state.description}
+                  onChange={this.handleDescriptionChange}
                   onKeyPress={this.confirmWithEnter}
                   onKeyDown={this.cancelDialogue}
               />
           </div>
-        </div>   
-      </div> 
+        </div>
+      </div>
     )
   }
 }

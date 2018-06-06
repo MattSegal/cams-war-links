@@ -7,7 +7,7 @@ from .models import Link
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'username',)
+        fields = ('username',)
 
 
 class LoggedInUserSerializer(serializers.ModelSerializer):
@@ -24,10 +24,15 @@ class LoggedInUserSerializer(serializers.ModelSerializer):
 class LinkSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
     created = serializers.DateTimeField(read_only=True)
+    user = UserSerializer()
 
     class Meta:
         model = Link
         fields = (
-            'id', 'user', 'title', 'url',
-            'created', 'description'
+            'id',
+            'user',
+            'title',
+            'url',
+            'created',
+            'description'
         )

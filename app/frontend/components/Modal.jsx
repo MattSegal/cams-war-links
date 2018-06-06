@@ -1,10 +1,11 @@
-import React, {Component, PropTypes} from 'react'
-import style from './Modal.scss'
+import React, { Component, PropTypes } from 'react'
+import { Link } from 'react-router-dom'
 import FaClose from 'react-icons/lib/fa/close'
-import {Link} from 'react-router-dom'
+
+import style from 'scss/Modal.scss'
 
 
-export default class Modal extends Component 
+export default class Modal extends Component
 {
   static propTypes = {
     closeRoute: PropTypes.string,
@@ -40,7 +41,7 @@ export default class Modal extends Component
     this.background.classList.remove('Modal__active')
   }
 
-  render() 
+  render()
   {
     const {children, closeRoute} = this.props
     return (

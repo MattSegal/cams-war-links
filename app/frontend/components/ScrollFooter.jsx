@@ -1,7 +1,9 @@
-import React, {PropTypes, PureComponent} from 'react';
-import style from 'components/ScrollFooter.scss'
+import React, { PropTypes, PureComponent } from 'react';
 import FaChevronUp from 'react-icons/lib/fa/chevron-up'
 require('smoothscroll-polyfill').polyfill(); // global side effect on window
+
+import style from 'scss/ScrollFooter.scss'
+
 
 export default class ScrollFooter extends PureComponent {
   constructor(props) {
@@ -11,11 +13,11 @@ export default class ScrollFooter extends PureComponent {
   }
 
   handleScroll = () => {
-    if (window.pageYOffset > 100) 
+    if (window.pageYOffset > 200)
     {
       this.setState({visible: true})
-    } 
-    else 
+    }
+    else
     {
       this.setState({visible: false})
     }
@@ -37,6 +39,6 @@ export default class ScrollFooter extends PureComponent {
           <FaChevronUp />
         </div>
       </div>
-    ) 
+    )
   }
 }

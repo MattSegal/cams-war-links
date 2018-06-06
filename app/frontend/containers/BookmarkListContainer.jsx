@@ -1,21 +1,19 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux'
-import HyperLink from 'components/HyperLink'
-import style from 'components/LinkList.scss'
-import linkStyle from 'components/Link.scss'
 import FaBookmark from 'react-icons/lib/fa/bookmark'
-import Actions from 'actions'
+
+import style from 'scss/LinkList.scss'
+import linkStyle from 'scss/Link.scss'
+
+import { actions } from 'state'
+import HyperLink from 'components/HyperLink'
 
 
 class BookmarkListContainer extends Component {
   render() {
-    const {users, loggedInUser, removeBookmark} = this.props
-    const usernames = users.reduce((obj, user) => ({...obj, [`${user.id}`]: user.username}), {})
-    const annotateUsername = link => ({...link, username: usernames[link.user]})
+    const {loggedInUser, removeBookmark} = this.props
     const sortByDate = (link1, link2) => new Date(link2.created) - new Date(link1.created)
-    const bookmarks = loggedInUser.bookmarks
-      .map(annotateUsername)
-      .sort(sortByDate)
+    const bookmarks = loggedInUser.bookmarks.sort(sortByDate)
 
     if (bookmarks.length > 0) {
       return (
@@ -39,11 +37,10 @@ class BookmarkListContainer extends Component {
 
 const mapStateToProps = (state) => ({
     loggedInUser: state.loggedInUser,
-    users: state.users.items,
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  removeBookmark: link => dispatch(Actions.removeBookmark(link)),
+  removeBookmark: link => dispatch(actions.removeBookmark(link)),
 })
 
 module.exports = connect(

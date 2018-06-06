@@ -1,6 +1,8 @@
-import React, {Component, PureComponent, PropTypes} from 'react'
-import {NO_USER_SELECTED} from 'constants'
-import {connect} from 'react-redux'
+import React, { Component, PureComponent, PropTypes } from 'react'
+import { connect } from 'react-redux'
+
+import { NO_USER_SELECTED } from 'constants'
+
 
 class LoggedInContainer extends Component {
   render() {

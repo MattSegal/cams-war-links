@@ -1,39 +1,43 @@
-import React, {Component, PropTypes} from 'react'
-import {Switch, Route, Link} from 'react-router-dom'
-import {LoggedIn, LoggedOut} from 'containers/UtilsContainers'
-import FaBars from 'react-icons/lib/fa/bars'
+import React, { Component, PropTypes } from 'react'
+import { Switch, Route, Link } from 'react-router-dom'
+import FaBook from 'react-icons/lib/fa/book'
+import FaChain from 'react-icons/lib/fa/chain'
 import FaPlus from 'react-icons/lib/fa/plus'
 import FaRefresh from 'react-icons/lib/fa/refresh'
+import FaCog from 'react-icons/lib/fa/cog'
+import FaSearch from 'react-icons/lib/fa/search'
+
+import { LoggedIn, LoggedOut } from 'containers/UtilsContainers'
 import Spinner from 'components/Spinner'
-import style from 'components/Header.scss'
+import style from 'scss/Header.scss'
 
 export default class Header extends Component {
   static propTypes ={
-    username: PropTypes.string,
     updating: PropTypes.bool,
     fetchLinks: PropTypes.func,
-    toggleSidebar: PropTypes.func,
   }
 
-  render() 
+  render()
   {
-    const {updating, fetchLinks, toggleSidebar, username} = this.props
+    const { updating, fetchLinks } = this.props
     return (
       <header className={style.header}>
         <div className={style.headerContent}>
           <div className={style.group}>
-            <FaBars 
-              onClick={toggleSidebar}
-              className={style.btn}
-            />
             <Switch>
-            <Route path="/bookmarks">
-              <Link to="/"><h1>Bookmarks</h1></Link>
+              <Route path="/search">
+                <Link to="/"><h1>Search</h1></Link>
+              </Route>
+              <Route path="/account">
+                <Link to="/"><h1>Account</h1></Link>
+              </Route>
+              <Route path="/bookmarks">
+                <Link to="/"><h1>Bookmarks</h1></Link>
               </Route>
               <Route path="/">
-                <Link to="/"><h1>{username ? username : 'Links'}</h1></Link>
+                <Link to="/"><h1>Links</h1></Link>
               </Route>
-            </Switch>
+           </Switch>
           </div>
           <div className={style.group}>
             <LoggedIn>
@@ -47,6 +51,36 @@ export default class Header extends Component {
               <FaRefresh title="Reload Links" onClick={fetchLinks} className={style.btn} />
             }/>}
             {updating && <span className={style.btn}><Spinner /></span>}
+            <Route exact path="/" component={() =>
+              <Link title="Search" to="/search">
+                <FaSearch className={style.btn}/>
+              </Link>
+            }/>
+            <Route exact path="/" component={() =>
+              <Link title="Account" to="/account">
+                <FaCog className={style.btn}/>
+              </Link>
+            }/>
+            <Route exact path="/search" component={() =>
+              <Link title="Links" to="/">
+                <FaChain className={style.btn}/>
+              </Link>
+            }/>
+            <Route exact path="/bookmarks" component={() =>
+              <Link title="Links" to="/">
+                <FaChain className={style.btn}/>
+              </Link>
+            }/>
+            <Route exact path="/account" component={() =>
+              <Link title="Links" to="/">
+                <FaChain className={style.btn}/>
+              </Link>
+            }/>
+            <Route exact path="/" component={() =>
+              <Link title="Bookmarks" to="/bookmarks">
+                <FaBook className={style.btn}/>
+              </Link>
+            }/>
           </div>
         </div>
       </header>

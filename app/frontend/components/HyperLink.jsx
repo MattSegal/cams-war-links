@@ -1,6 +1,8 @@
 import React, {PropTypes, PureComponent} from 'react';
-import style from 'components/Link.scss'
-import {getTimeSince} from 'utilities'
+
+import style from 'scss/Link.scss'
+
+import { getTimeSince } from 'utilities'
 import Spinner from 'components/Spinner'
 
 export default class HyperLink extends PureComponent {
@@ -8,15 +10,27 @@ export default class HyperLink extends PureComponent {
     link: PropTypes.shape({
       title: PropTypes.string,
       url: PropTypes.string,
-      username: PropTypes.string,
       created: PropTypes.string,
       updating: PropTypes.bool,
+      user: PropTypes.shape({
+        username: PropTypes.string,
+      }),
     })
   }
 
-  render()
-  {
+  getDomain(url) {
+    return url
+      .replace('http://', '')
+      .replace('https://', '')
+      .split(/[/?#]/)[0]
+      .replace('www.', '')
+  }
+
+  render() {
     const {link, children} = this.props
+    const timeAgo = getTimeSince(link.created) + ' ago'
+    const domain = this.getDomain(link.url)
+    const description = link.description ? '- description' : ''
     return (
       <li className={style.link}>
         <div className={style.left}>
@@ -28,8 +42,8 @@ export default class HyperLink extends PureComponent {
           >
             {link.title}
           </a>
-          <p className={style.details} >
-            {link.username} - {getTimeSince(link.created)} ago {link.description ? '- description' : ''}
+          <p className={style.details}>
+            {link.user.username} - {timeAgo} - {domain} {description}
           </p>
         </div>
         {link.updating

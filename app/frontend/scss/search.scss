@@ -1,0 +1,20 @@
+@import '../scss/constants';
+
+:local {
+  .inputBox {
+    margin-bottom: 1rem;
+
+    input {
+      padding: 0.4rem;
+      width: 260px;
+      font-size: 1.2rem;
+      border: 1px solid #ccc;
+      margin-bottom: 0.2rem;
+    }
+
+    .status {
+      height: 20px;
+      color: $text-grey;
+    }
+  }
+}

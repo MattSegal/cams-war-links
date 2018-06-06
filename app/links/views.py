@@ -11,8 +11,7 @@ from django.template import loader
 from django.views.generic import TemplateView
 
 from api.models import Link
-from api.serializers import (LinkSerializer, LoggedInUserSerializer,
-                             UserSerializer)
+from api.serializers import LinkSerializer, LoggedInUserSerializer
 from .forms import ChangePasswordForm, LoginForm, SignupForm
 
 NO_ACTIVE_USER = -1   # constant for client-side JS - this sucks
@@ -23,16 +22,9 @@ class IndexView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(IndexView, self).get_context_data(**kwargs)
-        users = User.objects.filter(is_superuser=False)
         links = Link.objects.filter(active=True).order_by('-created')[:settings.LINK_PAGE_SIZE]
         bootstrap_data = {
-            'users': {
-                'isFetching': False,
-                'activeUserId': NO_ACTIVE_USER,
-                'items': UserSerializer(users, many=True).data,
-            },
             'links': {
-                'isFetching': False,
                 'items': LinkSerializer(links, many=True).data,
                 'next': '/api/link/?page=2',  # yucky hack
             }

@@ -1,11 +1,22 @@
-import {NO_USER_SELECTED} from 'constants'
-
 // Lets us use pipe syntax eg. pipe(f,g,h)(x)
 const _pipe = (f, g) => (...args) => g(f(...args))
 const pipe = (...fns) => fns.reduce(_pipe)
 
 
-const titleCase = (str) => str.charAt(0).toUpperCase() + str.slice(1)
+const debounce = delay => {
+  let timer = null
+  return func => {
+      return (...args) => {
+        clearTimeout(timer)
+        timer = setTimeout(() => func( ...args), delay)
+      }
+  }
+}
+
+
+const titleCase = (str) =>
+    str.charAt(0).toUpperCase() + str.slice(1)
+
 
 const getTimeSince = (date) =>
 {
@@ -37,6 +48,7 @@ const LAST_WEEK = new Date(
 
 module.exports = {
     pipe,
+    debounce,
     getTimeSince,
     titleCase,
     LAST_WEEK,

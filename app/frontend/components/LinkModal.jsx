@@ -1,20 +1,22 @@
-import React, {PropTypes, Component} from 'react'
-import {Link, Route, Switch} from 'react-router-dom'
-import Modal from 'components/Modal'
-import {getTimeSince} from 'utilities'
-import style from 'components/LinkModal.scss'
-import linkStyle from 'components/Link.scss'
+import React, { PropTypes, Component } from 'react'
+import { Link, Route, Switch } from 'react-router-dom'
 import FaTrashO from 'react-icons/lib/fa/trash-o'
 import FaPencil from 'react-icons/lib/fa/pencil'
 import FaClose from 'react-icons/lib/fa/close'
 import FaBookmarkO from 'react-icons/lib/fa/bookmark-o'
 import FaBookmark from 'react-icons/lib/fa/bookmark'
 import FaTag from 'react-icons/lib/fa/tag'
+
+import style from 'scss/LinkModal.scss'
+import linkStyle from 'scss/Link.scss'
+
+import Modal from 'components/Modal'
+import { getTimeSince } from 'utilities'
 import LinkForm from 'components/LinkForm'
 import Spinner from 'components/Spinner'
 
-class LinkModal extends Component
-{
+
+class LinkModal extends Component {
   static propTypes = {
     link: PropTypes.object,
     username: PropTypes.string,
@@ -146,7 +148,7 @@ class LinkModal extends Component
             <Route path={`/link/${link.id}/delete`}>
               <div className={style.btnWrapper}>
                 <Link to="/">
-                  <button className={style.btn} onClick={() => deleteLink(link.id)}>
+                  <button className={style.btn} onClick={() => deleteLink(link)}>
                     <FaTrashO />&nbsp;Delete
                   </button>
                 </Link>

@@ -1,9 +1,12 @@
 from django.conf import settings
+from django.db.models import Q
 from rest_framework import exceptions, status, viewsets
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.generics import GenericAPIView
+from rest_framework.mixins import ListModelMixin
 
 from .serializers import LinkSerializer, LoggedInUserSerializer
 from .models import Link
@@ -70,3 +73,26 @@ class LinkViewSet(viewsets.ModelViewSet):
         link.active = False
         link.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
+class SearchView(GenericAPIView, ListModelMixin):
+    serializer_class = LinkSerializer
+    pagination_class = LinksPagination
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+    def get_queryset(self):
+        queryset = Link.objects.filter(active=True).order_by('-created')
+        search_term = self.request.GET.get('query')
+        if search_term:
+            query = (
+                Q(title__icontains=search_term) |
+                Q(user__username__icontains=search_term) |
+                Q(url__icontains=search_term) |
+                Q(description__icontains=search_term)
+            )
+            queryset = queryset.filter(query).distinct()
+
+        return queryset.all()
