@@ -4,12 +4,6 @@ from rest_framework import serializers
 from .models import Link
 
 
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ('username',)
-
-
 class LoggedInUserSerializer(serializers.ModelSerializer):
     bookmarks = serializers.SerializerMethodField()
 
@@ -24,13 +18,15 @@ class LoggedInUserSerializer(serializers.ModelSerializer):
 class LinkSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
     created = serializers.DateTimeField(read_only=True)
-    user = UserSerializer()
+    user_id = serializers.IntegerField(write_only=True)
+    username = serializers.CharField(source='user.username', read_only=True)
 
     class Meta:
         model = Link
         fields = (
             'id',
-            'user',
+            'user_id',
+            'username',
             'title',
             'url',
             'created',

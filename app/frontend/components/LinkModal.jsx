@@ -19,7 +19,6 @@ import Spinner from 'components/Spinner'
 class LinkModal extends Component {
   static propTypes = {
     link: PropTypes.object,
-    username: PropTypes.string,
     loggedInUser: PropTypes.object,
     deleteLink: PropTypes.func,
     editLink: PropTypes.func,
@@ -58,7 +57,7 @@ class LinkModal extends Component {
           title: this.state.title,
           url: this.state.url,
           description: this.state.description,
-          user: this.props.link.user
+          user_id: this.props.loggedInUser.id
       })
   }
 
@@ -89,13 +88,13 @@ class LinkModal extends Component {
   {
     const {
       link,
-      username,
       loggedInUser,
       deleteLink,
       addBookmark,
       removeBookmark
     } = this.props
-    const isLinkOwner = link && loggedInUser && link.user === loggedInUser.id
+    // This is dumb but there's server side validation that checks permissions as well
+    const isLinkOwner = link && loggedInUser && link.username === loggedInUser.username
 
     if (!link) {
       return (
@@ -128,7 +127,7 @@ class LinkModal extends Component {
               <strong>{this.state.title}</strong>
             </a>
             <p className={linkStyle.details}>
-              {username} - {getTimeSince(link.created)} ago
+              {link.username} - {getTimeSince(link.created)} ago
             </p>
           </div>
           <div className={style.description}>

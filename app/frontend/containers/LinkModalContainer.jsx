@@ -22,7 +22,6 @@ class LinkModalContainer extends Component
     return (
       <LinkModal
         link={link}
-        username={link.user.username}
         loggedInUser={loggedInUser}
         addBookmark={this.props.addBookmark}
         removeBookmark={this.props.removeBookmark}

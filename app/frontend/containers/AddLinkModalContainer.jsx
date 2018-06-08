@@ -27,10 +27,10 @@ class LinkModalContainer extends Component
   submitAddLink()
   {
     this.props.addLink({
-        title: this.state.title,
-        url: this.state.url,
-        description: this.state.description,
-        user: this.props.loggedInUser.id
+      title: this.state.title,
+      url: this.state.url,
+      description: this.state.description,
+      user_id: this.props.loggedInUser.id,
     })
   }
 

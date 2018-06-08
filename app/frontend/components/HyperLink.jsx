@@ -12,10 +12,8 @@ export default class HyperLink extends PureComponent {
       url: PropTypes.string,
       created: PropTypes.string,
       updating: PropTypes.bool,
-      user: PropTypes.shape({
-        username: PropTypes.string,
-      }),
-    })
+      username: PropTypes.string,
+    }),
   }
 
   getDomain(url) {
@@ -43,7 +41,7 @@ export default class HyperLink extends PureComponent {
             {link.title}
           </a>
           <p className={style.details}>
-            {link.user.username} - {timeAgo} - {domain} {description}
+            {link.username} - {timeAgo} - {domain} {description}
           </p>
         </div>
         {link.updating

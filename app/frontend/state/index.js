@@ -26,7 +26,7 @@
         description: string
         title: string
         url: string
-        user: {username: string}
+        username: string
         updating: bool
     }
 */
