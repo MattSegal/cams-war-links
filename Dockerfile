@@ -23,7 +23,6 @@ RUN \
 COPY app/requirements.txt .
 RUN \
   echo "Installing python packages..." && \
-    pip3 install -U pip && \
     pip3 install -r requirements.txt
 
 # Install NodeJS and NPM
