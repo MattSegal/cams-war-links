@@ -9,7 +9,7 @@ services:
             - 25432:5432
 
     web:
-        image: localhost:5000/links
+        image: localhost:5000/war
         command: ./manage.py runserver 0.0.0.0:8000
         build:
             context: .

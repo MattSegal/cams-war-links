@@ -35,7 +35,7 @@ export default class Header extends Component {
                 <Link to="/"><h1>Bookmarks</h1></Link>
               </Route>
               <Route path="/">
-                <Link to="/"><h1>Links</h1></Link>
+                <Link to="/"><h1>Cam's War Links</h1></Link>
               </Route>
            </Switch>
           </div>

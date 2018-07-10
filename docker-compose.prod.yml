@@ -2,7 +2,7 @@ version: '3'
 
 services:
     web:
-        image: localhost:5000/links
+        image: localhost:5000/war
         entrypoint: /app/start-web.sh
         ports:
             - 8001:8001
@@ -10,8 +10,8 @@ services:
             - DJANGO_SETTINGS_MODULE=links.settings.prod
             # Postgres
             - PGDATABASE=links
-            - PGUSER=$LINKS_DB_USER
-            - PGPASSWORD=$LINKS_DB_PASSWORD
+            - PGUSER=$WAR_DB_USER
+            - PGPASSWORD=$WAR_DB_PASSWORD
             - PGHOST=$DOCKERHOST
             - PGPORT=5432
             # Pass-through
