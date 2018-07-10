@@ -9,7 +9,7 @@ services:
         environment:
             - DJANGO_SETTINGS_MODULE=links.settings.prod
             # Postgres
-            - PGDATABASE=links
+            - PGDATABASE=war
             - PGUSER=$WAR_DB_USER
             - PGPASSWORD=$WAR_DB_PASSWORD
             - PGHOST=$DOCKERHOST
