@@ -7,7 +7,7 @@ echo "Starting gunicorn" && \
 gunicorn links.wsgi:application \
   --name links \
   --workers 3 \
-  --bind 0.0.0.0:8001 \
+  --bind 0.0.0.0:8004 \
   --capture-output \
   --log-level info \
   --error-logfile /var/log/gunicorn/error.log \
